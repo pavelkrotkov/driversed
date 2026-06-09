@@ -69,7 +69,7 @@
       const url = new URL(raw, window.location.href);
       const isProtocolRelative = raw.startsWith("//");
       const isRelative = !/^[a-z][a-z\d+.-]*:/i.test(raw) && !isProtocolRelative;
-      const hasSafeProtocol = url.protocol === "https:" || url.protocol === "http:";
+      const hasSafeProtocol = url.protocol === "https:";
       const hasAllowedOrigin = !allowedOrigins || allowedOrigins.includes(url.origin);
 
       if (isRelative && allowRelative) {
@@ -242,7 +242,7 @@
         <section class="progress-band">
           <div>
             <strong>Next up: ${escapeHtml(nextModuleTitle)}</strong>
-            <div class="progress-meter" aria-label="${progressPercent}% complete"><div class="progress-fill" style="width:${progressPercent}%"></div></div>
+            <div class="progress-meter" role="progressbar" aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100" aria-label="${progressPercent}% complete"><div class="progress-fill" style="width:${progressPercent}%"></div></div>
           </div>
           <a class="button primary" href="${nextModuleFile}">${icon("next")} Continue</a>
         </section>
@@ -419,6 +419,14 @@
 
   function bindLessonLog(slug) {
     const fields = ["started", "complete", "date", "rating", "notes"];
+    const debounce = (fn, delay) => {
+      let timeout;
+      return () => {
+        window.clearTimeout(timeout);
+        timeout = window.setTimeout(fn, delay);
+      };
+    };
+
     const save = () => {
       const startedEl = document.getElementById("started");
       const completeEl = document.getElementById("complete");
@@ -436,11 +444,18 @@
       const state = document.getElementById("save-state");
       if (state) state.textContent = "Saved " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + ".";
     };
+    const debouncedSave = debounce(save, 250);
 
     fields.forEach((id) => {
       const field = document.getElementById(id);
-      field?.addEventListener("input", save);
-      field?.addEventListener("change", save);
+      if (!field) return;
+
+      if (field.type === "checkbox" || field.tagName === "SELECT") {
+        field.addEventListener("change", save);
+      } else {
+        field.addEventListener("input", debouncedSave);
+        field.addEventListener("change", save);
+      }
     });
   }
 
