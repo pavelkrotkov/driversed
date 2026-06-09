@@ -8,6 +8,8 @@ Open `index.html` locally or publish the repository root with GitHub Pages.
 
 Progress is saved in the browser with `localStorage`. The site includes export/import buttons so a parent can back up the training log as JSON.
 
+The numbered lesson HTML files are intentionally tiny clean-URL stubs for GitHub Pages. They should stay uniform: each one only sets `window.LESSON_SLUG` and loads the shared `curriculum.js` and `app.js` renderer.
+
 ## Curriculum Spine
 
 1. Toyota Risk-ATTEND for hidden-risk anticipation.

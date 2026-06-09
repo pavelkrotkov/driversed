@@ -1,5 +1,6 @@
 (function () {
   const storageKey = "hpt-progress-v1";
+  const EMBED_ORIGINS = ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"];
   const data = window.HPT_CURRICULUM || {};
   const modules = Array.isArray(data.modules) ? data.modules : [];
   const sources = Array.isArray(data.sources) ? data.sources : [];
@@ -68,6 +69,7 @@
     try {
       const url = new URL(raw, window.location.href);
       const isProtocolRelative = raw.startsWith("//");
+      if (isProtocolRelative) return "#";
       const isRelative = !/^[a-z][a-z\d+.-]*:/i.test(raw) && !isProtocolRelative;
       const hasSafeProtocol = url.protocol === "https:";
       const hasAllowedOrigin = !allowedOrigins || allowedOrigins.includes(url.origin);
@@ -108,6 +110,16 @@
       };
       return result;
     }, {});
+  }
+
+  if (window.HPT_EXPOSE_TESTS) {
+    window.HPT_TESTS = {
+      clampPercent,
+      escapeHtml,
+      normalizeProgress,
+      safeUrl,
+      safeYoutubeEmbed
+    };
   }
 
   function icon(name) {
@@ -304,7 +316,7 @@
     const videoEmbed = safeYoutubeEmbed(module.video);
     const embedUrl = safeUrl(module.embedUrl, {
       allowRelative: false,
-      allowedOrigins: ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"]
+      allowedOrigins: EMBED_ORIGINS
     });
     const media = videoEmbed ? `
       <div class="media-box">
