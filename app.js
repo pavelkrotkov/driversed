@@ -1,20 +1,26 @@
 (function () {
   const storageKey = "hpt-progress-v1";
-  const data = window.HPT_CURRICULUM;
+  const data = window.HPT_CURRICULUM || {};
+  const modules = Array.isArray(data.modules) ? data.modules : [];
+  const sources = Array.isArray(data.sources) ? data.sources : [];
   const app = document.getElementById("app");
 
   const pageSlug = window.LESSON_SLUG || null;
 
   function loadProgress() {
     try {
-      return JSON.parse(localStorage.getItem(storageKey)) || {};
+      return normalizeProgress(JSON.parse(localStorage.getItem(storageKey)) || {});
     } catch (error) {
       return {};
     }
   }
 
   function saveProgress(progress) {
-    localStorage.setItem(storageKey, JSON.stringify(progress));
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(normalizeProgress(progress)));
+    } catch (error) {
+      console.error("Failed to save progress to localStorage:", error);
+    }
   }
 
   function lessonProgress(slug) {
@@ -32,11 +38,11 @@
 
   function completedCount() {
     const progress = loadProgress();
-    return data.modules.filter((module) => progress[module.slug]?.complete).length;
+    return modules.filter((module) => progress[module.slug]?.complete).length;
   }
 
   function percentComplete() {
-    return Math.round((completedCount() / data.modules.length) * 100);
+    return modules.length > 0 ? Math.round((completedCount() / modules.length) * 100) : 0;
   }
 
   function escapeHtml(value) {
@@ -44,7 +50,50 @@
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;");
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function safeUrl(value, options = {}) {
+    const { allowRelative = true, allowedOrigins = null } = options;
+    try {
+      const url = new URL(String(value || ""), window.location.href);
+      const isRelative = !/^[a-z][a-z\d+.-]*:/i.test(String(value || ""));
+      const hasSafeProtocol = url.protocol === "https:" || url.protocol === "http:";
+      const hasAllowedOrigin = !allowedOrigins || allowedOrigins.includes(url.origin);
+
+      if ((isRelative && allowRelative) || (hasSafeProtocol && hasAllowedOrigin)) {
+        return escapeHtml(isRelative ? url.pathname.split("/").pop() || "#" : url.href);
+      }
+    } catch (error) {
+      return "#";
+    }
+
+    return "#";
+  }
+
+  function safeYoutubeEmbed(videoId) {
+    const id = String(videoId || "");
+    return /^[A-Za-z0-9_-]{6,32}$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}` : "";
+  }
+
+  function normalizeProgress(raw) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+
+    return modules.reduce((result, module) => {
+      const entry = raw[module.slug];
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) return result;
+
+      result[module.slug] = {
+        started: Boolean(entry.started),
+        complete: Boolean(entry.complete),
+        date: typeof entry.date === "string" ? entry.date : "",
+        rating: typeof entry.rating === "string" ? entry.rating : "",
+        notes: typeof entry.notes === "string" ? entry.notes : "",
+        updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : ""
+      };
+      return result;
+    }, {});
   }
 
   function icon(name) {
@@ -66,7 +115,7 @@
         <header class="topbar">
           <a class="brand" href="index.html">
             <span class="brand-mark">${icon("check")}</span>
-            <span>${escapeHtml(data.title)}</span>
+            <span>${escapeHtml(data.title || "Teen Hazard Perception Lab")}</span>
           </a>
           <div class="top-actions">
             <a class="button ghost" href="index.html">${icon("home")} Home</a>
@@ -107,10 +156,19 @@
     importFile?.addEventListener("change", async () => {
       const file = importFile.files?.[0];
       if (!file) return;
-      const text = await file.text();
-      const parsed = JSON.parse(text);
-      saveProgress(parsed.progress || parsed);
-      window.location.reload();
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          throw new Error("Progress import must be a JSON object.");
+        }
+        saveProgress(parsed.progress || parsed);
+        window.location.reload();
+      } catch (error) {
+        window.alert("Invalid progress file. Please upload a valid exported JSON file.");
+      } finally {
+        importFile.value = "";
+      }
     });
   }
 
@@ -118,12 +176,12 @@
     const done = completedCount();
     const percent = percentComplete();
     const progress = loadProgress();
-    const nextModule = data.modules.find((module) => !progress[module.slug]?.complete) || data.modules[data.modules.length - 1];
+    const nextModule = modules.find((module) => !progress[module.slug]?.complete) || modules[modules.length - 1];
 
-    const cards = data.modules.map((module) => {
+    const cards = modules.map((module) => {
       const item = progress[module.slug] || {};
       return `
-        <a class="module-card" href="${module.file}">
+        <a class="module-card" href="${safeUrl(module.file)}">
           <div class="module-meta">
             <span class="pill green">${String(module.id).padStart(2, "0")}</span>
             <span class="pill blue">${escapeHtml(module.phase)}</span>
@@ -136,22 +194,24 @@
       `;
     }).join("");
 
-    const sourceLinks = data.sources.map((source) => `
-      <li><a href="${source.url}" target="_blank" rel="noreferrer">${escapeHtml(source.label)}</a>: ${escapeHtml(source.note)}</li>
+    const sourceLinks = sources.map((source) => `
+      <li><a href="${safeUrl(source.url, { allowRelative: false })}" target="_blank" rel="noreferrer">${escapeHtml(source.label)}</a>: ${escapeHtml(source.note)}</li>
     `).join("");
 
-    const critique = data.critique.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const critique = (Array.isArray(data.critique) ? data.critique : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const nextModuleTitle = nextModule ? nextModule.title : "No modules configured";
+    const nextModuleFile = nextModule ? safeUrl(nextModule.file) : "#";
 
     app.innerHTML = shell(`
       <section class="hero">
         <div class="hero-inner">
           <p class="eyebrow">Hazard perception only</p>
           <h1>Before anything bad happens, where could trouble come from?</h1>
-          <p class="hero-copy">A 22-step training path that builds from hidden-risk anticipation to real-road scanning, behavior prediction, highway space management, and DVSA-style timed practice.</p>
+          <p class="hero-copy">A 28-step training path that builds from hidden-risk anticipation to real-road scanning, behavior prediction, simulator practice, and DVSA-style timed hazard practice.</p>
           <div class="hero-grid">
-            <div class="stat"><strong>${done}/${data.modules.length}</strong><span>modules complete</span></div>
+            <div class="stat"><strong>${done}/${modules.length}</strong><span>modules complete</span></div>
             <div class="stat"><strong>${percent}%</strong><span>logged progress</span></div>
-            <div class="stat"><strong>${data.sources.length}</strong><span>source groups reviewed</span></div>
+            <div class="stat"><strong>${sources.length}</strong><span>source groups reviewed</span></div>
             <div class="stat"><strong>0</strong><span>generic driver-ed pages</span></div>
           </div>
         </div>
@@ -159,10 +219,10 @@
       <main class="layout">
         <section class="progress-band">
           <div>
-            <strong>Next up: ${escapeHtml(nextModule.title)}</strong>
+            <strong>Next up: ${escapeHtml(nextModuleTitle)}</strong>
             <div class="progress-meter" aria-label="${percent}% complete"><div class="progress-fill" style="width:${percent}%"></div></div>
           </div>
-          <a class="button primary" href="${nextModule.file}">${icon("next")} Continue</a>
+          <a class="button primary" href="${nextModuleFile}">${icon("next")} Continue</a>
         </section>
 
         <section class="insight-grid">
@@ -196,42 +256,48 @@
   }
 
   function renderLesson(slug) {
-    const module = data.modules.find((item) => item.slug === slug);
+    const module = modules.find((item) => item.slug === slug);
     if (!module) {
       renderHome();
       return;
     }
 
     const current = lessonProgress(module.slug);
-    const prev = data.modules[module.id - 2];
-    const next = data.modules[module.id];
+    const currentIndex = modules.findIndex((item) => item.slug === slug);
+    const prev = modules[currentIndex - 1];
+    const next = modules[currentIndex + 1];
     const hasEmbeddedMedia = Boolean(module.video || module.embedUrl);
-    const resourceItems = module.resources.map(([label, url]) => `
-      <li><a href="${url}" target="_blank" rel="noreferrer"><span>${escapeHtml(label)}</span>${icon("link")}</a></li>
+    const resourceItems = (Array.isArray(module.resources) ? module.resources : []).map(([label, url]) => `
+      <li><a href="${safeUrl(url, { allowRelative: false })}" target="_blank" rel="noreferrer"><span>${escapeHtml(label)}</span>${icon("link")}</a></li>
     `).join("");
-    const doItems = module.do.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-    const drillItems = module.drill.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-    const promptItems = module.logPrompts.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const doItems = (Array.isArray(module.do) ? module.do : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const drillItems = (Array.isArray(module.drill) ? module.drill : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const promptItems = (Array.isArray(module.logPrompts) ? module.logPrompts : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
     const preWatch = module.preWatch ? `
       <div class="panel intro-panel">
         <h2>Before You Start</h2>
         <p>${escapeHtml(module.preWatch)}</p>
       </div>
     ` : "";
-    const media = module.video ? `
+    const videoEmbed = safeYoutubeEmbed(module.video);
+    const embedUrl = safeUrl(module.embedUrl, {
+      allowRelative: false,
+      allowedOrigins: ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"]
+    });
+    const media = videoEmbed ? `
       <div class="media-box">
-        <iframe title="${escapeHtml(module.title)} video" src="https://www.youtube-nocookie.com/embed/${module.video}" allowfullscreen></iframe>
+        <iframe title="${escapeHtml(module.title)} video" src="${videoEmbed}" allowfullscreen></iframe>
       </div>
-    ` : module.embedUrl ? `
+    ` : embedUrl !== "#" ? `
       <div class="media-box media-box-tall">
-        <iframe title="${escapeHtml(module.embedTitle || module.title)}" src="${module.embedUrl}" allowfullscreen></iframe>
+        <iframe title="${escapeHtml(module.embedTitle || module.title)}" src="${embedUrl}" allowfullscreen></iframe>
       </div>
     ` : "";
     const activity = !media && module.activityUrl ? `
       <div class="panel activity-panel">
         <h2>Activity</h2>
         <p>${escapeHtml(module.activityNote || "Open the activity in a new tab, complete the assigned run, then return here to log what happened.")}</p>
-        <a class="button primary" href="${module.activityUrl}" target="_blank" rel="noreferrer">${icon("next")} ${escapeHtml(module.activityLabel || "Open activity")}</a>
+        <a class="button primary" href="${safeUrl(module.activityUrl, { allowRelative: false })}" target="_blank" rel="noreferrer">${icon("next")} ${escapeHtml(module.activityLabel || "Open activity")}</a>
       </div>
     ` : "";
     const sourcePanel = hasEmbeddedMedia ? `
@@ -250,7 +316,7 @@
       <main class="lesson-shell">
         <section class="lesson-header">
           <div class="lesson-title">
-            <p class="lesson-number">Module ${String(module.id).padStart(2, "0")} / ${data.modules.length}</p>
+            <p class="lesson-number">Module ${String(module.id).padStart(2, "0")} / ${modules.length}</p>
             <h1>${escapeHtml(module.title)}</h1>
             <p class="muted">${escapeHtml(module.objective)}</p>
             <div class="pill-row">
@@ -260,8 +326,8 @@
             </div>
           </div>
           <nav class="lesson-nav" aria-label="Lesson navigation">
-            ${prev ? `<a class="button" href="${prev.file}">${icon("prev")} Previous</a>` : `<a class="button" href="index.html">${icon("home")} Overview</a>`}
-            ${next ? `<a class="button primary" href="${next.file}">${icon("next")} Next</a>` : `<a class="button primary" href="index.html">${icon("check")} Finish</a>`}
+            ${prev ? `<a class="button" href="${safeUrl(prev.file)}">${icon("prev")} Previous</a>` : `<a class="button" href="index.html">${icon("home")} Overview</a>`}
+            ${next ? `<a class="button primary" href="${safeUrl(next.file)}">${icon("next")} Next</a>` : `<a class="button primary" href="index.html">${icon("check")} Finish</a>`}
           </nav>
         </section>
 
@@ -332,12 +398,18 @@
   function bindLessonLog(slug) {
     const fields = ["started", "complete", "date", "rating", "notes"];
     const save = () => {
+      const startedEl = document.getElementById("started");
+      const completeEl = document.getElementById("complete");
+      const dateEl = document.getElementById("date");
+      const ratingEl = document.getElementById("rating");
+      const notesEl = document.getElementById("notes");
+
       updateLesson(slug, {
-        started: document.getElementById("started").checked,
-        complete: document.getElementById("complete").checked,
-        date: document.getElementById("date").value,
-        rating: document.getElementById("rating").value,
-        notes: document.getElementById("notes").value
+        started: startedEl ? startedEl.checked : false,
+        complete: completeEl ? completeEl.checked : false,
+        date: dateEl ? dateEl.value : "",
+        rating: ratingEl ? ratingEl.value : "",
+        notes: notesEl ? notesEl.value : ""
       });
       const state = document.getElementById("save-state");
       if (state) state.textContent = "Saved " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + ".";

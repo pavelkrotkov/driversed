@@ -116,6 +116,7 @@ button.ghost {
   min-height: 520px;
   display: grid;
   align-items: end;
+  background-color: var(--ink);
   background:
     linear-gradient(90deg, rgba(23, 33, 29, 0.78), rgba(23, 33, 29, 0.46) 43%, rgba(23, 33, 29, 0.12)),
     url("assets/hazard-perception-road.png") center / cover no-repeat;
