@@ -159,7 +159,7 @@ test("normalizeProgress keeps only known module entries and expected fields", ()
 
 test("Risk-ATTEND modules open externally instead of embedding Toyota app", () => {
   const curriculum = loadCurriculum();
-  const riskAttendModules = curriculum.modules.filter((module) => module.slug.startsWith("0") && module.slug.includes("risk-attend"));
+  const riskAttendModules = curriculum.modules.filter((module) => module.slug.includes("risk-attend"));
 
   assert.equal(riskAttendModules.length, 2);
   for (const module of riskAttendModules) {
@@ -173,5 +173,5 @@ test("Risk-ATTEND modules open externally instead of embedding Toyota app", () =
 test("curriculum copy addresses the student directly", () => {
   const curriculum = loadCurriculum();
 
-  assert.equal(/\b[Ss]he\b|\b[Hh]er\b/.test(JSON.stringify(curriculum)), false);
+  assert.equal(/\b[Ss]he\b|\b[Hh]ers?\b|\b[Hh]erself\b/.test(JSON.stringify(curriculum)), false);
 });
