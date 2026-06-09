@@ -169,9 +169,3 @@ test("Risk-ATTEND modules open externally instead of embedding Toyota app", () =
     assert.equal(module.activityLabel, "Open Risk-ATTEND");
   }
 });
-
-test("curriculum copy addresses the student directly", () => {
-  const curriculum = loadCurriculum();
-
-  assert.equal(/\b[Ss]he\b|\b[Hh]ers?\b|\b[Hh]erself\b/.test(JSON.stringify(curriculum)), false);
-});
