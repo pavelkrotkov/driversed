@@ -45,6 +45,12 @@
     return modules.length > 0 ? Math.round((completedCount() / modules.length) * 100) : 0;
   }
 
+  function clampPercent(value) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return 0;
+    return Math.min(100, Math.max(0, number));
+  }
+
   function escapeHtml(value) {
     return String(value || "")
       .replaceAll("&", "&amp;")
@@ -55,15 +61,23 @@
   }
 
   function safeUrl(value, options = {}) {
-    const { allowRelative = true, allowedOrigins = null } = options;
+    const { allowRelative = true, allowExternal = true, allowedOrigins = null } = options;
+    const raw = String(value || "").trim();
+    if (!raw) return "#";
+
     try {
-      const url = new URL(String(value || ""), window.location.href);
-      const isRelative = !/^[a-z][a-z\d+.-]*:/i.test(String(value || ""));
+      const url = new URL(raw, window.location.href);
+      const isProtocolRelative = raw.startsWith("//");
+      const isRelative = !/^[a-z][a-z\d+.-]*:/i.test(raw) && !isProtocolRelative;
       const hasSafeProtocol = url.protocol === "https:" || url.protocol === "http:";
       const hasAllowedOrigin = !allowedOrigins || allowedOrigins.includes(url.origin);
 
-      if ((isRelative && allowRelative) || (hasSafeProtocol && hasAllowedOrigin)) {
-        return escapeHtml(isRelative ? url.pathname.split("/").pop() || "#" : url.href);
+      if (isRelative && allowRelative) {
+        return escapeHtml(url.href);
+      }
+
+      if (!isRelative && allowExternal && hasSafeProtocol && hasAllowedOrigin) {
+        return escapeHtml(url.href);
       }
     } catch (error) {
       return "#";
@@ -156,6 +170,11 @@
     importFile?.addEventListener("change", async () => {
       const file = importFile.files?.[0];
       if (!file) return;
+      if (file.size > 1048576) {
+        window.alert("File too large. Maximum size is 1MB.");
+        importFile.value = "";
+        return;
+      }
       try {
         const text = await file.text();
         const parsed = JSON.parse(text);
@@ -175,13 +194,16 @@
   function renderHome() {
     const done = completedCount();
     const percent = percentComplete();
+    const progressPercent = clampPercent(percent);
     const progress = loadProgress();
-    const nextModule = modules.find((module) => !progress[module.slug]?.complete) || modules[modules.length - 1];
+    const pendingModule = modules.find((module) => !progress[module.slug]?.complete);
+    const fallbackModule = modules.length > 0 ? modules[modules.length - 1] : null;
+    const nextModule = pendingModule || fallbackModule;
 
     const cards = modules.map((module) => {
       const item = progress[module.slug] || {};
       return `
-        <a class="module-card" href="${safeUrl(module.file)}">
+        <a class="module-card" href="${safeUrl(module.file, { allowExternal: false })}">
           <div class="module-meta">
             <span class="pill green">${String(module.id).padStart(2, "0")}</span>
             <span class="pill blue">${escapeHtml(module.phase)}</span>
@@ -200,7 +222,7 @@
 
     const critique = (Array.isArray(data.critique) ? data.critique : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
     const nextModuleTitle = nextModule ? nextModule.title : "No modules configured";
-    const nextModuleFile = nextModule ? safeUrl(nextModule.file) : "#";
+    const nextModuleFile = nextModule ? safeUrl(nextModule.file, { allowExternal: false }) : "#";
 
     app.innerHTML = shell(`
       <section class="hero">
@@ -210,7 +232,7 @@
           <p class="hero-copy">A 28-step training path that builds from hidden-risk anticipation to real-road scanning, behavior prediction, simulator practice, and DVSA-style timed hazard practice.</p>
           <div class="hero-grid">
             <div class="stat"><strong>${done}/${modules.length}</strong><span>modules complete</span></div>
-            <div class="stat"><strong>${percent}%</strong><span>logged progress</span></div>
+            <div class="stat"><strong>${progressPercent}%</strong><span>logged progress</span></div>
             <div class="stat"><strong>${sources.length}</strong><span>source groups reviewed</span></div>
             <div class="stat"><strong>0</strong><span>generic driver-ed pages</span></div>
           </div>
@@ -220,7 +242,7 @@
         <section class="progress-band">
           <div>
             <strong>Next up: ${escapeHtml(nextModuleTitle)}</strong>
-            <div class="progress-meter" aria-label="${percent}% complete"><div class="progress-fill" style="width:${percent}%"></div></div>
+            <div class="progress-meter" aria-label="${progressPercent}% complete"><div class="progress-fill" style="width:${progressPercent}%"></div></div>
           </div>
           <a class="button primary" href="${nextModuleFile}">${icon("next")} Continue</a>
         </section>
@@ -326,8 +348,8 @@
             </div>
           </div>
           <nav class="lesson-nav" aria-label="Lesson navigation">
-            ${prev ? `<a class="button" href="${safeUrl(prev.file)}">${icon("prev")} Previous</a>` : `<a class="button" href="index.html">${icon("home")} Overview</a>`}
-            ${next ? `<a class="button primary" href="${safeUrl(next.file)}">${icon("next")} Next</a>` : `<a class="button primary" href="index.html">${icon("check")} Finish</a>`}
+            ${prev ? `<a class="button" href="${safeUrl(prev.file, { allowExternal: false })}">${icon("prev")} Previous</a>` : `<a class="button" href="index.html">${icon("home")} Overview</a>`}
+            ${next ? `<a class="button primary" href="${safeUrl(next.file, { allowExternal: false })}">${icon("next")} Next</a>` : `<a class="button primary" href="index.html">${icon("check")} Finish</a>`}
           </nav>
         </section>
 
@@ -377,7 +399,7 @@
               <label for="rating">Confidence</label>
               <select id="rating">
                 ${["", "Needs more coaching", "Emerging", "Solid with prompts", "Independent"].map((value) => `
-                  <option value="${escapeHtml(value)}" ${current.rating === value ? "selected" : ""}>${value || "Select"}</option>
+                  <option value="${escapeHtml(value)}" ${current.rating === value ? "selected" : ""}>${escapeHtml(value || "Select")}</option>
                 `).join("")}
               </select>
             </div>
