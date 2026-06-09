@@ -48,7 +48,7 @@ function loadApp(options = {}) {
       }
     },
     localStorage: null,
-    setTimeout,
+    setTimeout: options.setTimeout || setTimeout,
     window: {
       HPT_CURRICULUM: {
         modules,
@@ -71,13 +71,13 @@ function loadApp(options = {}) {
           storage[key] = value;
         }
       },
-      setTimeout
+      setTimeout: options.setTimeout || setTimeout
     }
   };
   context.localStorage = context.window.localStorage;
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context, { filename: "app.js" });
-  return Object.assign({ appHtml: app.innerHTML }, context.window.HPT_TESTS);
+  return Object.assign({ appHtml: app.innerHTML, elements, storage }, context.window.HPT_TESTS);
 }
 
 function loadCurriculum() {
@@ -226,4 +226,39 @@ test("renderLesson renders primary and companion YouTube embeds", () => {
   assert.match(appHtml, /youtube-nocookie\.com\/embed\/91fc2N1-5sw/);
   assert.match(appHtml, /Commentary &amp; method \(Smart Drive Test\)/);
   assert.match(appHtml, /Active prompt:/);
+});
+
+test("renderLesson auto-marks the lesson as started once the dwell timer fires", () => {
+  const timers = [];
+  const { elements, storage } = loadApp({
+    pageSlug: "lesson-one",
+    setTimeout: (fn) => timers.push(fn),
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        sourceFit: "Fits here.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  assert.equal(storage["hpt-progress-v1"], undefined);
+
+  timers.forEach((fn) => fn());
+
+  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["lesson-one"].started, true);
+  assert.equal(elements.get("started").checked, true);
+  assert.match(elements.get("date").value, /^\d{4}-\d{2}-\d{2}$/);
 });

@@ -1,5 +1,6 @@
 (function () {
   const storageKey = "hpt-progress-v1";
+  const STARTED_DWELL_MS = 8000;
   const EMBED_ORIGINS = ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"];
   const data = window.HPT_CURRICULUM || {};
   const modules = Array.isArray(data.modules) ? data.modules : [];
@@ -484,6 +485,23 @@
         field.addEventListener("change", save);
       }
     });
+
+    // Automatically mark the lesson as started once the learner has stayed on
+    // the page past the dwell threshold, unless they already marked it.
+    if (!lessonProgress(slug).started) {
+      window.setTimeout(() => {
+        const startedEl = document.getElementById("started");
+        if (!startedEl || startedEl.checked) return;
+        const dateEl = document.getElementById("date");
+        if (dateEl && !dateEl.value) {
+          dateEl.value = new Date().toISOString().slice(0, 10);
+        }
+        startedEl.checked = true;
+        save();
+        const state = document.getElementById("save-state");
+        if (state) state.textContent = "Marked as started automatically.";
+      }, STARTED_DWELL_MS);
+    }
   }
 
   if (pageSlug) {
