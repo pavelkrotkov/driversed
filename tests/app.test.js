@@ -56,7 +56,7 @@ function loadApp(options = {}) {
         title: "Test Curriculum"
       },
       HPT_EXPOSE_TESTS: true,
-      LESSON_SLUG: null,
+      LESSON_SLUG: options.pageSlug || null,
       alert() {},
       clearTimeout,
       location: {
@@ -77,7 +77,7 @@ function loadApp(options = {}) {
   context.localStorage = context.window.localStorage;
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context, { filename: "app.js" });
-  return context.window.HPT_TESTS;
+  return Object.assign({ appHtml: app.innerHTML }, context.window.HPT_TESTS);
 }
 
 function loadCurriculum() {
@@ -168,4 +168,62 @@ test("Risk-ATTEND modules open externally instead of embedding Toyota app", () =
     assert.equal(module.activityUrl, "https://amrd.toyota.com/csrc/risk/");
     assert.equal(module.activityLabel, "Open Risk-ATTEND");
   }
+});
+
+test("Smart Drive Test companions are only added to the four approved DED modules", () => {
+  const curriculum = loadCurriculum();
+  const companionModules = curriculum.modules.filter((module) => module.companionVideo);
+
+  assert.equal(curriculum.modules.length, 28);
+  assert.deepEqual(JSON.parse(JSON.stringify(companionModules.map((module) => module.id))), [3, 4, 5, 8]);
+  assert.deepEqual(JSON.parse(JSON.stringify(companionModules.map((module) => module.companionVideo.id))), [
+    "91fc2N1-5sw",
+    "TrtgVbd87SY",
+    "J_UKNOGJ2tU",
+    "v0Soc-kicOQ"
+  ]);
+
+  for (const module of companionModules) {
+    assert.match(module.companionVideo.note, /Canadian, right-side-of-road/);
+    assert.match(module.companionVideo.prompt, /Before|before/);
+    assert.match(module.preWatch, /DED/);
+    assert.match(module.preWatch, /Smart Drive Test/);
+  }
+});
+
+test("renderLesson renders primary and companion YouTube embeds", () => {
+  const { appHtml } = loadApp({
+    pageSlug: "lesson-one",
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        video: "YUTAimvbfSk",
+        companionVideo: {
+          id: "91fc2N1-5sw",
+          label: "Commentary & method (Smart Drive Test)",
+          note: "Canadian, right-side-of-road context.",
+          prompt: "Predict aloud before watching."
+        },
+        preWatch: "Before watching.",
+        sourceFit: "Fits here.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  assert.match(appHtml, /youtube-nocookie\.com\/embed\/YUTAimvbfSk/);
+  assert.match(appHtml, /youtube-nocookie\.com\/embed\/91fc2N1-5sw/);
+  assert.match(appHtml, /Commentary &amp; method \(Smart Drive Test\)/);
+  assert.match(appHtml, /Active prompt:/);
 });

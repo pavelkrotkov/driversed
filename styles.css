@@ -415,6 +415,30 @@ button.ghost {
   background: white;
 }
 
+.companion-video {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #bdd2e3;
+  border-radius: 8px;
+  background: #edf4f9;
+}
+
+.companion-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.companion-copy h2,
+.companion-copy p {
+  margin: 0;
+}
+
+.companion-copy h2 {
+  color: var(--blue);
+  font-size: 1.2rem;
+}
+
 .resource-list {
   display: grid;
   gap: 8px;
