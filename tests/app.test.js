@@ -80,6 +80,13 @@ function loadApp(options = {}) {
   return context.window.HPT_TESTS;
 }
 
+function loadCurriculum() {
+  const context = { window: {} };
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(root, "curriculum.js"), "utf8"), context, { filename: "curriculum.js" });
+  return context.window.HPT_CURRICULUM;
+}
+
 test("safeUrl rejects dangerous and non-HTTPS external URLs", () => {
   const { safeUrl } = loadApp();
 
@@ -148,4 +155,23 @@ test("normalizeProgress keeps only known module entries and expected fields", ()
       updatedAt: "now"
     }
   });
+});
+
+test("Risk-ATTEND modules open externally instead of embedding Toyota app", () => {
+  const curriculum = loadCurriculum();
+  const riskAttendModules = curriculum.modules.filter((module) => module.slug.startsWith("0") && module.slug.includes("risk-attend"));
+
+  assert.equal(riskAttendModules.length, 2);
+  for (const module of riskAttendModules) {
+    assert.equal(module.embedUrl, undefined);
+    assert.equal(module.embedTitle, undefined);
+    assert.equal(module.activityUrl, "https://amrd.toyota.com/csrc/risk/");
+    assert.equal(module.activityLabel, "Open Risk-ATTEND");
+  }
+});
+
+test("curriculum copy addresses the student directly", () => {
+  const curriculum = loadCurriculum();
+
+  assert.equal(/\b[Ss]he\b|\b[Hh]er\b/.test(JSON.stringify(curriculum)), false);
 });
