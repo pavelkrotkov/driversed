@@ -314,6 +314,8 @@
       </div>
     ` : "";
     const videoEmbed = safeYoutubeEmbed(module.video);
+    const companionVideo = module.companionVideo && typeof module.companionVideo === "object" ? module.companionVideo : null;
+    const companionEmbed = safeYoutubeEmbed(companionVideo?.id);
     const embedUrl = safeUrl(module.embedUrl, {
       allowRelative: false,
       allowedOrigins: EMBED_ORIGINS
@@ -326,6 +328,18 @@
       <div class="media-box media-box-tall">
         <iframe title="${escapeHtml(module.embedTitle || module.title)}" src="${embedUrl}" allowfullscreen></iframe>
       </div>
+    ` : "";
+    const companionMedia = companionEmbed ? `
+      <section class="companion-video" aria-label="${escapeHtml(companionVideo.label || "Companion video")}">
+        <div class="companion-copy">
+          <h2>${escapeHtml(companionVideo.label || "Companion Video")}</h2>
+          ${companionVideo.note ? `<p>${escapeHtml(companionVideo.note)}</p>` : ""}
+          ${companionVideo.prompt ? `<p><strong>Active prompt:</strong> ${escapeHtml(companionVideo.prompt)}</p>` : ""}
+        </div>
+        <div class="media-box">
+          <iframe title="${escapeHtml(companionVideo.title || companionVideo.label || "Companion video")}" src="${companionEmbed}" allowfullscreen></iframe>
+        </div>
+      </section>
     ` : "";
     const activity = !media && module.activityUrl ? `
       <div class="panel activity-panel">
@@ -369,6 +383,7 @@
           <div class="stack">
             ${preWatch}
             ${media}
+            ${companionMedia}
             ${activity}
             <div class="panel">
               <h2>Why This Goes Here</h2>

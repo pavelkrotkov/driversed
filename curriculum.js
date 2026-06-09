@@ -36,6 +36,11 @@ window.HPT_CURRICULUM = {
       note: "Student-facing U.S. driving videos; twelve hazard-perception-adjacent clips are used here."
     },
     {
+      label: "Smart Drive Test YouTube channel",
+      url: "https://www.youtube.com/@smartdrivetest",
+      note: "North American right-side-of-road commentary and method clips used as companions on four DED lessons."
+    },
+    {
       label: "Driving-Tests.org hazard perception simulator",
       url: "https://driving-tests.org/driving-simulator/",
       note: "Standalone simulator sessions with feedback/replay; not embeddable from GitHub Pages."
@@ -109,14 +114,21 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "YUTAimvbfSk",
-      preWatch: "This is the first learner-facing road video layer. Watch it as a catalog of where neighborhood trouble hides: driveways, parked cars, doors, bikes, children, curves, glare, animals, debris, and blocked sightlines.",
+      companionVideo: {
+        id: "91fc2N1-5sw",
+        title: "Talk to Yourself & Pass Your Driver's Test :: Running Commentary",
+        label: "Commentary & method (Smart Drive Test)",
+        note: "Canadian, right-side-of-road context. Use this as the course-wide commentary habit: verbalize what you see, what is hidden, and what you will do next.",
+        prompt: "Before the DED clip, predict aloud where trouble could appear; then watch the SDT clip and practice narrating hazards the way an expert thinks."
+      },
+      preWatch: "This is the first learner-facing road video layer. DED gives the U.S. residential example; Smart Drive Test adds the running-commentary method you will use for every later clip and every supervised drive. Predict aloud where neighborhood trouble could hide before watching, then narrate the hazards as they appear: driveways, parked cars, doors, bikes, children, curves, glare, animals, debris, and blocked sightlines.",
       sourceFit: "DED presents residential hazards directly to the student in a U.S. road context, so it fits immediately after Risk-ATTEND.",
       objective: "Transfer hidden-risk anticipation into ordinary neighborhood streets.",
       do: ["Watch once without pausing.", "Watch again and name each blocked sightline before the narrator explains it.", "Afterward, take a passenger-seat neighborhood ride and call only hidden-risk zones."],
       drill: ["Parked vehicle blocks curb.", "Driveway partly hidden.", "Large vehicle blocks forward view.", "Curve hides what is around it.", "Child, bike, scooter, animal, or door could enter path."],
       pass: "You identify hidden residential zones before the car reaches them.",
       logPrompts: ["Which residential hazards were easy?", "Which hidden zones still appeared late?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/hazards/residential/default.aspx"), source("YouTube video", "https://www.youtube.com/watch?v=YUTAimvbfSk")]
+      resources: [source("DED source page", "https://www.driverseddirect.com/videos/hazards/residential/default.aspx"), source("DED YouTube video", "https://www.youtube.com/watch?v=YUTAimvbfSk"), source("SDT YouTube video", "https://www.youtube.com/watch?v=91fc2N1-5sw")]
     },
     {
       id: 4,
@@ -128,14 +140,21 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "SbOWPZAbpvw",
-      preWatch: "After learning what can be hidden, add a scan pattern. This clip is about keeping the eyes moving through residential intersections and sightline problems instead of staring straight ahead.",
+      companionVideo: {
+        id: "TrtgVbd87SY",
+        title: "The Observation Technique That Guarantees You Pass First Time",
+        label: "Scanning method (Smart Drive Test)",
+        note: "Canadian, right-side-of-road context. Watch for the repeatable head-and-eye scan procedure, not just the specific road scene.",
+        prompt: "Before each DED traffic check, say left, center, right, mirror, and hidden edge aloud; then compare your pattern with the SDT method."
+      },
+      preWatch: "After learning what can be hidden, add a scan pattern. DED demonstrates residential traffic checks in context; Smart Drive Test supplies the systematic observation routine. Before watching, predict which zones the driver must clear, then narrate the scan instead of staring straight ahead.",
       sourceFit: "The video is student-facing and demonstrates scanning in residential intersections, including blocked sightlines.",
       objective: "Build a repeatable low-speed traffic-check routine.",
       do: ["Watch for where the driver looks before entering conflict zones.", "Practice the same scan as a passenger on a short residential route."],
       drill: ["Left edge.", "Right edge.", "Far ahead.", "Side street or driveway.", "Hidden spaces before moving into them."],
       pass: "You perform traffic checks before entering residential conflict points.",
       logPrompts: ["Was the scan early or last-second?", "Did you check both vehicle and pedestrian zones?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/traffic-checks-residential/"), source("YouTube video", "https://www.youtube.com/watch?v=SbOWPZAbpvw")]
+      resources: [source("DED source page", "https://www.driverseddirect.com/videos/traffic-checks-residential/"), source("DED YouTube video", "https://www.youtube.com/watch?v=SbOWPZAbpvw"), source("SDT YouTube video", "https://www.youtube.com/watch?v=TrtgVbd87SY")]
     },
     {
       id: 5,
@@ -147,14 +166,21 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "0QlcsqV0JQY",
-      preWatch: "Hazard perception is not only what you see; it is where you place the car while uncertainty exists. Watch this clip for how lane position creates margin around parked cars, curves, narrow streets, and hidden edges.",
+      companionVideo: {
+        id: "J_UKNOGJ2tU",
+        title: "How to Manage Space Around Your Vehicle to Pass a Road Test",
+        label: "Space cushion method (Smart Drive Test)",
+        note: "Canadian, right-side-of-road context. This adds the all-around space cushion and following-distance layer that the DED lane-position clip does not cover.",
+        prompt: "Before watching, predict where the car needs front, side, and rear margin; then narrate how lane position and following distance preserve escape space."
+      },
+      preWatch: "Hazard perception is not only what you see; it is where you place the car while uncertainty exists. DED shows lateral lane position around parked cars, curves, narrow streets, and hidden edges; Smart Drive Test adds the all-around space cushion and following-distance method. Predict where space can disappear before watching, then narrate how each position choice preserves margin.",
       sourceFit: "This DED lesson gives a student-facing bridge from noticing hazards to preserving side space.",
       objective: "Connect perception to lane placement and clearance.",
       do: ["Watch for how lane position changes available escape space.", "On a quiet street, discuss where the car should sit when parked vehicles or curves reduce visibility."],
       drill: ["Leave room beside parked cars.", "Do not drift toward hidden edges.", "Use lane position to buy sightline and space."],
       pass: "You can explain how lane position changes escape space and sightline.",
       logPrompts: ["Where did you choose more side space?", "Where did you crowd a hidden edge?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/lane-positioning/residential/"), source("YouTube video", "https://www.youtube.com/watch?v=0QlcsqV0JQY")]
+      resources: [source("DED source page", "https://www.driverseddirect.com/videos/lane-positioning/residential/"), source("DED YouTube video", "https://www.youtube.com/watch?v=0QlcsqV0JQY"), source("SDT YouTube video", "https://www.youtube.com/watch?v=J_UKNOGJ2tU")]
     },
     {
       id: 6,
@@ -204,14 +230,21 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "OP-qM-ZrVPQ",
-      preWatch: "Now move from quiet streets to busier intersections. The skill is the same, but the scan has to cover more actors: cross traffic, pedestrians, turners, lane changers, and people making late decisions.",
+      companionVideo: {
+        id: "v0Soc-kicOQ",
+        title: "Scanning And Moving Through Intersections Safely",
+        label: "MIT intersection method (Smart Drive Test)",
+        note: "Canadian, right-side-of-road context. Use this for the named intersection-scanning method, then apply it back to the DED major-street example.",
+        prompt: "Before the DED clip, call the cross traffic, pedestrian zones, turners, and blocked edges; then use the SDT method to narrate the intersection before entering."
+      },
+      preWatch: "Now move from quiet streets to busier intersections. DED gives the major-street example; Smart Drive Test adds a named intersection-scanning method to apply before entering the box. Predict the cross traffic, pedestrians, turners, lane changers, late decision-makers, and blocked edges before watching, then narrate them as the clip unfolds.",
       sourceFit: "DED's major-street traffic-check video keeps the lesson student-facing while increasing intersection complexity.",
       objective: "Scan wider without losing pedestrians and hidden edges.",
       do: ["Watch for how the scan expands on major streets.", "On a passenger ride, call the three road users most likely to matter next."],
       drill: ["Near crosswalk.", "Far crosswalk.", "Cross traffic.", "Turning path.", "Lane-changing vehicle.", "Blocked view near larger vehicle."],
       pass: "You scan beyond the car directly ahead and include pedestrian zones.",
       logPrompts: ["Which road user mattered most?", "Was anything ignored because it was not a car?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/traffic-checks-major-streets/"), source("YouTube video", "https://www.youtube.com/watch?v=OP-qM-ZrVPQ")]
+      resources: [source("DED source page", "https://www.driverseddirect.com/videos/traffic-checks-major-streets/"), source("DED YouTube video", "https://www.youtube.com/watch?v=OP-qM-ZrVPQ"), source("SDT YouTube video", "https://www.youtube.com/watch?v=v0Soc-kicOQ")]
     },
     {
       id: 9,
