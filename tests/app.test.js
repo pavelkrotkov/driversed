@@ -121,6 +121,72 @@ test("safeYoutubeEmbed accepts normal IDs and rejects malformed IDs", () => {
   assert.equal(safeYoutubeEmbed("x".repeat(40)), "");
 });
 
+test("html escapes interpolated values by default", () => {
+  const { html, renderHtml } = loadApp();
+
+  const output = renderHtml(html`<h1>${'<img src=x onerror="alert(1)">'}</h1>`);
+  assert.equal(output, '<h1>&lt;img src=x onerror=&quot;alert(1)&quot;&gt;</h1>');
+});
+
+test("html keeps raw() fragments unescaped and composes nested templates", () => {
+  const { html, raw, renderHtml } = loadApp();
+
+  const svg = "<svg><path/></svg>";
+  const nested = html`<span>${"<b>&"}</span>`;
+  const output = renderHtml(html`<div>${raw(svg)}${nested}</div>`);
+  assert.equal(output, "<div><svg><path/></svg><span>&lt;b&gt;&amp;</span></div>");
+});
+
+test("html renders arrays by escaping each item and dropping nullish values", () => {
+  const { html, renderHtml } = loadApp();
+
+  const items = ["a", "<b>", "c&d"].map((value) => html`<li>${value}</li>`);
+  const output = renderHtml(html`<ul>${items}</ul>${null}${false}${undefined}`);
+  assert.equal(output, "<ul><li>a</li><li>&lt;b&gt;</li><li>c&amp;d</li></ul>");
+});
+
+test("renderHome escapes module fields but keeps icon SVGs raw", () => {
+  const { appHtml } = loadApp({
+    modules: [
+      {
+        id: 1,
+        slug: "x",
+        file: "x.html",
+        phase: "Phase",
+        cost: "Free",
+        title: "<script>bad()</script>",
+        objective: "Obj & more"
+      }
+    ]
+  });
+
+  assert.match(appHtml, /&lt;script&gt;bad\(\)&lt;\/script&gt;/);
+  assert.doesNotMatch(appHtml, /<script>bad\(\)<\/script>/);
+  assert.match(appHtml, /Obj &amp; more/);
+  assert.match(appHtml, /<svg aria-hidden="true"/);
+});
+
+test("URLs flow through safeUrl and are escaped once at the template boundary", () => {
+  const { appHtml } = loadApp({
+    modules: [
+      {
+        id: 1,
+        slug: "x",
+        file: "x.html?a=1&b=2",
+        phase: "Phase",
+        cost: "Free",
+        title: "Title",
+        objective: "Objective"
+      }
+    ]
+  });
+
+  // safeUrl validates and returns the href; html`` escapes it exactly once,
+  // so the ampersand is encoded a single time (no double-escaped &amp;amp;).
+  assert.match(appHtml, /href="https:\/\/example\.test\/x\.html\?a=1&amp;b=2"/);
+  assert.doesNotMatch(appHtml, /&amp;amp;/);
+});
+
 test("clampPercent keeps progress finite and bounded", () => {
   const { clampPercent } = loadApp();
 
