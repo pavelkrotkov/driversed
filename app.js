@@ -53,6 +53,15 @@
     return Math.min(100, Math.max(0, number));
   }
 
+  function todayLocalDate() {
+    const now = new Date();
+    return [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0")
+    ].join("-");
+  }
+
   function escapeHtml(value) {
     return String(value || "")
       .replaceAll("&", "&amp;")
@@ -119,7 +128,8 @@
       escapeHtml,
       normalizeProgress,
       safeUrl,
-      safeYoutubeEmbed
+      safeYoutubeEmbed,
+      todayLocalDate
     };
   }
 
@@ -494,7 +504,7 @@
         if (!startedEl || startedEl.checked) return;
         const dateEl = document.getElementById("date");
         if (dateEl && !dateEl.value) {
-          dateEl.value = new Date().toISOString().slice(0, 10);
+          dateEl.value = todayLocalDate();
         }
         startedEl.checked = true;
         save();

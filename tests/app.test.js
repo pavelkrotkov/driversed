@@ -260,5 +260,12 @@ test("renderLesson auto-marks the lesson as started once the dwell timer fires",
   const saved = JSON.parse(storage["hpt-progress-v1"]);
   assert.equal(saved["lesson-one"].started, true);
   assert.equal(elements.get("started").checked, true);
-  assert.match(elements.get("date").value, /^\d{4}-\d{2}-\d{2}$/);
+  // Date must reflect the learner's local calendar day, not UTC.
+  const now = new Date();
+  const expectedDate = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0")
+  ].join("-");
+  assert.equal(elements.get("date").value, expectedDate);
 });
