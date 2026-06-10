@@ -497,11 +497,12 @@
     });
 
     // Automatically mark the lesson as started once the learner has stayed on
-    // the page past the dwell threshold, unless they already marked it.
-    if (!lessonProgress(slug).started) {
-      window.setTimeout(() => {
-        const startedEl = document.getElementById("started");
-        if (!startedEl || startedEl.checked) return;
+    // the page past the dwell threshold. A manual toggle of the checkbox
+    // cancels the timer so the auto-mark never overrides an explicit choice.
+    const startedEl = document.getElementById("started");
+    if (startedEl && !lessonProgress(slug).started) {
+      const dwellTimer = window.setTimeout(() => {
+        if (startedEl.checked) return;
         const dateEl = document.getElementById("date");
         if (dateEl && !dateEl.value) {
           dateEl.value = todayLocalDate();
@@ -511,6 +512,7 @@
         const state = document.getElementById("save-state");
         if (state) state.textContent = "Marked as started automatically.";
       }, STARTED_DWELL_MS);
+      startedEl.addEventListener("change", () => window.clearTimeout(dwellTimer));
     }
   }
 

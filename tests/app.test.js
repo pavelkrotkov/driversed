@@ -37,7 +37,7 @@ function loadApp(options = {}) {
   const context = {
     Blob,
     URL,
-    clearTimeout,
+    clearTimeout: options.clearTimeout || clearTimeout,
     console,
     document: {
       createElement() {
@@ -58,7 +58,7 @@ function loadApp(options = {}) {
       HPT_EXPOSE_TESTS: true,
       LESSON_SLUG: options.pageSlug || null,
       alert() {},
-      clearTimeout,
+      clearTimeout: options.clearTimeout || clearTimeout,
       location: {
         href: "https://example.test/index.html",
         reload() {}
@@ -268,4 +268,45 @@ test("renderLesson auto-marks the lesson as started once the dwell timer fires",
     String(now.getDate()).padStart(2, "0")
   ].join("-");
   assert.equal(elements.get("date").value, expectedDate);
+});
+
+test("manually toggling Started cancels the pending auto-start timer", () => {
+  const timers = new Map();
+  let nextId = 0;
+  const { elements, storage } = loadApp({
+    pageSlug: "lesson-one",
+    setTimeout: (fn) => {
+      const id = ++nextId;
+      timers.set(id, fn);
+      return id;
+    },
+    clearTimeout: (id) => timers.delete(id),
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        sourceFit: "Fits here.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  // The learner toggles the Started checkbox during the dwell window.
+  elements.get("started").listeners.change();
+
+  // Any remaining timers fire; the cancelled dwell timer must not be among them.
+  timers.forEach((fn) => fn());
+
+  assert.equal(storage["hpt-progress-v1"], undefined);
+  assert.equal(elements.get("date").value, "");
 });
