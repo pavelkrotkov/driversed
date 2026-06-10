@@ -71,6 +71,41 @@
       .replaceAll("'", "&#39;");
   }
 
+  // Escape-by-default templating. `html` is a tagged template that escapes
+  // every interpolation with escapeHtml, so a value such as module.title is
+  // safe even if it later starts carrying user-influenced text. Known-safe
+  // fragments (icon SVGs, nested html`` output) must be wrapped in raw(...) so
+  // that every unescaped HTML insertion is explicit and greppable.
+  function raw(value) {
+    return { __raw: value == null ? "" : String(value) };
+  }
+
+  function isRaw(value) {
+    return Boolean(value) && typeof value === "object" && typeof value.__raw === "string";
+  }
+
+  // Turn any interpolated value into an HTML string: raw markers (including
+  // nested html`` results) pass through untouched, arrays are flattened element
+  // by element, null/false/undefined render as empty, everything else escapes.
+  function interpolate(value) {
+    if (value == null || value === false) return "";
+    if (isRaw(value)) return value.__raw;
+    if (Array.isArray(value)) return value.map(interpolate).join("");
+    return escapeHtml(value);
+  }
+
+  function html(strings, ...values) {
+    let out = strings[0];
+    for (let i = 0; i < values.length; i += 1) {
+      out += interpolate(values[i]) + strings[i + 1];
+    }
+    return raw(out);
+  }
+
+  function mount(target, template) {
+    target.innerHTML = interpolate(template);
+  }
+
   function safeUrl(value, options = {}) {
     const { allowRelative = true, allowExternal = true, allowedOrigins = null } = options;
     const raw = String(value || "").trim();
@@ -84,12 +119,15 @@
       const hasSafeProtocol = url.protocol === "https:";
       const hasAllowedOrigin = !allowedOrigins || allowedOrigins.includes(url.origin);
 
+      // Return the validated href unescaped; the html`` template performs the
+      // attribute-context escaping when it is interpolated into markup. This
+      // keeps URLs flowing through safeUrl validation rather than raw(...).
       if (isRelative && allowRelative) {
-        return escapeHtml(url.href);
+        return url.href;
       }
 
       if (!isRelative && allowExternal && hasSafeProtocol && hasAllowedOrigin) {
-        return escapeHtml(url.href);
+        return url.href;
       }
     } catch (error) {
       return "#";
@@ -126,7 +164,10 @@
     window.HPT_TESTS = {
       clampPercent,
       escapeHtml,
+      html,
       normalizeProgress,
+      raw,
+      renderHtml: interpolate,
       safeUrl,
       safeYoutubeEmbed,
       todayLocalDate
@@ -143,16 +184,18 @@
       prev: '<path d="M19 12H5"/><path d="m11 5-7 7 7 7"/>',
       link: '<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/>'
     };
-    return `<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths[name] || ""}</svg>`;
+    // SVG markup is built from a fixed allow-list of names, so it is a known
+    // raw fragment; returning a raw marker lets it pass through html`` intact.
+    return raw(`<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths[name] || ""}</svg>`);
   }
 
   function shell(content) {
-    return `
+    return html`
       <div class="site-shell">
         <header class="topbar">
           <a class="brand" href="index.html">
             <span class="brand-mark">${icon("check")}</span>
-            <span>${escapeHtml(data.title || "Teen Hazard Perception Lab")}</span>
+            <span>${data.title || "Teen Hazard Perception Lab"}</span>
           </a>
           <div class="top-actions">
             <a class="button ghost" href="index.html">${icon("home")} Home</a>
@@ -225,29 +268,29 @@
 
     const cards = modules.map((module) => {
       const item = progress[module.slug] || {};
-      return `
+      return html`
         <a class="module-card" href="${safeUrl(module.file, { allowExternal: false })}">
           <div class="module-meta">
             <span class="pill green">${String(module.id).padStart(2, "0")}</span>
-            <span class="pill blue">${escapeHtml(module.phase)}</span>
-            <span class="pill">${escapeHtml(module.cost)}</span>
+            <span class="pill blue">${module.phase}</span>
+            <span class="pill">${module.cost}</span>
           </div>
-          <h3>${escapeHtml(module.title)}</h3>
-          <p class="muted">${escapeHtml(module.objective)}</p>
+          <h3>${module.title}</h3>
+          <p class="muted">${module.objective}</p>
           <span class="status">${item.complete ? "Complete" : item.started ? "In progress" : "Not started"}</span>
         </a>
       `;
-    }).join("");
+    });
 
-    const sourceLinks = sources.map((source) => `
-      <li><a href="${safeUrl(source.url, { allowRelative: false })}" target="_blank" rel="noreferrer">${escapeHtml(source.label)}</a>: ${escapeHtml(source.note)}</li>
-    `).join("");
+    const sourceLinks = sources.map((source) => html`
+      <li><a href="${safeUrl(source.url, { allowRelative: false })}" target="_blank" rel="noreferrer">${source.label}</a>: ${source.note}</li>
+    `);
 
-    const critique = (Array.isArray(data.critique) ? data.critique : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const critique = (Array.isArray(data.critique) ? data.critique : []).map((item) => html`<li>${item}</li>`);
     const nextModuleTitle = nextModule ? nextModule.title : "No modules configured";
     const nextModuleFile = nextModule ? safeUrl(nextModule.file, { allowExternal: false }) : "#";
 
-    app.innerHTML = shell(`
+    mount(app, shell(html`
       <section class="hero">
         <div class="hero-inner">
           <p class="eyebrow">Hazard perception only</p>
@@ -264,7 +307,7 @@
       <main class="layout">
         <section class="progress-band">
           <div>
-            <strong>Next up: ${escapeHtml(nextModuleTitle)}</strong>
+            <strong>Next up: ${nextModuleTitle}</strong>
             <div class="progress-meter" role="progressbar" aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100" aria-label="${progressPercent}% complete"><div class="progress-fill" style="width:${progressPercent}%"></div></div>
           </div>
           <a class="button primary" href="${nextModuleFile}">${icon("next")} Continue</a>
@@ -296,7 +339,7 @@
           <ul>${sourceLinks}</ul>
         </section>
       </main>
-    `);
+    `));
     bindImportExport();
   }
 
@@ -312,16 +355,16 @@
     const prev = modules[currentIndex - 1];
     const next = modules[currentIndex + 1];
     const hasEmbeddedMedia = Boolean(module.video || module.embedUrl);
-    const resourceItems = (Array.isArray(module.resources) ? module.resources : []).map(([label, url]) => `
-      <li><a href="${safeUrl(url, { allowRelative: false })}" target="_blank" rel="noreferrer"><span>${escapeHtml(label)}</span>${icon("link")}</a></li>
-    `).join("");
-    const doItems = (Array.isArray(module.do) ? module.do : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-    const drillItems = (Array.isArray(module.drill) ? module.drill : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-    const promptItems = (Array.isArray(module.logPrompts) ? module.logPrompts : []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-    const preWatch = module.preWatch ? `
+    const resourceItems = (Array.isArray(module.resources) ? module.resources : []).map(([label, url]) => html`
+      <li><a href="${safeUrl(url, { allowRelative: false })}" target="_blank" rel="noreferrer"><span>${label}</span>${icon("link")}</a></li>
+    `);
+    const doItems = (Array.isArray(module.do) ? module.do : []).map((item) => html`<li>${item}</li>`);
+    const drillItems = (Array.isArray(module.drill) ? module.drill : []).map((item) => html`<li>${item}</li>`);
+    const promptItems = (Array.isArray(module.logPrompts) ? module.logPrompts : []).map((item) => html`<li>${item}</li>`);
+    const preWatch = module.preWatch ? html`
       <div class="panel intro-panel">
         <h2>Before You Start</h2>
-        <p>${escapeHtml(module.preWatch)}</p>
+        <p>${module.preWatch}</p>
       </div>
     ` : "";
     const videoEmbed = safeYoutubeEmbed(module.video);
@@ -331,62 +374,62 @@
       allowRelative: false,
       allowedOrigins: EMBED_ORIGINS
     });
-    const media = videoEmbed ? `
+    const media = videoEmbed ? html`
       <div class="media-box">
-        <iframe title="${escapeHtml(module.title)} video" src="${videoEmbed}" allowfullscreen></iframe>
+        <iframe title="${module.title} video" src="${videoEmbed}" allowfullscreen></iframe>
       </div>
-    ` : embedUrl !== "#" ? `
+    ` : embedUrl !== "#" ? html`
       <div class="media-box media-box-tall">
-        <iframe title="${escapeHtml(module.embedTitle || module.title)}" src="${embedUrl}" allowfullscreen></iframe>
+        <iframe title="${module.embedTitle || module.title}" src="${embedUrl}" allowfullscreen></iframe>
       </div>
     ` : "";
-    const companionMedia = companionEmbed ? `
-      <section class="companion-video" aria-label="${escapeHtml(companionVideo.label || "Companion video")}">
+    const companionMedia = companionEmbed ? html`
+      <section class="companion-video" aria-label="${companionVideo.label || "Companion video"}">
         <div class="companion-copy">
-          <h2>${escapeHtml(companionVideo.label || "Companion Video")}</h2>
-          ${companionVideo.note ? `<p>${escapeHtml(companionVideo.note)}</p>` : ""}
-          ${companionVideo.prompt ? `<p><strong>Active prompt:</strong> ${escapeHtml(companionVideo.prompt)}</p>` : ""}
+          <h2>${companionVideo.label || "Companion Video"}</h2>
+          ${companionVideo.note ? html`<p>${companionVideo.note}</p>` : ""}
+          ${companionVideo.prompt ? html`<p><strong>Active prompt:</strong> ${companionVideo.prompt}</p>` : ""}
         </div>
         <div class="media-box">
-          <iframe title="${escapeHtml(companionVideo.title || companionVideo.label || "Companion video")}" src="${companionEmbed}" allowfullscreen></iframe>
+          <iframe title="${companionVideo.title || companionVideo.label || "Companion video"}" src="${companionEmbed}" allowfullscreen></iframe>
         </div>
       </section>
     ` : "";
-    const activity = !media && module.activityUrl ? `
+    const activity = !media && module.activityUrl ? html`
       <div class="panel activity-panel">
         <h2>Activity</h2>
-        <p>${escapeHtml(module.activityNote || "Open the activity in a new tab, complete the assigned run, then return here to log what happened.")}</p>
-        <a class="button primary" href="${safeUrl(module.activityUrl, { allowRelative: false })}" target="_blank" rel="noreferrer">${icon("next")} ${escapeHtml(module.activityLabel || "Open activity")}</a>
+        <p>${module.activityNote || "Open the activity in a new tab, complete the assigned run, then return here to log what happened."}</p>
+        <a class="button primary" href="${safeUrl(module.activityUrl, { allowRelative: false })}" target="_blank" rel="noreferrer">${icon("next")} ${module.activityLabel || "Open activity"}</a>
       </div>
     ` : "";
-    const sourcePanel = hasEmbeddedMedia ? `
+    const sourcePanel = hasEmbeddedMedia ? html`
       <details class="source-details">
         <summary>Source links</summary>
         <ul class="resource-list quiet">${resourceItems}</ul>
       </details>
-    ` : `
+    ` : html`
       <div class="panel">
         <h2>Resources</h2>
         <ul class="resource-list">${resourceItems}</ul>
       </div>
     `;
 
-    app.innerHTML = shell(`
+    mount(app, shell(html`
       <main class="lesson-shell">
         <section class="lesson-header">
           <div class="lesson-title">
             <p class="lesson-number">Module ${String(module.id).padStart(2, "0")} / ${modules.length}</p>
-            <h1>${escapeHtml(module.title)}</h1>
-            <p class="muted">${escapeHtml(module.objective)}</p>
+            <h1>${module.title}</h1>
+            <p class="muted">${module.objective}</p>
             <div class="pill-row">
-              <span class="pill green">${escapeHtml(module.phase)}</span>
-              <span class="pill blue">${escapeHtml(module.cost)}</span>
-              <span class="pill rust">${escapeHtml(module.time)}</span>
+              <span class="pill green">${module.phase}</span>
+              <span class="pill blue">${module.cost}</span>
+              <span class="pill rust">${module.time}</span>
             </div>
           </div>
           <nav class="lesson-nav" aria-label="Lesson navigation">
-            ${prev ? `<a class="button" href="${safeUrl(prev.file, { allowExternal: false })}">${icon("prev")} Previous</a>` : `<a class="button" href="index.html">${icon("home")} Overview</a>`}
-            ${next ? `<a class="button primary" href="${safeUrl(next.file, { allowExternal: false })}">${icon("next")} Next</a>` : `<a class="button primary" href="index.html">${icon("check")} Finish</a>`}
+            ${prev ? html`<a class="button" href="${safeUrl(prev.file, { allowExternal: false })}">${icon("prev")} Previous</a>` : html`<a class="button" href="index.html">${icon("home")} Overview</a>`}
+            ${next ? html`<a class="button primary" href="${safeUrl(next.file, { allowExternal: false })}">${icon("next")} Next</a>` : html`<a class="button primary" href="index.html">${icon("check")} Finish</a>`}
           </nav>
         </section>
 
@@ -398,7 +441,7 @@
             ${activity}
             <div class="panel">
               <h2>Why This Goes Here</h2>
-              <p>${escapeHtml(module.sourceFit)}</p>
+              <p>${module.sourceFit}</p>
             </div>
             <div class="panel">
               <h2>Do</h2>
@@ -410,7 +453,7 @@
             </div>
             <div class="callout">
               <strong>Pass criterion</strong>
-              <p>${escapeHtml(module.pass)}</p>
+              <p>${module.pass}</p>
             </div>
             <div class="panel">
               <h2>Log Prompts</h2>
@@ -422,34 +465,34 @@
           <aside class="panel log-panel" aria-label="Progress log">
             <h2>Progress Log</h2>
             <label class="check-row">
-              <input id="started" type="checkbox" ${current.started ? "checked" : ""}>
+              <input id="started" type="checkbox" ${current.started ? raw("checked") : ""}>
               <span>Started</span>
             </label>
             <label class="check-row">
-              <input id="complete" type="checkbox" ${current.complete ? "checked" : ""}>
+              <input id="complete" type="checkbox" ${current.complete ? raw("checked") : ""}>
               <span>Pass criterion met</span>
             </label>
             <div class="field">
               <label for="date">Session date</label>
-              <input id="date" type="date" value="${escapeHtml(current.date || "")}">
+              <input id="date" type="date" value="${current.date || ""}">
             </div>
             <div class="field">
               <label for="rating">Confidence</label>
               <select id="rating">
-                ${["", "Needs more coaching", "Emerging", "Solid with prompts", "Independent"].map((value) => `
-                  <option value="${escapeHtml(value)}" ${current.rating === value ? "selected" : ""}>${escapeHtml(value || "Select")}</option>
-                `).join("")}
+                ${["", "Needs more coaching", "Emerging", "Solid with prompts", "Independent"].map((value) => html`
+                  <option value="${value}" ${current.rating === value ? raw("selected") : ""}>${value || "Select"}</option>
+                `)}
               </select>
             </div>
             <div class="field">
               <label for="notes">Notes</label>
-              <textarea id="notes" placeholder="Specific hidden actor, cue, error type, or next drill...">${escapeHtml(current.notes || "")}</textarea>
+              <textarea id="notes" placeholder="Specific hidden actor, cue, error type, or next drill...">${current.notes || ""}</textarea>
             </div>
             <p class="small muted" id="save-state">Saved locally in this browser.</p>
           </aside>
         </section>
       </main>
-    `);
+    `));
 
     bindImportExport();
     bindLessonLog(module.slug);
