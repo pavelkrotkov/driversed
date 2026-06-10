@@ -24,7 +24,10 @@ function loadApp(options = {}) {
         type: "",
         value: "",
         addEventListener(event, handler) {
-          this.listeners[event] = handler;
+          (this.listeners[event] || (this.listeners[event] = [])).push(handler);
+        },
+        dispatch(event) {
+          (this.listeners[event] || []).forEach((handler) => handler());
         },
         click() {}
       });
@@ -301,12 +304,21 @@ test("manually toggling Started cancels the pending auto-start timer", () => {
     ]
   });
 
-  // The learner toggles the Started checkbox during the dwell window.
-  elements.get("started").listeners.change();
+  // The learner checks Started, then changes their mind and unchecks it,
+  // both within the dwell window. Each toggle runs every "change" handler.
+  const startedEl = elements.get("started");
+  startedEl.checked = true;
+  startedEl.dispatch("change");
+  startedEl.checked = false;
+  startedEl.dispatch("change");
 
-  // Any remaining timers fire; the cancelled dwell timer must not be among them.
+  // The first manual toggle must have cleared the pending dwell timer.
+  assert.equal(timers.size, 0);
+
+  // Firing any remaining timers must not override the learner's choice.
   timers.forEach((fn) => fn());
 
-  assert.equal(storage["hpt-progress-v1"], undefined);
+  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["lesson-one"].started, false);
   assert.equal(elements.get("date").value, "");
 });
