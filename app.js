@@ -1,5 +1,6 @@
 (function () {
   const storageKey = "hpt-progress-v1";
+  const STARTED_DWELL_MS = 8000;
   const EMBED_ORIGINS = ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"];
   const data = window.HPT_CURRICULUM || {};
   const modules = Array.isArray(data.modules) ? data.modules : [];
@@ -50,6 +51,15 @@
     const number = Number(value);
     if (!Number.isFinite(number)) return 0;
     return Math.min(100, Math.max(0, number));
+  }
+
+  function todayLocalDate() {
+    const now = new Date();
+    return [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0")
+    ].join("-");
   }
 
   function escapeHtml(value) {
@@ -118,7 +128,8 @@
       escapeHtml,
       normalizeProgress,
       safeUrl,
-      safeYoutubeEmbed
+      safeYoutubeEmbed,
+      todayLocalDate
     };
   }
 
@@ -484,6 +495,25 @@
         field.addEventListener("change", save);
       }
     });
+
+    // Automatically mark the lesson as started once the learner has stayed on
+    // the page past the dwell threshold. A manual toggle of the checkbox
+    // cancels the timer so the auto-mark never overrides an explicit choice.
+    const startedEl = document.getElementById("started");
+    if (startedEl && !lessonProgress(slug).started) {
+      const dwellTimer = window.setTimeout(() => {
+        if (startedEl.checked) return;
+        const dateEl = document.getElementById("date");
+        if (dateEl && !dateEl.value) {
+          dateEl.value = todayLocalDate();
+        }
+        startedEl.checked = true;
+        save();
+        const state = document.getElementById("save-state");
+        if (state) state.textContent = "Marked as started automatically.";
+      }, STARTED_DWELL_MS);
+      startedEl.addEventListener("change", () => window.clearTimeout(dwellTimer));
+    }
   }
 
   if (pageSlug) {

@@ -24,7 +24,10 @@ function loadApp(options = {}) {
         type: "",
         value: "",
         addEventListener(event, handler) {
-          this.listeners[event] = handler;
+          (this.listeners[event] || (this.listeners[event] = [])).push(handler);
+        },
+        dispatch(event) {
+          (this.listeners[event] || []).forEach((handler) => handler());
         },
         click() {}
       });
@@ -37,7 +40,7 @@ function loadApp(options = {}) {
   const context = {
     Blob,
     URL,
-    clearTimeout,
+    clearTimeout: options.clearTimeout || clearTimeout,
     console,
     document: {
       createElement() {
@@ -48,7 +51,7 @@ function loadApp(options = {}) {
       }
     },
     localStorage: null,
-    setTimeout,
+    setTimeout: options.setTimeout || setTimeout,
     window: {
       HPT_CURRICULUM: {
         modules,
@@ -58,7 +61,7 @@ function loadApp(options = {}) {
       HPT_EXPOSE_TESTS: true,
       LESSON_SLUG: options.pageSlug || null,
       alert() {},
-      clearTimeout,
+      clearTimeout: options.clearTimeout || clearTimeout,
       location: {
         href: "https://example.test/index.html",
         reload() {}
@@ -71,13 +74,13 @@ function loadApp(options = {}) {
           storage[key] = value;
         }
       },
-      setTimeout
+      setTimeout: options.setTimeout || setTimeout
     }
   };
   context.localStorage = context.window.localStorage;
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context, { filename: "app.js" });
-  return Object.assign({ appHtml: app.innerHTML }, context.window.HPT_TESTS);
+  return Object.assign({ appHtml: app.innerHTML, elements, storage }, context.window.HPT_TESTS);
 }
 
 function loadCurriculum() {
@@ -226,4 +229,96 @@ test("renderLesson renders primary and companion YouTube embeds", () => {
   assert.match(appHtml, /youtube-nocookie\.com\/embed\/91fc2N1-5sw/);
   assert.match(appHtml, /Commentary &amp; method \(Smart Drive Test\)/);
   assert.match(appHtml, /Active prompt:/);
+});
+
+test("renderLesson auto-marks the lesson as started once the dwell timer fires", () => {
+  const timers = [];
+  const { elements, storage } = loadApp({
+    pageSlug: "lesson-one",
+    setTimeout: (fn) => timers.push(fn),
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        sourceFit: "Fits here.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  assert.equal(storage["hpt-progress-v1"], undefined);
+
+  timers.forEach((fn) => fn());
+
+  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["lesson-one"].started, true);
+  assert.equal(elements.get("started").checked, true);
+  // Date must reflect the learner's local calendar day, not UTC.
+  const now = new Date();
+  const expectedDate = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0")
+  ].join("-");
+  assert.equal(elements.get("date").value, expectedDate);
+});
+
+test("manually toggling Started cancels the pending auto-start timer", () => {
+  const timers = new Map();
+  let nextId = 0;
+  const { elements, storage } = loadApp({
+    pageSlug: "lesson-one",
+    setTimeout: (fn) => {
+      const id = ++nextId;
+      timers.set(id, fn);
+      return id;
+    },
+    clearTimeout: (id) => timers.delete(id),
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        sourceFit: "Fits here.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  // The learner checks Started, then changes their mind and unchecks it,
+  // both within the dwell window. Each toggle runs every "change" handler.
+  const startedEl = elements.get("started");
+  startedEl.checked = true;
+  startedEl.dispatch("change");
+  startedEl.checked = false;
+  startedEl.dispatch("change");
+
+  // The first manual toggle must have cleared the pending dwell timer.
+  assert.equal(timers.size, 0);
+
+  // Firing any remaining timers must not override the learner's choice.
+  timers.forEach((fn) => fn());
+
+  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["lesson-one"].started, false);
+  assert.equal(elements.get("date").value, "");
 });
