@@ -243,7 +243,7 @@ test("Smart Drive Test companions are only added to the four approved DED module
   const curriculum = loadCurriculum();
   const companionModules = curriculum.modules.filter((module) => module.companionVideo);
 
-  assert.equal(curriculum.modules.length, 28);
+  assert.equal(curriculum.modules.length, 32);
   assert.deepEqual(JSON.parse(JSON.stringify(companionModules.map((module) => module.id))), [4, 5, 7, 9]);
   assert.deepEqual(JSON.parse(JSON.stringify(companionModules.map((module) => module.companionVideo.id))), [
     "91fc2N1-5sw",
