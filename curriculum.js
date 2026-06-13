@@ -380,6 +380,63 @@ window.HPT_CURRICULUM = {
       logPrompts: ["Which vehicle controlled the decision?", "Was there enough time and space to abort?"],
       resources: [source("DED source page", "https://www.driverseddirect.com/videos/lane-changes/freeway/"), source("YouTube video", "https://www.youtube.com/watch?v=eLWOkdwkhps")]
     },
+    {
+      id: 16,
+      slug: "16-ded-freeway-canyon-right-of-way",
+      file: "16-ded-freeway-canyon-right-of-way.html",
+      title: "DED: Freeway & Canyon Right-of-Way",
+      phase: "Highway & Canyon",
+      material: "Drivers Ed Direct / Right-of-Way on Freeways & Canyons (ROW Part 3)",
+      cost: "Free",
+      time: "10-15 min",
+      video: "oizQKbE-OLs",
+      preWatch: "High speed and limited sightlines turn right-of-way into a timing-and-space problem. On the freeway, the merge gap is the hazard: it can close while you commit. On a canyon road, the bend is the hazard: the important part is past the curve. Watch how early the driver reads the gap, matches speed, and prepares for what the road geometry hides.",
+      sourceFit: "Completes the DED right-of-way series (Parts 1 and 2 are already used) and extends hazard perception to freeway-speed merging and limited-sightline rural/canyon roads, which the course did not cover.",
+      objective: "Read high-speed merge gaps and canyon sightlines before committing.",
+      do: ["Watch once for freeway merging and being passed.", "Watch again for the canyon rules: uphill priority on narrow roads, and pulling into a turnout when a queue forms behind a slow vehicle."],
+      drill: ["Merge gap that closes.", "Vehicle passing you.", "Blind canyon bend.", "Oncoming car on a narrow uphill/downhill.", "Slow vehicle with a queue and a turnout ahead."],
+      pass: "You commit to a merge or a canyon pass only after the gap and the hidden road geometry are accounted for.",
+      logPrompts: ["Did you read the merge gap early or late?", "What did the canyon geometry hide that you planned for?"],
+      resources: [source("DED source page", "https://www.driverseddirect.com/videos/Right-of-Way/Freeways-Canyons/"), source("YouTube video", "https://www.youtube.com/watch?v=oizQKbE-OLs")]
+    },
+    {
+      id: 17,
+      slug: "17-large-vehicles-no-zone",
+      file: "17-large-vehicles-no-zone.html",
+      title: "Sharing the Road With Large Vehicles (No-Zone)",
+      phase: "Large-Vehicle Blind Zones",
+      material: "Smart Drive Test blind-spot demo + FMCSA No-Zone guidance",
+      cost: "Free",
+      time: "10-15 min",
+      video: "Cw32CWOVL7c",
+      preWatch: "A truck's blind spots ('No-Zones') are occlusion you create for someone else. The rule of thumb: if you cannot see the driver's face in their mirror, they cannot see you. Large vehicles also need up to two football fields to stop and swing wide on turns. Watch for where your car disappears, and how much earlier and wider you have to plan around a big vehicle.",
+      sourceFit: "The course repeatedly mentions large vehicles blocking sightlines but had no dedicated lesson. SDT gives a watchable blind-spot demonstration; FMCSA's official No-Zone material is the authoritative US reference.",
+      objective: "Predict and stay out of large-vehicle blind zones, and give them stopping and turning room.",
+      do: ["Watch for the four No-Zones: front, rear, and both sides.", "Use the mirror test: can you see the driver's face?", "On a passenger ride, call when the car is sitting in a truck's blind zone."],
+      drill: ["Front No-Zone when merging in.", "Rear No-Zone when following.", "Wide right turn.", "Long stopping distance.", "Spray/wind buffeting beside a trailer."],
+      pass: "You can name where a truck cannot see you and leave extra stopping and turning space.",
+      logPrompts: ["Where did you linger in a blind zone?", "Did you give enough stopping/turning room?"],
+      resources: [source("FMCSA large blind spots", "https://www.fmcsa.dot.gov/ourroads/large-blind-spots"), source("FMCSA Teen Zone", "https://www.fmcsa.dot.gov/TeenZone"), source("YouTube video", "https://www.youtube.com/watch?v=Cw32CWOVL7c")]
+    },
+    {
+      id: 18,
+      slug: "18-adverse-conditions-night",
+      file: "18-adverse-conditions-night.html",
+      title: "Adverse Conditions & Night Driving",
+      phase: "Low-Visibility (Free)",
+      material: "Smart Drive Test / night and low-visibility driving",
+      cost: "Free",
+      time: "15-20 min",
+      video: "MpRHhikARbQ",
+      preWatch: "Bad light and wet roads do not add a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, or darkness should change when you slow, how much space you keep, and how hard you search. Watch for what the driver does differently, and treat this as the free primer for the paid DVSA adverse-conditions session later in the course.",
+      sourceFit: "Adverse conditions previously appeared only in the paid DVSA session. This adds a free, student-facing video so the skill is introduced before the simulators, not gated behind the paid bank.",
+      objective: "Adjust speed, space, and search when visibility and traction degrade.",
+      do: ["Watch for headlight use, speed reduction, and longer following distance.", "Name the condition-specific change for each scene."],
+      drill: ["Same pedestrian risk, less visibility, so earlier speed reduction.", "Wet road, so longer following distance and gentler braking.", "Glare or darkness hiding the road edge or a crossing.", "Outrunning your headlights at night."],
+      pass: "You can say what changes because of the condition, not just 'drive carefully.'",
+      logPrompts: ["Which condition required the biggest change?", "Did you slow before or after visibility dropped?"],
+      resources: [source("SDT night driving", "https://smartdrivetest.com/new-driver/how-to-drive-at-night"), source("YouTube video", "https://www.youtube.com/watch?v=MpRHhikARbQ")]
+    },
     ...[1, 2, 3, 4, 5, 6, 7].map((simNumber, index) => {
       const meta = {
         1: ["Hard", "2:15 min", "Public in browser check"],
@@ -391,9 +448,9 @@ window.HPT_CURRICULUM = {
         7: ["Easy", "0:59 min", "Premium-gated in browser check"]
       }[simNumber];
       return {
-        id: 15 + simNumber,
-        slug: `${String(15 + simNumber).padStart(2, "0")}-dto-simulator-${simNumber}`,
-        file: `${String(15 + simNumber).padStart(2, "0")}-dto-simulator-${simNumber}.html`,
+        id: 18 + simNumber,
+        slug: `${String(18 + simNumber).padStart(2, "0")}-dto-simulator-${simNumber}`,
+        file: `${String(18 + simNumber).padStart(2, "0")}-dto-simulator-${simNumber}.html`,
         title: `Driving-Tests.org Simulator ${simNumber}`,
         phase: "Interactive U.S. Practice",
         material: `Driving-Tests.org Hazard Perception Test #${simNumber}`,
@@ -412,9 +469,9 @@ window.HPT_CURRICULUM = {
       };
     }),
     {
-      id: 23,
-      slug: "23-dvsa-free-practice-clips",
-      file: "23-dvsa-free-practice-clips.html",
+      id: 26,
+      slug: "26-dvsa-free-practice-clips",
+      file: "26-dvsa-free-practice-clips.html",
       title: "DVSA Free Practice Clips",
       phase: "UK Timing Transfer",
       material: "Safe Driving for Life free hazard perception test",
@@ -432,9 +489,28 @@ window.HPT_CURRICULUM = {
       resources: [source("Free hazard perception test", "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/"), source("GOV.UK practice test page", "https://www.gov.uk/take-practice-theory-test")]
     },
     {
-      id: 24,
-      slug: "24-dvsa-online-first-scored-session",
-      file: "24-dvsa-online-first-scored-session.html",
+      id: 27,
+      slug: "27-dvsa-hazard-perception-explainer",
+      file: "27-dvsa-hazard-perception-explainer.html",
+      title: "DVSA: How the Hazard Perception Test Works",
+      phase: "DVSA Format Primer",
+      material: "Official DVSA hazard perception explainer (DVSA YouTube channel)",
+      cost: "Free",
+      time: "10-15 min",
+      video: "SdQRkmdhwJs",
+      preWatch: "Before spending money on the paid bank, watch the official DVSA explainer to see exactly how the scored test presents a developing hazard and when to click. The point is to learn the format, not to memorize these clips.",
+      sourceFit: "DVSA's own channel content is safe to embed; the scored CGI clips are not, so the real practice stays as the free link-out and the paid bank. This module bridges the free clips and the paid sessions.",
+      objective: "Understand the scored DVSA format and click timing before paying.",
+      do: ["Watch the official explainer.", "Note what counts as a developing hazard and the scoring window.", "Then return to the free clips before buying the bank."],
+      drill: ["What makes a hazard 'developing' in the test?", "When does an early click score zero?", "How is the 5-to-0 score window structured?"],
+      pass: "You can explain how the scored test defines and times a developing hazard.",
+      logPrompts: ["What surprised you about the scoring?", "Are you clicking on developing hazards, not potential ones?"],
+      resources: [source("DVSA explainer video", "https://www.youtube.com/watch?v=SdQRkmdhwJs"), source("DVSA free practice clips", "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/")]
+    },
+    {
+      id: 28,
+      slug: "28-dvsa-online-first-scored-session",
+      file: "28-dvsa-online-first-scored-session.html",
       title: "DVSA Online: First Scored Session",
       phase: "Paid Timed Practice",
       material: "Official DVSA Guide to Hazard Perception e-learning",
@@ -452,9 +528,9 @@ window.HPT_CURRICULUM = {
       resources: [source("Official DVSA e-learning", dvsaCourse)]
     },
     {
-      id: 25,
-      slug: "25-dvsa-online-occlusion-session",
-      file: "25-dvsa-online-occlusion-session.html",
+      id: 29,
+      slug: "29-dvsa-online-occlusion-session",
+      file: "29-dvsa-online-occlusion-session.html",
       title: "DVSA Online: Occlusion Session",
       phase: "Focused DVSA Practice",
       material: "Official DVSA Guide to Hazard Perception e-learning",
@@ -472,9 +548,9 @@ window.HPT_CURRICULUM = {
       resources: [source("Official DVSA e-learning", dvsaCourse)]
     },
     {
-      id: 26,
-      slug: "26-dvsa-online-intention-session",
-      file: "26-dvsa-online-intention-session.html",
+      id: 30,
+      slug: "30-dvsa-online-intention-session",
+      file: "30-dvsa-online-intention-session.html",
       title: "DVSA Online: Intention Session",
       phase: "Focused DVSA Practice",
       material: "Official DVSA Guide to Hazard Perception e-learning",
@@ -492,9 +568,9 @@ window.HPT_CURRICULUM = {
       resources: [source("Official DVSA e-learning", dvsaCourse)]
     },
     {
-      id: 27,
-      slug: "27-dvsa-online-adverse-conditions-session",
-      file: "27-dvsa-online-adverse-conditions-session.html",
+      id: 31,
+      slug: "31-dvsa-online-adverse-conditions-session",
+      file: "31-dvsa-online-adverse-conditions-session.html",
       title: "DVSA Online: Adverse-Conditions Session",
       phase: "Low-Visibility Practice",
       material: "Official DVSA Guide to Hazard Perception e-learning",
@@ -512,9 +588,9 @@ window.HPT_CURRICULUM = {
       resources: [source("Official DVSA e-learning", dvsaCourse)]
     },
     {
-      id: 28,
-      slug: "28-dvsa-online-mock-tests",
-      file: "28-dvsa-online-mock-tests.html",
+      id: 32,
+      slug: "32-dvsa-online-mock-tests",
+      file: "32-dvsa-online-mock-tests.html",
       title: "DVSA Online: Mock Tests",
       phase: "Final Assessment",
       material: "Official DVSA Guide to Hazard Perception e-learning",
