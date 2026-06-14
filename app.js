@@ -4,7 +4,6 @@
   const EMBED_ORIGINS = ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"];
   const data = window.HPT_CURRICULUM || {};
   const modules = Array.isArray(data.modules) ? data.modules : [];
-  const sources = Array.isArray(data.sources) ? data.sources : [];
   const app = document.getElementById("app");
 
   const pageSlug = window.LESSON_SLUG || null;
@@ -282,11 +281,6 @@
       `;
     });
 
-    const sourceLinks = sources.map((source) => html`
-      <li><a href="${safeUrl(source.url, { allowRelative: false })}" target="_blank" rel="noreferrer">${source.label}</a>: ${source.note}</li>
-    `);
-
-    const critique = (Array.isArray(data.critique) ? data.critique : []).map((item) => html`<li>${item}</li>`);
     const nextModuleTitle = nextModule ? nextModule.title : "No modules configured";
     const nextModuleFile = nextModule ? safeUrl(nextModule.file, { allowExternal: false }) : "#";
 
@@ -295,12 +289,10 @@
         <div class="hero-inner">
           <p class="eyebrow">Hazard perception only</p>
           <h1>Before anything bad happens, where could trouble come from?</h1>
-          <p class="hero-copy">A 28-step training path that builds from hidden-risk anticipation to real-road scanning, behavior prediction, simulator practice, and DVSA-style timed hazard practice.</p>
+          <p class="hero-copy">A step-by-step training path that builds from spotting hidden risks to scanning real roads, predicting what other road users will do, and timed hazard practice.</p>
           <div class="hero-grid">
             <div class="stat"><strong>${done}/${modules.length}</strong><span>modules complete</span></div>
             <div class="stat"><strong>${progressPercent}%</strong><span>logged progress</span></div>
-            <div class="stat"><strong>${sources.length}</strong><span>source groups reviewed</span></div>
-            <div class="stat"><strong>0</strong><span>generic driver-ed pages</span></div>
           </div>
         </div>
       </section>
@@ -313,30 +305,14 @@
           <a class="button primary" href="${nextModuleFile}">${icon("next")} Continue</a>
         </section>
 
-        <section class="insight-grid">
-          <div class="panel">
-            <h2>Curriculum Verdict</h2>
-            <ul>${critique}</ul>
-          </div>
-          <div class="panel">
-            <h2>Research Notes</h2>
-            <p>Drivers Ed Direct videos are used where the student needs a watchable U.S. road demonstration. Driving-Tests.org simulators add interactive U.S.-oriented hazard practice, although they cannot be embedded here. The paid DVSA bank cannot be audited clip-by-clip before purchase, so those lessons are organized around the official product's advertised breadth: interactive videos, varied conditions, mock tests, and readiness measurement.</p>
-          </div>
-        </section>
-
         <section>
           <div class="section-head">
             <div>
               <h2>Training Sequence</h2>
-              <p class="muted">Risk-ATTEND for hidden-risk anticipation -> Drivers Ed Direct for student-facing U.S. road demos -> Driving-Tests.org simulators for interactive U.S. practice -> DVSA for developing-hazard timing and repeated timed practice.</p>
+              <p class="muted">Spot hidden risks, scan real roads, practice on interactive clips, then sharpen your timing on developing hazards.</p>
             </div>
           </div>
           <div class="module-grid">${cards}</div>
-        </section>
-
-        <section class="panel">
-          <h2>Sources Mapped</h2>
-          <ul>${sourceLinks}</ul>
         </section>
       </main>
     `));
@@ -439,10 +415,6 @@
             ${media}
             ${companionMedia}
             ${activity}
-            <div class="panel">
-              <h2>Why This Goes Here</h2>
-              <p>${module.sourceFit}</p>
-            </div>
             <div class="panel">
               <h2>Do</h2>
               <ul class="lesson-list">${doItems}</ul>

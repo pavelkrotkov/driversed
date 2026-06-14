@@ -9,58 +9,6 @@ function source(label, url) {
 window.HPT_CURRICULUM = {
   title: "Teen Hazard Perception Lab",
   updated: "June 13, 2026",
-  critique: [
-    "The course now uses student-facing media for the core video layer rather than parent-coaching clips.",
-    "Drivers Ed Direct provides twelve useful U.S.-style instructional clips that can be embedded as YouTube videos. They are not interactive tests, but they are strong learner-facing demonstrations.",
-    "Driving-Tests.org adds seven standalone U.S.-oriented hazard simulator sessions before the UK DVSA material. Simulators 1-3 appeared public in browser checks; 4-7 appeared Premium-gated, so the site marks them that way."
-  ],
-  sources: [
-    {
-      label: "Toyota Risk-ATTEND module",
-      url: toyotaRiskAttend,
-      note: "Free interactive teen risk-anticipation module."
-    },
-    {
-      label: "Toyota / AMRD Risk-ATTEND background",
-      url: "https://amrd.toyota.com/csrc-risk-attend-program-to-help-teen-drivers/",
-      note: "Describes Risk-ATTEND as a web-based teen hazard/risk anticipation program."
-    },
-    {
-      label: "UMass Amherst Risk-ATTEND background",
-      url: "https://www.umass.edu/news/article/risk-anticipation-isnt-covered-drivers-ed-umass-amherst-researchers-collaborate-toyota",
-      note: "Explains risk anticipation as noticing precursors to danger."
-    },
-    {
-      label: "Drivers Ed Direct video library",
-      url: "https://www.driverseddirect.com/videos/",
-      note: "Student-facing U.S. driving videos; twelve hazard-perception-adjacent clips are used here."
-    },
-    {
-      label: "Smart Drive Test YouTube channel",
-      url: "https://www.youtube.com/@smartdrivetest",
-      note: "North American right-side-of-road commentary and method clips used as companions on four DED lessons."
-    },
-    {
-      label: "Driving-Tests.org hazard perception simulator",
-      url: "https://driving-tests.org/driving-simulator/",
-      note: "Standalone simulator sessions with feedback/replay; not embeddable from GitHub Pages."
-    },
-    {
-      label: "GOV.UK hazard perception explanation",
-      url: "https://www.gov.uk/theory-test/hazard-perception-test",
-      note: "Useful public explanation of potential versus developing hazards."
-    },
-    {
-      label: "Safe Driving for Life free hazard clips",
-      url: "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/",
-      note: "Free DVSA-style hazard perception clips; not embeddable from GitHub Pages."
-    },
-    {
-      label: "Official DVSA Guide to Hazard Perception e-learning",
-      url: dvsaCourse,
-      note: "Paid UK hazard perception bank with interactive videos, mock tests, and progress/readiness measurement."
-    }
-  ],
   modules: [
     {
       id: 1,
@@ -75,7 +23,6 @@ window.HPT_CURRICULUM = {
       activityLabel: "Open Risk-ATTEND",
       activityNote: "Open Risk-ATTEND in a new tab, complete the interactive module in Toyota's app, then return here to log what you noticed.",
       preWatch: "Start with the central habit for the whole course: do not wait for trouble to be visible. As you work through Risk-ATTEND, keep asking what the visible scene is hiding: behind a parked vehicle, beyond a hedge, inside a driveway, around a curve, or past a large vehicle.",
-      sourceFit: "Risk-ATTEND is still the best first module because it trains the exact missing skill: anticipating where trouble could emerge before the threat is visible.",
       objective: "Learn that the danger is often the space behind or beside the visible object.",
       do: ["Complete the self-paced module once.", "Do not coach every answer. Let the module establish the baseline.", "Afterward, name the hidden-risk categories that appeared."],
       drill: ["Look for pedestrian hidden by vehicle, driveway vehicle, child hidden by parked cars, cyclist hidden by road geometry, hazard beyond a curve or hill, obscured intersection, and stopped vehicle hiding crosswalk activity."],
@@ -96,7 +43,6 @@ window.HPT_CURRICULUM = {
       activityLabel: "Open Risk-ATTEND",
       activityNote: "Open Risk-ATTEND in a new tab, use Toyota's interactive scenarios for the replay, then return here to log your best prediction.",
       preWatch: "Now repeat the same kind of scene, but make it active. Before answering, pause and say the hidden actor, the search zone, the clue, and the first gentle action you would take. This turns 'be careful' into a usable driving prediction.",
-      sourceFit: "The second pass converts the module from exposure into a prediction routine.",
       objective: "Convert visual scenes into a prediction checklist.",
       do: ["Repeat selected scenarios.", "Pause before answering.", "Require a concrete prediction before any click or selection."],
       drill: ["What is visible?", "What is hidden?", "Who could enter my path?", "What clue tells me to look there?", "What would I do now: maintain, ease off, cover brake, brake, or change lane position?"],
@@ -115,8 +61,7 @@ window.HPT_CURRICULUM = {
       time: "15-20 min",
       activityUrl: "https://www.gov.uk/theory-test/hazard-perception-test",
       activityLabel: "Open GOV.UK explanation",
-      preWatch: "Before the road-video layer, lock in the timing language the whole course depends on. A potential hazard is something that could matter. A developing hazard has started to change your plan. The point is not to react to everything; it is to notice the moment a possible risk becomes an act-now risk. Carry this distinction into every clip and simulator that follows.",
-      sourceFit: "The UK terminology is useful even for a U.S. teen because it separates early awareness from actual developing-hazard timing. Learning it now, right after Risk-ATTEND and before the road videos, gives every later clip and simulator a shared vocabulary.",
+      preWatch: "Lock in the timing language the rest of this course depends on. A potential hazard is something that could matter. A developing hazard has started to change your plan. The point is not to react to everything; it is to notice the moment a possible risk becomes an act-now risk. Carry this distinction into every clip and simulator that follows.",
       objective: "Know when a risk changes from possible to act-now.",
       do: ["Read the short explanation.", "Drill potential versus developing examples.", "Carry the distinction into the video lessons and, later, the simulator sessions."],
       drill: ["Parked car: potential. Parked car with wheel movement or signal: developing.", "Pedestrian near curb: potential. Pedestrian stepping toward road: developing.", "Cyclist steady: potential. Cyclist swerving around parked car: developing."],
@@ -141,8 +86,7 @@ window.HPT_CURRICULUM = {
         note: "Canadian, right-side-of-road context. Use this as the course-wide commentary habit: verbalize what you see, what is hidden, and what you will do next.",
         prompt: "Before the DED clip, predict aloud where trouble could appear; then watch the SDT clip and practice narrating hazards the way an expert thinks."
       },
-      preWatch: "This is the first learner-facing road video layer. DED gives the U.S. residential example; Smart Drive Test adds the running-commentary method you will use for every later clip and every supervised drive. Predict aloud where neighborhood trouble could hide before watching, then narrate the hazards as they appear: driveways, parked cars, doors, bikes, children, curves, glare, animals, debris, and blocked sightlines.",
-      sourceFit: "DED presents residential hazards directly to the student in a U.S. road context, so it fits immediately after Risk-ATTEND.",
+      preWatch: "DED gives the U.S. residential example; Smart Drive Test adds the running-commentary method you will use for every later clip and every supervised drive. Predict aloud where neighborhood trouble could hide before watching, then narrate the hazards as they appear: driveways, parked cars, doors, bikes, children, curves, glare, animals, debris, and blocked sightlines.",
       objective: "Transfer hidden-risk anticipation into ordinary neighborhood streets.",
       do: ["Watch once without pausing.", "Watch again and name each blocked sightline before the narrator explains it.", "Afterward, take a passenger-seat neighborhood ride and call only hidden-risk zones."],
       drill: ["Parked vehicle blocks curb.", "Driveway partly hidden.", "Large vehicle blocks forward view.", "Curve hides what is around it.", "Child, bike, scooter, animal, or door could enter path."],
@@ -168,7 +112,6 @@ window.HPT_CURRICULUM = {
         prompt: "Before watching, predict where the car needs front, side, and rear margin; then narrate how lane position and following distance preserve escape space."
       },
       preWatch: "Hazard perception is not only what you see; it is where you place the car while uncertainty exists. DED shows lateral lane position around parked cars, curves, narrow streets, and hidden edges; Smart Drive Test adds the all-around space cushion and following-distance method. Predict where space can disappear before watching, then narrate how each position choice preserves margin.",
-      sourceFit: "This DED lesson gives a student-facing bridge from noticing hazards to preserving side space.",
       objective: "Connect perception to lane placement and clearance.",
       do: ["Watch for how lane position changes available escape space.", "On a quiet street, discuss where the car should sit when parked vehicles or curves reduce visibility."],
       drill: ["Leave room beside parked cars.", "Do not drift toward hidden edges.", "Use lane position to buy sightline and space."],
@@ -187,7 +130,6 @@ window.HPT_CURRICULUM = {
       time: "10-15 min",
       video: "LQZiG2OXkx8",
       preWatch: "A curve is an occlusion machine. The road may look empty, but the important part is beyond the bend. Watch for speed, lane position, and how early the driver prepares for what cannot yet be seen.",
-      sourceFit: "The clip turns residential curves into a concrete hidden-space lesson rather than a generic steering lesson.",
       objective: "Treat curves as blocked sightlines that require earlier speed and space decisions.",
       do: ["Watch for the moment where the view ahead is incomplete.", "Practice saying what could be beyond the curve before it is visible."],
       drill: ["Hidden pedestrian.", "Hidden vehicle.", "Parked car after curve.", "Oncoming traffic crossing center.", "Reduced escape space."],
@@ -213,7 +155,6 @@ window.HPT_CURRICULUM = {
         prompt: "Before each DED traffic check, say left, center, right, mirror, and hidden edge aloud; then compare your pattern with the SDT method."
       },
       preWatch: "After the open-road fundamentals, add a scan pattern for intersections. DED demonstrates residential traffic checks in context; Smart Drive Test supplies the systematic observation routine. Before watching, predict which zones the driver must clear, then narrate the scan instead of staring straight ahead.",
-      sourceFit: "The video is student-facing and demonstrates scanning in residential intersections, including blocked sightlines.",
       objective: "Build a repeatable low-speed traffic-check routine.",
       do: ["Watch for where the driver looks before entering conflict zones.", "Practice the same scan as a passenger on a short residential route."],
       drill: ["Left edge.", "Right edge.", "Far ahead.", "Side street or driveway.", "Hidden spaces before moving into them."],
@@ -232,7 +173,6 @@ window.HPT_CURRICULUM = {
       time: "15-20 min",
       video: "xgXkH4l4eQA",
       preWatch: "Right-of-way is not just a rule question. It is a prediction question: who might enter the same space, who may misunderstand, and where should you leave room if the other person makes a poor choice?",
-      sourceFit: "This DED lesson gives a student-facing way to connect residential rules to conflict anticipation.",
       objective: "Identify likely conflict points at residential intersections.",
       do: ["Watch for which vehicle or pedestrian could claim the same space.", "Pause at examples and ask what mistake another road user might make."],
       drill: ["Four-way stop uncertainty.", "Unprotected turn conflict.", "Pedestrian crossing conflict.", "Driver who rolls or hesitates."],
@@ -258,7 +198,6 @@ window.HPT_CURRICULUM = {
         prompt: "Before the DED clip, call the cross traffic, pedestrian zones, turners, and blocked edges; then use the SDT method to narrate the intersection before entering."
       },
       preWatch: "Now move from quiet streets to busier intersections. DED gives the major-street example; Smart Drive Test adds a named intersection-scanning method to apply before entering the box. Predict the cross traffic, pedestrians, turners, lane changers, late decision-makers, and blocked edges before watching, then narrate them as the clip unfolds.",
-      sourceFit: "DED's major-street traffic-check video keeps the lesson student-facing while increasing intersection complexity.",
       objective: "Scan wider without losing pedestrians and hidden edges.",
       do: ["Watch for how the scan expands on major streets.", "On a passenger ride, call the three road users most likely to matter next."],
       drill: ["Near crosswalk.", "Far crosswalk.", "Cross traffic.", "Turning path.", "Lane-changing vehicle.", "Blocked view near larger vehicle."],
@@ -277,7 +216,6 @@ window.HPT_CURRICULUM = {
       time: "15-20 min",
       video: "2CXnQmudiD0",
       preWatch: "Major streets add speed and impatience. Watch this as a conflict map: who has a path across yours, who may misjudge a gap, and what clue would make you wait even if the rule says you can go.",
-      sourceFit: "This clip moves right-of-way thinking into a busier U.S. street context.",
       objective: "Predict conflicts at major street intersections before entering them.",
       do: ["Watch for legal right-of-way versus practical safety.", "Name the cue that would make you delay or add space."],
       drill: ["Late left turn.", "Rolling right turn.", "Pedestrian crossing during turn.", "Driver accelerating to beat a gap."],
@@ -296,7 +234,6 @@ window.HPT_CURRICULUM = {
       time: "15-20 min",
       video: "t7j8MEsS9Mc",
       preWatch: "Right turn on red is a perfect hazard-perception trap: the driver looks left for cars and forgets the pedestrian or cyclist on the right. Watch for how the turning path, near sidewalk, far sidewalk, and crosswalk all have to stay in view.",
-      sourceFit: "This student-facing DED lesson turns crosswalk conflict into a concrete U.S. driving scenario.",
       objective: "Keep pedestrian and cyclist scanning alive during right-turn decisions.",
       do: ["Watch once for traffic gaps.", "Watch again only for pedestrian/cyclist conflict.", "Practice the spoken scan before any right turn on red."],
       drill: ["Near sidewalk.", "Far sidewalk.", "Crosswalk.", "Turning path.", "Bikes or scooters approaching from the right."],
@@ -315,7 +252,6 @@ window.HPT_CURRICULUM = {
       time: "10-15 min",
       video: "VFRv3Je7phs",
       preWatch: "Hazard perception is not only forward. The car behind you changes your escape options, braking margin, and lane-change choices. Watch for how mirror checks keep the whole traffic picture alive. Mirrors come first because the next two lessons, blind spots and lane changes, build directly on them.",
-      sourceFit: "This DED clip connects rear observation to the hazard course instead of treating mirrors as a DMV checklist.",
       objective: "Use mirrors to track threats and space behind the vehicle.",
       do: ["Watch for when mirror information changes the driver's options.", "During a passenger ride, call whether the space behind is open, close, or unstable."],
       drill: ["Tailgater.", "Fast-approaching vehicle.", "Open escape lane.", "Vehicle hidden beside rear quarter.", "Brake earlier when followed closely."],
@@ -334,7 +270,6 @@ window.HPT_CURRICULUM = {
       time: "10-15 min",
       video: "ZkVBf-LIGro",
       preWatch: "Blind spots are just occlusion beside the car. You already met the shoulder-check and 360-scan routine with the Residential Traffic Checks observation method; this lesson isolates the blind zone itself and pairs with the mirror lesson before it. Watch this clip as a visibility lesson: mirrors give information, but they do not prove the space is empty.",
-      sourceFit: "DED gives the student a direct blind-spot demonstration before the course moves into lane changes.",
       objective: "Understand why mirror checks and shoulder checks answer different questions.",
       do: ["Watch for what mirrors miss.", "In a parked car, compare mirror view with shoulder-check view."],
       drill: ["Mirror says likely clear.", "Shoulder check confirms side zone.", "Large vehicles have larger hidden zones.", "Do not linger in someone else's blind spot."],
@@ -353,7 +288,6 @@ window.HPT_CURRICULUM = {
       time: "15-20 min",
       video: "6TgFxB32fnE",
       preWatch: "A lane change is a moving conflict problem. Before moving, the driver has to know what is ahead, behind, beside, and hidden in the blind spot. Watch for sequence, timing, and whether space remains if someone else changes speed.",
-      sourceFit: "This DED clip turns mirror/blind-spot awareness into a student-facing lane-change scenario.",
       objective: "Combine mirror, blind spot, speed, and gap judgement.",
       do: ["Watch for the order of checks.", "Pause and ask what could make the gap unsafe."],
       drill: ["Front space.", "Rear closing speed.", "Side blind spot.", "Signal and second look.", "Abort option."],
@@ -372,7 +306,6 @@ window.HPT_CURRICULUM = {
       time: "15-20 min",
       video: "eLWOkdwkhps",
       preWatch: "At freeway speed, late perception becomes expensive. Watch this clip for closing speed, blind spots, space cushions, and how early the driver has to decide whether a gap is stable enough to use.",
-      sourceFit: "This is the student-facing highway bridge before interactive simulator practice.",
       objective: "Read high-speed gaps and preserve options before changing lanes.",
       do: ["Watch for early mirror checks and blind-spot confirmation.", "Name the vehicles that could change the lane-change decision."],
       drill: ["Fast vehicle from behind.", "Vehicle sitting in blind spot.", "Lead vehicle braking.", "Truck blocking forward view.", "Open space to abort."],
@@ -391,7 +324,6 @@ window.HPT_CURRICULUM = {
       time: "10-15 min",
       video: "oizQKbE-OLs",
       preWatch: "High speed and limited sightlines turn right-of-way into a timing-and-space problem. On the freeway, the merge gap is the hazard: it can close while you commit. On a canyon road, the bend is the hazard: the important part is past the curve. Watch how early the driver reads the gap, matches speed, and prepares for what the road geometry hides.",
-      sourceFit: "Completes the DED right-of-way series (Parts 1 and 2 are already used) and extends hazard perception to freeway-speed merging and limited-sightline rural/canyon roads, which the course did not cover.",
       objective: "Read high-speed merge gaps and canyon sightlines before committing.",
       do: ["Watch once for freeway merging and being passed.", "Watch again for the canyon rules: uphill priority on narrow roads, and pulling into a turnout when a queue forms behind a slow vehicle."],
       drill: ["Merge gap that closes.", "Vehicle passing you.", "Blind canyon bend.", "Oncoming car on a narrow uphill/downhill.", "Slow vehicle with a queue and a turnout ahead."],
@@ -410,7 +342,6 @@ window.HPT_CURRICULUM = {
       time: "10-15 min",
       video: "Cw32CWOVL7c",
       preWatch: "A truck's blind spots ('No-Zones') are occlusion you create for someone else. The rule of thumb: if you cannot see the driver's face in their mirror, they cannot see you. Large vehicles also need up to two football fields to stop and swing wide on turns. Watch for where your car disappears, and how much earlier and wider you have to plan around a big vehicle.",
-      sourceFit: "The course repeatedly mentions large vehicles blocking sightlines but had no dedicated lesson. SDT gives a watchable blind-spot demonstration; FMCSA's official No-Zone material is the authoritative US reference.",
       objective: "Predict and stay out of large-vehicle blind zones, and give them stopping and turning room.",
       do: ["Watch for the four No-Zones: front, rear, and both sides.", "Use the mirror test: can you see the driver's face?", "On a passenger ride, call when the car is sitting in a truck's blind zone."],
       drill: ["Front No-Zone when merging in.", "Rear No-Zone when following.", "Wide right turn.", "Long stopping distance.", "Spray/wind buffeting beside a trailer."],
@@ -428,8 +359,7 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "MpRHhikARbQ",
-      preWatch: "Bad light and wet roads do not add a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, or darkness should change when you slow, how much space you keep, and how hard you search. Watch for what the driver does differently, and treat this as the free primer for the paid DVSA adverse-conditions session later in the course.",
-      sourceFit: "Adverse conditions previously appeared only in the paid DVSA session. This adds a free, student-facing video so the skill is introduced before the simulators, not gated behind the paid bank.",
+      preWatch: "Bad light and wet roads do not add a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, or darkness should change when you slow, how much space you keep, and how hard you search. Watch for what the driver does differently.",
       objective: "Adjust speed, space, and search when visibility and traction degrade.",
       do: ["Watch for headlight use, speed reduction, and longer following distance.", "Name the condition-specific change for each scene."],
       drill: ["Same pedestrian risk, less visibility, so earlier speed reduction.", "Wet road, so longer following distance and gentler braking.", "Glare or darkness hiding the road edge or a crossing.", "Outrunning your headlights at night."],
@@ -439,13 +369,13 @@ window.HPT_CURRICULUM = {
     },
     ...[1, 2, 3, 4, 5, 6, 7].map((simNumber, index) => {
       const meta = {
-        1: ["Hard", "2:15 min", "Public in browser check"],
-        2: ["Hard", "2:14 min", "Public in browser check"],
-        3: ["Easy", "1:44 min", "Public in browser check"],
-        4: ["Hard", "3:04 min", "Premium-gated in browser check"],
-        5: ["Hard", "1:42 min", "Premium-gated in browser check"],
-        6: ["Hard", "3:41 min", "Premium-gated in browser check"],
-        7: ["Easy", "0:59 min", "Premium-gated in browser check"]
+        1: ["Hard", "2:15 min", "Free"],
+        2: ["Hard", "2:14 min", "Free"],
+        3: ["Easy", "1:44 min", "Free"],
+        4: ["Hard", "3:04 min", "Premium"],
+        5: ["Hard", "1:42 min", "Premium"],
+        6: ["Hard", "3:41 min", "Premium"],
+        7: ["Easy", "0:59 min", "Premium"]
       }[simNumber];
       return {
         id: 18 + simNumber,
@@ -458,8 +388,7 @@ window.HPT_CURRICULUM = {
         time: meta[1],
         activityUrl: `${dtoBase}${simNumber}/`,
         activityLabel: `Open Simulator ${simNumber}`,
-        preWatch: `This is the first interactive layer after the DED videos. Use Simulator ${simNumber} to practice clicking real developing hazards, then return here to log what kind of miss happened: late cue, hidden actor, intention, space, or pattern-clicking.`,
-        sourceFit: "Driving-Tests.org is U.S.-oriented and student-facing. It cannot be embedded here, but the standalone simulator gives feedback and replay practice.",
+        preWatch: `Use Simulator ${simNumber} to practice clicking real developing hazards, then return here to log what kind of miss happened: late cue, hidden actor, intention, space, or pattern-clicking.`,
         objective: "Convert passive video recognition into timed hazard response.",
         do: ["Open the simulator in a new tab.", "Complete one run without trying to game the clicks.", "Review mistakes, then log the dominant error type here."],
         drill: ["Click when a hazard starts developing.", "Ignore harmless possibilities until something changes.", "Afterward, explain each miss by category rather than score alone."],
@@ -479,8 +408,7 @@ window.HPT_CURRICULUM = {
       time: "20-30 min",
       activityUrl: "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/",
       activityLabel: "Open DVSA free clips",
-      preWatch: "Now transfer the U.S.-oriented simulator practice into the official UK-style developing-hazard format. Do not treat the left-side road context as the lesson. The lesson is timing: when does a possible hazard become something a driver must act on?",
-      sourceFit: "The DVSA free clips are useful after the student has already practiced U.S.-style scenarios and knows the timing vocabulary.",
+      preWatch: "Now move into the official UK-style developing-hazard format. Do not treat the left-side road context as the lesson. The lesson is timing: when does a possible hazard become something a driver must act on?",
       objective: "Practice DVSA-style timed recognition while keeping the focus on real-road meaning.",
       do: ["Complete the free clips.", "Review each clip immediately after the set.", "Do not chase a perfect score yet."],
       drill: ["What was the first clue?", "When did it become developing?", "What would the driver need to do?", "What was hidden or unstable?"],
@@ -499,7 +427,6 @@ window.HPT_CURRICULUM = {
       time: "10-15 min",
       video: "SdQRkmdhwJs",
       preWatch: "Before spending money on the paid bank, watch the official DVSA explainer to see exactly how the scored test presents a developing hazard and when to click. The point is to learn the format, not to memorize these clips.",
-      sourceFit: "DVSA's own channel content is safe to embed; the scored CGI clips are not, so the real practice stays as the free link-out and the paid bank. This module bridges the free clips and the paid sessions.",
       objective: "Understand the scored DVSA format and click timing before paying.",
       do: ["Watch the official explainer.", "Note what counts as a developing hazard and the scoring window.", "Then return to the free clips before buying the bank."],
       drill: ["What makes a hazard 'developing' in the test?", "When does an early click score zero?", "How is the 5-to-0 score window structured?"],
@@ -519,7 +446,6 @@ window.HPT_CURRICULUM = {
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
       preWatch: "Only buy the paid DVSA bank after the earlier layers are familiar. Treat this first scored session as calibration, not judgment: are misses caused by timing, occlusion, over-focusing on cars, missed intention, or weak space planning?",
-      sourceFit: "The official DVSA e-learning adds a large practice bank and mock-test structure after the student already has vocabulary and practice habits.",
       objective: "Start paid timed practice without turning it into test gaming.",
       do: ["Do only 5-6 clips in the first session.", "Review each miss using the course categories.", "Stop before fatigue turns into random clicking."],
       drill: ["What was the potential hazard?", "When did it become developing?", "Did you click too early, too late, or correctly?", "What clue did you miss?", "What action would a real driver take?"],
@@ -539,7 +465,6 @@ window.HPT_CURRICULUM = {
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
       preWatch: "Use the paid bank for focused reps. In this session, hunt for hidden actors and blocked sightlines. Try to name where the hazard will come from before it appears on screen.",
-      sourceFit: "Occlusion remains the biggest novice weakness, so the first focused DVSA session returns to the course's foundation.",
       objective: "Predict hidden actors before they appear.",
       do: ["Select clips involving hidden pedestrians, parked vehicles, crosswalks, large vehicles, bends, crests, side roads, or blocked sightlines.", "After each clip, write the hidden space and cue."],
       drill: ["Where is the blocked edge?", "Who could come out of it?", "What would I do before seeing them?"],
@@ -559,7 +484,6 @@ window.HPT_CURRICULUM = {
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
       preWatch: "This focused session is about visible actors whose behavior is changing. Look for wheel angle, speed change, braking, lane position, body language, and second signals before the hazard becomes obvious.",
-      sourceFit: "After hidden actors, use the bank for visible road users whose next action can be read from behavior cues.",
       objective: "Detect behavioral cues before the event becomes obvious.",
       do: ["Select clips involving turning vehicles, parked cars pulling out, cyclists changing line, pedestrians stepping out, vehicles braking unexpectedly, side roads, or late decisions.", "Name the cue before naming the hazard."],
       drill: ["What changed in motion?", "What second signal confirmed it?", "What would I do now?"],
@@ -579,7 +503,6 @@ window.HPT_CURRICULUM = {
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
       preWatch: "Bad conditions do not create a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, darkness, or poor traction should change when you slow, how much space you keep, and how hard you search.",
-      sourceFit: "This uses the DVSA bank's variety after the student can already name hidden actors and developing cues.",
       objective: "Adjust hazard expectations when visibility and traction degrade.",
       do: ["Use clips with rain, glare, night, snow or ice if available, poor contrast, wet braking distance, or obscured pedestrians and cyclists.", "For each clip, require the condition-specific adjustment."],
       drill: ["Same pedestrian risk, less visibility, longer stopping distance, so earlier speed reduction.", "Same car-pulling-out risk, wet road, so more distance and gentler braking."],
@@ -599,7 +522,6 @@ window.HPT_CURRICULUM = {
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
       preWatch: "The final step is consistency. Use mock tests sparingly and review them by error type, not by ego. A better score is nice; the real goal is a steadier habit of seeing trouble while there is still time to choose.",
-      sourceFit: "The official course includes mock tests and readiness measurement, which are useful only after the perception categories are already meaningful.",
       objective: "Assess consistency without optimizing for UK test tricks.",
       do: ["Take one mock test per week.", "Review errors immediately.", "Track trends by error type rather than only total score."],
       drill: ["Clicked too early: saw a possible risk before it became developing.", "Clicked too late: missed the cue.", "Missed occlusion: failed to imagine hidden actor.", "Over-focused on cars: missed pedestrian or cyclist.", "Missed intention: did not read wheel angle, speed, signal, or body language.", "Poor space thinking: recognized hazard too late to preserve options.", "Pattern clicking: gaming the test instead of reading the road."],
