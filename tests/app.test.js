@@ -388,3 +388,103 @@ test("manually toggling Started cancels the pending auto-start timer", () => {
   assert.equal(saved["lesson-one"].started, false);
   assert.equal(elements.get("date").value, "");
 });
+
+function stubSlug(name) {
+  const match = fs.readFileSync(path.join(root, name), "utf8").match(/LESSON_SLUG\s*=\s*"([^"]+)"/);
+  return match ? match[1] : null;
+}
+
+function numberedStubs() {
+  return fs.readdirSync(root).filter((name) => /^\d.*\.html$/.test(name)).sort();
+}
+
+test("every curriculum module has a matching stub whose slug matches its filename", () => {
+  const { modules } = loadCurriculum();
+
+  for (const module of modules) {
+    assert.equal(module.file, `${module.slug}.html`, `file must equal slug for ${module.slug}`);
+    assert.ok(fs.existsSync(path.join(root, module.file)), `missing stub file ${module.file}`);
+    // This is the exact failure that broke 13 tiles: a stub whose LESSON_SLUG
+    // did not match any module, so app.js silently fell back to the home page.
+    assert.equal(stubSlug(module.file), module.slug, `stub ${module.file} declares the wrong slug`);
+  }
+});
+
+test("every numbered stub maps to a module and loads the shared scripts", () => {
+  const { modules } = loadCurriculum();
+  const slugs = new Set(modules.map((module) => module.slug));
+  const stubs = numberedStubs();
+
+  assert.equal(stubs.length, modules.length, "stub count must match module count");
+  for (const name of stubs) {
+    assert.ok(slugs.has(stubSlug(name)), `stub ${name} has no matching module`);
+    const html = fs.readFileSync(path.join(root, name), "utf8");
+    assert.match(html, /curriculum\.js/, `${name} must load curriculum.js`);
+    assert.match(html, /app\.js/, `${name} must load app.js`);
+  }
+});
+
+test("renderHome links every module to an existing file and never to '#'", () => {
+  const { modules } = loadCurriculum();
+  const { appHtml } = loadApp({ modules });
+
+  const hrefs = [...appHtml.matchAll(/class="module-card" href="([^"]+)"/g)].map((match) => match[1]);
+  assert.equal(hrefs.length, modules.length, "one card per module");
+  for (const href of hrefs) {
+    assert.notEqual(href, "#", "module cards must resolve to a real file");
+  }
+  for (const module of modules) {
+    assert.ok(appHtml.includes(module.file), `home should link to ${module.file}`);
+    assert.ok(fs.existsSync(path.join(root, module.file)), `${module.file} must exist`);
+  }
+});
+
+test("curriculum ids are sequential and slugs/required fields are well formed", () => {
+  const { modules } = loadCurriculum();
+  const ids = modules.map((module) => module.id);
+  const slugs = modules.map((module) => module.slug);
+
+  assert.equal(new Set(ids).size, ids.length, "ids must be unique");
+  assert.equal(new Set(slugs).size, slugs.length, "slugs must be unique");
+  assert.deepEqual(ids, modules.map((_, index) => index + 1), "ids must run 1..N in order");
+
+  for (const module of modules) {
+    for (const field of ["slug", "file", "title", "phase", "cost", "time", "objective", "pass"]) {
+      assert.equal(typeof module[field], "string", `${module.slug} ${field} must be a string`);
+      assert.ok(module[field].length > 0, `${module.slug} ${field} must not be empty`);
+    }
+    for (const field of ["do", "drill", "logPrompts", "resources"]) {
+      assert.ok(Array.isArray(module[field]), `${module.slug} ${field} must be an array`);
+    }
+  }
+});
+
+test("module media ids and links pass the app's URL validators", () => {
+  const { modules } = loadCurriculum();
+  const { safeUrl, safeYoutubeEmbed } = loadApp();
+
+  for (const module of modules) {
+    if (module.video) {
+      assert.notEqual(safeYoutubeEmbed(module.video), "", `${module.slug} has an invalid video id`);
+    }
+    if (module.companionVideo) {
+      assert.notEqual(safeYoutubeEmbed(module.companionVideo.id), "", `${module.slug} has an invalid companion id`);
+    }
+    if (module.activityUrl) {
+      assert.notEqual(safeUrl(module.activityUrl, { allowRelative: false }), "#", `${module.slug} has a rejected activityUrl`);
+    }
+    for (const [, url] of module.resources) {
+      assert.notEqual(safeUrl(url, { allowRelative: false }), "#", `${module.slug} has a rejected resource URL: ${url}`);
+    }
+  }
+});
+
+test("site-construction metadata stays out of the curriculum", () => {
+  const curriculum = loadCurriculum();
+
+  assert.equal("critique" in curriculum, false, "critique should be removed");
+  assert.equal("sources" in curriculum, false, "sources should be removed");
+  for (const module of curriculum.modules) {
+    assert.equal("sourceFit" in module, false, `${module.slug} should not carry sourceFit`);
+  }
+});
