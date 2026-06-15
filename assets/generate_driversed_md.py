@@ -394,12 +394,11 @@ def main():
 
         for index, video in enumerate(VIDEOS):
             f.write(f"## {video['title']}\n")
-            f.write(f"- **YouTube ID:** `{video['id']}`\n")
+            f.write("- **YouTube ID:** " + chr(96) + video["id"] + chr(96) + "\n")
             f.write(f"- **Source:** {video['url']}\n\n")
-            f.write(video['transcript'] + "\n\n")
-            f.write("---\n")
+            f.write(video['transcript'] + "\n")
             if index != len(VIDEOS) - 1:
-                f.write("\n")
+                f.write("\n---\n\n")
 
     print(f"Successfully generated {output_file} with full timings.")
 
