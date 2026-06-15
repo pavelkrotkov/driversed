@@ -326,21 +326,80 @@ VIDEOS = [
 [07:42] 405 to 101 interchange. This is a 'Lane Change Bonanza.' I've got to make about five lane changes to the right in a short distance.
 [09:15] One thing to point out: when you check your blind spots, you're not just checking the lane right next to you. You're checking several lanes across because a car could be making a wild lane change from two lanes over.
 [10:00] Final lane change into the exit lane. Nice. Play it safe and play it cautious. Stay safe out there!"""
+    },
+    {
+        "id": "oizQKbE-OLs",
+        "title": "Right-of-Way Part 3: Freeways and Canyons",
+        "url": "https://www.youtube.com/watch?v=oizQKbE-OLs",
+        "transcript": """[0:00] Introduction: You made it to Right-of-Way Part 3. Today we're looking at the right-of-way rules we need to follow on freeways and canyons.
+[0:15] Definition: Right-of-way is the privilege of the immediate use of the highway.
+[0:25] Purpose: Right-of-way is whose turn it is to be going. It's a set of rules that stops us from getting in each other's way.
+[0:40] Entering the Freeway: Right-of-way is huge when entering the freeway because your on-ramp is most likely a merging lane.
+[0:50] Merging Rules: In a merging lane, you do not have the right of way. To safely merge, match the speed of traffic and find a gap.
+[1:05] SMOG Technique: To find that gap, use SMOG: Signal, Mirrors, Over the shoulder, Go.
+[1:20] Continuous Lanes: Some on-ramps are weaving or continuous lanes. Here, you have your own lane and don't have to enter someone else's lane immediately.
+[1:40] Lane Changes: When making a lane change on the freeway, we do not have the right of way. We use SMOG and only go if it's clear.
+[1:55] Impeding Traffic: If a car has to brake or adjust their lane for us, we've impeded their right of way.
+[2:10] Being Passed: If a car is passing you, the California Vehicle Code says any vehicle being passed must yield the right of way.
+[2:30] Canyon Roads: When two cars meet on a narrow incline where passing is impossible, the car traveling downhill must yield to the car traveling uphill.
+[2:50] Turnouts: When driving below the speed limit with five or more cars behind you, you must pull off the road to let traffic pass.
+[3:10] Leaving a Turnout: When leaving a turnout, do another SMOG to ensure there is a safe gap in traffic before re-entering."""
+    },
+    {
+        "id": "Cw32CWOVL7c",
+        "title": "Staying Safe Near Big Trucks",
+        "url": "https://www.youtube.com/watch?v=Cw32CWOVL7c",
+        "transcript": """[0:00] Introduction: How to stay safe when driving near big trucks.
+[0:05] Big trucks are just another vehicle on the roadway, but they require specific awareness.
+[0:33] Merging Onto the Freeway with Trucks: Stay calm and in control. Get your foot into the throttle and keep moving.
+[0:58] Pass or Hang Back? Do not hang out next to them.
+[1:10] Adjust your speed to either get in front of or behind a truck quickly. They have slow acceleration, so it's easy to pass them.
+[1:25] Hills/Mountains: Remember that loaded trucks will slow down significantly going uphill.
+[2:15] Avoid hanging out behind trucks to prevent windshield damage from debris and stones.
+[2:30] Summary: Don't hang out in their blind spots. Get around them expediently."""
+    },
+    {
+        "id": "MpRHhikARbQ",
+        "title": "Smart Night Driving",
+        "url": "https://www.youtube.com/watch?v=MpRHhikARbQ",
+        "transcript": """[00:00] As you're driving, because our eyes are attracted to light and movement, so in the darkness, you are looking for movement.
+[00:25] So nighttime isn't just when it's dark outside, but also the transition from full light to darkness is also dangerous.
+[00:50] Where is the curve of the road? Is the road curving to the left, curving to the right?
+[01:28] What happens is that when we get blinded by other traffic or there's a lot of street lights, it reduces and erodes our night vision.
+[01:52] So you need to preserve your night vision, especially as you get out onto highways and into rural areas.
+[02:05] You always need to be scanning farther down the road, both shoulders of the roadway.
+[02:42] Talking to other people would help you keep awake at night. Podcasts and audiobooks, and whatnot, that all this will help you out.
+[03:20] But ultimately, if you're tired, you need to stop. You need to get off the roadway and you need to get yourself some rest.
+[04:22] Because your headlights are a poor substitute for visibility at night."""
+    },
+    {
+        "id": "SdQRkmdhwJs",
+        "title": "DVSA: How the Hazard Perception Test Works",
+        "url": "https://www.youtube.com/watch?v=SdQRkmdhwJs",
+        "transcript": """[0:00] Introduction to the official DVSA Hazard Perception Test format.
+[0:30] The test consists of a series of short video clips showing potential developing hazards.
+[1:00] A developing hazard is something that would cause you to take action, like changing speed or direction.
+[1:30] You score points based on how quickly you click when the hazard starts to develop.
+[2:00] The window for scoring goes from 5 points down to 0, depending on your reaction time.
+[2:30] If you click repeatedly (pattern clicking) during a clip, your score for that clip will be zero.
+[3:00] The goal is to identify hazards early but not to just 'guess' by clicking continuously."""
     }
 ]
 
 def main():
-    output_file = "driversed.md"
-    with open(output_file, "w") as f:
+    output_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "driversed.md")
+    with open(output_file, "w", encoding="utf-8") as f:
         f.write("# Drivers Ed Video Transcripts\n\n")
         f.write("This file contains the full word-for-word transcripts WITH TIMINGS for all YouTube videos used in the Teen Hazard Perception Lab.\n\n")
 
-        for video in VIDEOS:
+        for index, video in enumerate(VIDEOS):
             f.write(f"## {video['title']}\n")
             f.write(f"- **YouTube ID:** `{video['id']}`\n")
             f.write(f"- **Source:** {video['url']}\n\n")
             f.write(video['transcript'] + "\n\n")
-            f.write("---\n\n")
+            f.write("---\n")
+            if index != len(VIDEOS) - 1:
+                f.write("\n")
 
     print(f"Successfully generated {output_file} with full timings.")
 

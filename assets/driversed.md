@@ -284,6 +284,11 @@ This file contains the full word-for-word transcripts WITH TIMINGS for all YouTu
 [01:00] The Mandatory Stop: You must come to a full and complete stop behind the limit line (the thick white line). A 'rolling stop' is an automatic fail.
 [02:30] Yielding Right-of-Way: Pedestrians always have the right of way. Even if they are just entering the crosswalk from the far side, you must wait.
 [04:00] Cross Traffic: Look left for oncoming traffic that has the green light. You must yield to any vehicle close enough to be a hazard.
+[05:30] U-Turners: Watch for cars making U-turns from the opposite direction; they often have a protected left-turn arrow and have the right of way over you.
+[07:00] The 'Creep' and Search: If your view is blocked by bushes, signs, or other cars, 'creep' forward slowly after your initial stop to get a better view.
+[08:30] Lane Choice: Turn into the right-most lane. Do not 'lane swing' into the middle or left lanes.
+[10:00] Decision Making: You are not required to turn on red. If you do not feel it is 100% safe, or if you cannot see clearly, you can wait for the green light.
+[11:00] Thanks for watching—we really appreciate it. Until next time, from Ben and everyone at Drivers Ed Direct, please stay safe out there. Thanks, guys!
 
 ---
 
