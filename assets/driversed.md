@@ -421,5 +421,3 @@ This file contains the full word-for-word transcripts WITH TIMINGS for all YouTu
 [2:00] The window for scoring goes from 5 points down to 0, depending on your reaction time.
 [2:30] If you click repeatedly (pattern clicking) during a clip, your score for that clip will be zero.
 [3:00] The goal is to identify hazards early but not to just 'guess' by clicking continuously.
-
----
