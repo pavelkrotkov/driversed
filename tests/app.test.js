@@ -54,10 +54,12 @@ function loadApp(options = {}) {
     setTimeout: options.setTimeout || setTimeout,
     window: {
       HPT_CURRICULUM: {
+        groups: options.groups || [],
         modules,
         sources: [],
         title: "Test Curriculum"
       },
+      HPT_CHECKPOINTS: options.checkpoints || [],
       HPT_EXPOSE_TESTS: true,
       LESSON_SLUG: options.pageSlug || null,
       alert() {},
@@ -88,6 +90,13 @@ function loadCurriculum() {
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(root, "curriculum.js"), "utf8"), context, { filename: "curriculum.js" });
   return context.window.HPT_CURRICULUM;
+}
+
+function loadCheckpoints() {
+  const context = { window: {} };
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(root, "mcq-data.js"), "utf8"), context, { filename: "mcq-data.js" });
+  return context.window.HPT_CHECKPOINTS;
 }
 
 test("safeUrl rejects dangerous and non-HTTPS external URLs", () => {
@@ -128,6 +137,12 @@ test("html escapes interpolated values by default", () => {
   assert.equal(output, '<h1>&lt;img src=x onerror=&quot;alert(1)&quot;&gt;</h1>');
 });
 
+test("html preserves zero values while escaping", () => {
+  const { html, renderHtml } = loadApp();
+
+  assert.equal(renderHtml(html`<span>${0}</span>`), "<span>0</span>");
+});
+
 test("html keeps raw() fragments unescaped and composes nested templates", () => {
   const { html, raw, renderHtml } = loadApp();
 
@@ -164,6 +179,34 @@ test("renderHome escapes module fields but keeps icon SVGs raw", () => {
   assert.doesNotMatch(appHtml, /<script>bad\(\)<\/script>/);
   assert.match(appHtml, /Obj &amp; more/);
   assert.match(appHtml, /<svg aria-hidden="true"/);
+});
+
+test("renderHome does not mark empty groups as checkpoint-ready", () => {
+  const { appHtml } = loadApp({
+    groups: [
+      {
+        id: "g99",
+        title: "Empty Group",
+        unitIds: [],
+        estimatedStudentMinutes: 0,
+        knownRuntime: "n/a"
+      }
+    ],
+    modules: [
+      {
+        id: 1,
+        slug: "x",
+        file: "x.html",
+        phase: "Phase",
+        cost: "Free",
+        title: "Title",
+        objective: "Objective"
+      }
+    ]
+  });
+
+  assert.match(appHtml, /0\/0 modules/);
+  assert.doesNotMatch(appHtml, /Checkpoint ready/);
 });
 
 test("URLs flow through safeUrl and are escaped once at the template boundary", () => {
@@ -223,6 +266,139 @@ test("normalizeProgress keeps only known module entries and expected fields", ()
       started: true,
       updatedAt: "now"
     }
+  });
+});
+
+test("normalizeProgress keeps checkpoint entries separate from lessons", () => {
+  const { normalizeProgress } = loadApp({
+    groups: [{ id: "g01", unitIds: [1] }],
+    checkpoints: [
+      {
+        id: "g01",
+        questions: [
+          { id: "g01-q01", choices: ["A", "B"], answer: 1 }
+        ]
+      }
+    ]
+  });
+
+  const normalized = normalizeProgress({
+    "checkpoint:g01": {
+      answers: {
+        "g01-q01": 1,
+        unknown: 0
+      },
+      complete: 1,
+      score: 125,
+      correct: 1,
+      selfDeclared: false,
+      submittedAt: "2026-06-15T00:00:00.000Z",
+      updatedAt: "now"
+    }
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(normalized)), {
+    "checkpoint:g01": {
+      answers: {
+        "g01-q01": 1
+      },
+      complete: true,
+      correct: 1,
+      score: 100,
+      selfDeclared: false,
+      started: false,
+      submittedAt: "2026-06-15T00:00:00.000Z",
+      updatedAt: "now"
+    }
+  });
+});
+
+test("normalizeProgress rejects invalid falsy checkpoint answers and null scores", () => {
+  const { normalizeProgress } = loadApp({
+    groups: [{ id: "g01", unitIds: [1] }],
+    checkpoints: [
+      {
+        id: "g01",
+        questions: [
+          { id: "g01-q01", choices: ["A", "B"], answer: 1 },
+          { id: "g01-q02", choices: ["A", "B"], answer: 0 }
+        ]
+      }
+    ]
+  });
+
+  const normalized = normalizeProgress({
+    "checkpoint:g01": {
+      answers: {
+        "g01-q01": "",
+        "g01-q02": false
+      },
+      complete: false,
+      correct: null,
+      score: null
+    }
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(normalized["checkpoint:g01"].answers)), {});
+  assert.equal(normalized["checkpoint:g01"].score, null);
+  assert.equal(normalized["checkpoint:g01"].correct, null);
+});
+
+test("normalizeProgress ignores checkpoint answers when question data is malformed", () => {
+  const { normalizeProgress } = loadApp({
+    groups: [{ id: "g01", unitIds: [1] }],
+    checkpoints: [
+      {
+        id: "g01",
+        questions: [
+          { id: "g01-q01", answer: 0 }
+        ]
+      }
+    ]
+  });
+
+  const normalized = normalizeProgress({
+    "checkpoint:g01": {
+      answers: {
+        "g01-q01": 0
+      }
+    }
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(normalized["checkpoint:g01"].answers)), {});
+});
+
+test("scoreCheckpoint counts answered and correct questions", () => {
+  const { scoreCheckpoint } = loadApp();
+  const checkpoint = {
+    questions: [
+      { id: "q1", choices: ["A", "B"], answer: 1 },
+      { id: "q2", choices: ["A", "B"], answer: 0 }
+    ]
+  };
+
+  assert.deepEqual(JSON.parse(JSON.stringify(scoreCheckpoint(checkpoint, { q1: 1 }))), {
+    answered: 1,
+    correct: 1,
+    total: 2,
+    score: 50
+  });
+});
+
+test("scoreCheckpoint treats missing answers as unanswered", () => {
+  const { scoreCheckpoint } = loadApp();
+  const checkpoint = {
+    questions: [
+      { id: "q1", choices: ["A", "B"], answer: 1 },
+      { id: "q2", choices: ["A", "B"], answer: 0 }
+    ]
+  };
+
+  assert.deepEqual(JSON.parse(JSON.stringify(scoreCheckpoint(checkpoint, null))), {
+    answered: 0,
+    correct: 0,
+    total: 2,
+    score: 0
   });
 });
 
@@ -295,6 +471,146 @@ test("renderLesson renders primary and companion YouTube embeds", () => {
   assert.match(appHtml, /youtube-nocookie\.com\/embed\/91fc2N1-5sw/);
   assert.match(appHtml, /Commentary &amp; method \(Smart Drive Test\)/);
   assert.match(appHtml, /Active prompt:/);
+});
+
+test("renderLesson scores the final module checkpoint", () => {
+  const checkpoint = {
+    id: "g01",
+    passTarget: 80,
+    questions: [
+      {
+        id: "g01-q01",
+        title: "Hidden space",
+        prompt: "What should you predict?",
+        choices: ["Ignore it", "Hidden actor"],
+        answer: 1,
+        explanation: "Look for the hidden space.",
+        errorCategory: "Hidden-space recognition"
+      }
+    ]
+  };
+  const { appHtml, elements, storage } = loadApp({
+    pageSlug: "lesson-two",
+    groups: [
+      {
+        id: "g01",
+        title: "Hidden-Risk Baseline",
+        unitIds: [1, 2],
+        estimatedStudentMinutes: 75,
+        knownRuntime: "n/a"
+      }
+    ],
+    checkpoints: [checkpoint],
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      },
+      {
+        id: 2,
+        slug: "lesson-two",
+        file: "lesson-two.html",
+        title: "Lesson Two",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  assert.match(appHtml, /G01 Checkpoint/);
+  assert.match(appHtml, /Hidden space/);
+
+  elements.get("choice-g01-q01-1").checked = true;
+  elements.get("submit-checkpoint").dispatch("click");
+
+  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].complete, true);
+  assert.equal(saved["checkpoint:g01"].score, 100);
+  assert.deepEqual(saved["checkpoint:g01"].answers, { "g01-q01": 1 });
+});
+
+test("changing checkpoint answers after submission clears stale score state", () => {
+  const checkpoint = {
+    id: "g01",
+    passTarget: 80,
+    questions: [
+      {
+        id: "g01-q01",
+        title: "Hidden space",
+        prompt: "What should you predict?",
+        choices: ["Ignore it", "Hidden actor"],
+        answer: 1,
+        explanation: "Look for the hidden space.",
+        errorCategory: "Hidden-space recognition"
+      }
+    ]
+  };
+  const { elements, storage } = loadApp({
+    pageSlug: "lesson-one",
+    groups: [
+      {
+        id: "g01",
+        title: "Hidden-Risk Baseline",
+        unitIds: [1],
+        estimatedStudentMinutes: 75,
+        knownRuntime: "n/a"
+      }
+    ],
+    checkpoints: [checkpoint],
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  elements.get("choice-g01-q01-1").checked = true;
+  elements.get("submit-checkpoint").dispatch("click");
+
+  let saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].complete, true);
+  assert.equal(saved["checkpoint:g01"].score, 100);
+
+  elements.get("choice-g01-q01-1").checked = false;
+  elements.get("choice-g01-q01-0").checked = true;
+  elements.get("choice-g01-q01-0").dispatch("change");
+
+  saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].complete, false);
+  assert.equal(saved["checkpoint:g01"].score, null);
+  assert.equal(saved["checkpoint:g01"].correct, null);
+  assert.equal(saved["checkpoint:g01"].submittedAt, "");
+  assert.deepEqual(saved["checkpoint:g01"].answers, { "g01-q01": 0 });
 });
 
 test("renderLesson auto-marks the lesson as started once the dwell timer fires", () => {
@@ -420,8 +736,20 @@ test("every numbered stub maps to a module and loads the shared scripts", () => 
     assert.ok(slugs.has(stubSlug(name)), `stub ${name} has no matching module`);
     const html = fs.readFileSync(path.join(root, name), "utf8");
     assert.match(html, /curriculum\.js/, `${name} must load curriculum.js`);
+    assert.match(html, /mcq-data\.js/, `${name} must load mcq-data.js`);
     assert.match(html, /app\.js/, `${name} must load app.js`);
   }
+});
+
+test("index loads curriculum, checkpoint data, and the app in order", () => {
+  const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+  const curriculumIndex = html.indexOf("curriculum.js");
+  const checkpointIndex = html.indexOf("mcq-data.js");
+  const appIndex = html.indexOf("app.js");
+
+  assert.ok(curriculumIndex > -1, "index must load curriculum.js");
+  assert.ok(checkpointIndex > curriculumIndex, "index must load mcq-data.js after curriculum.js");
+  assert.ok(appIndex > checkpointIndex, "index must load app.js after mcq-data.js");
 });
 
 test("renderHome links every module to an existing file and never to '#'", () => {
@@ -457,6 +785,66 @@ test("curriculum ids are sequential and slugs/required fields are well formed", 
       assert.ok(Array.isArray(module[field]), `${module.slug} ${field} must be an array`);
     }
   }
+});
+
+test("curriculum groups assign all 32 modules exactly once", () => {
+  const { groups, modules } = loadCurriculum();
+  const moduleIds = modules.map((module) => module.id);
+  const assigned = groups.flatMap((group) => group.unitIds);
+
+  assert.equal(groups.length, 10);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify([...assigned].sort((a, b) => a - b))),
+    JSON.parse(JSON.stringify(moduleIds))
+  );
+  assert.equal(new Set(assigned).size, moduleIds.length, "module ids must not be assigned twice");
+
+  for (const group of groups) {
+    assert.match(group.id, /^g\d\d$/);
+    assert.equal(typeof group.title, "string");
+    assert.ok(group.title.length > 0);
+    assert.ok(Array.isArray(group.unitIds));
+    assert.equal(typeof group.estimatedStudentMinutes, "number");
+    assert.equal(typeof group.knownRuntime, "string");
+    assert.match(group.mcqAsset, /^assets\/mcq-.*\.md$/);
+    assert.ok(fs.existsSync(path.join(root, group.mcqAsset)), `${group.mcqAsset} must exist`);
+  }
+});
+
+test("generated checkpoint data matches the markdown MCQ banks", () => {
+  const { groups } = loadCurriculum();
+  const checkpoints = loadCheckpoints();
+
+  assert.equal(checkpoints.length, groups.length);
+  for (const group of groups) {
+    const checkpoint = checkpoints.find((item) => item.id === group.id);
+    assert.ok(checkpoint, `missing checkpoint ${group.id}`);
+    assert.equal(checkpoint.source, group.mcqAsset);
+    assert.equal(checkpoint.passTarget, 80);
+
+    const markdown = fs.readFileSync(path.join(root, group.mcqAsset), "utf8");
+    const questionCount = (markdown.match(/^## Q\d+/gm) || []).length;
+    const answerCount = (markdown.match(/^\*\*Answer:\*\*/gm) || []).length;
+    const keyCount = (markdown.match(/^\d+\. [A-D]$/gm) || []).length;
+
+    assert.equal(checkpoint.questions.length, questionCount, `${group.mcqAsset} question count`);
+    assert.equal(questionCount, answerCount, `${group.mcqAsset} answer count`);
+    assert.equal(answerCount, keyCount, `${group.mcqAsset} answer key count`);
+    for (const question of checkpoint.questions) {
+      assert.equal(question.choices.length, 4);
+      assert.ok(Number.isInteger(question.answer));
+      assert.ok(question.answer >= 0 && question.answer < question.choices.length);
+      assert.ok(question.explanation.length > 0);
+      assert.ok(question.errorCategory.length > 0);
+    }
+  }
+});
+
+test("generated transcript markdown still contains 20 video sections", () => {
+  const transcript = fs.readFileSync(path.join(root, "assets/driversed.md"), "utf8");
+  const sections = transcript.match(/^## /gm) || [];
+
+  assert.equal(sections.length, 20);
 });
 
 test("module media ids and links pass the app's URL validators", () => {
