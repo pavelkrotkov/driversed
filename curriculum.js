@@ -9,6 +9,88 @@ function source(label, url) {
 window.HPT_CURRICULUM = {
   title: "Teen Hazard Perception Lab",
   updated: "June 13, 2026",
+  groups: [
+    {
+      id: "g01",
+      title: "Hidden-Risk Baseline",
+      unitIds: [1, 2],
+      estimatedStudentMinutes: 75,
+      knownRuntime: "n/a",
+      mcqAsset: "assets/mcq-g01-hidden-risk-baseline.md"
+    },
+    {
+      id: "g02",
+      title: "Residential Sightlines and Space",
+      unitIds: [3, 4, 5, 6],
+      estimatedStudentMinutes: 70,
+      knownRuntime: "17:30",
+      mcqAsset: "assets/mcq-g02-residential-sightlines-and-space.md"
+    },
+    {
+      id: "g03",
+      title: "Intersection Scanning Ladder",
+      unitIds: [7, 8, 9],
+      estimatedStudentMinutes: 55,
+      knownRuntime: "29:12",
+      mcqAsset: "assets/mcq-g03-intersection-scanning-ladder.md"
+    },
+    {
+      id: "g04",
+      title: "Conflict Checks Around the Car",
+      unitIds: [10, 11, 12, 13],
+      estimatedStudentMinutes: 55,
+      knownRuntime: "25:00",
+      mcqAsset: "assets/mcq-g04-conflict-checks-around-the-car.md"
+    },
+    {
+      id: "g05",
+      title: "Lane Change Deep Dive",
+      unitIds: [14],
+      estimatedStudentMinutes: 55,
+      knownRuntime: "25:00",
+      mcqAsset: "assets/mcq-g05-lane-change-deep-dive.md"
+    },
+    {
+      id: "g06",
+      title: "High-Speed, Large-Vehicle, Low-Visibility Driving",
+      unitIds: [15, 16, 17, 18],
+      estimatedStudentMinutes: 75,
+      knownRuntime: "20:02",
+      mcqAsset: "assets/mcq-g06-high-speed-large-vehicle-low-visibility.md"
+    },
+    {
+      id: "g07",
+      title: "U.S. Simulator Set",
+      unitIds: [19, 20, 21, 22, 23, 24, 25],
+      estimatedStudentMinutes: 70,
+      knownRuntime: "15:39",
+      mcqAsset: "assets/mcq-g07-us-simulator-set.md"
+    },
+    {
+      id: "g08",
+      title: "DVSA Format Transfer + First Paid Calibration",
+      unitIds: [26, 27, 28],
+      estimatedStudentMinutes: 70,
+      knownRuntime: "3:00",
+      mcqAsset: "assets/mcq-g08-dvsa-format-transfer-first-paid-calibration.md"
+    },
+    {
+      id: "g09",
+      title: "DVSA Focused Practice: Occlusion + Intention",
+      unitIds: [29, 30],
+      estimatedStudentMinutes: 70,
+      knownRuntime: "n/a",
+      mcqAsset: "assets/mcq-g09-dvsa-occlusion-intention.md"
+    },
+    {
+      id: "g10",
+      title: "DVSA Conditions + Mock Checkpoint",
+      unitIds: [31, 32],
+      estimatedStudentMinutes: 65,
+      knownRuntime: "n/a",
+      mcqAsset: "assets/mcq-g10-dvsa-conditions-mock-checkpoint.md"
+    }
+  ],
   modules: [
     {
       id: 1,

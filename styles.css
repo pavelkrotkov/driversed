@@ -233,6 +233,45 @@ button.ghost {
   gap: 12px;
 }
 
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.group-card {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.group-card h3 {
+  margin: 0;
+  font-size: 1.14rem;
+}
+
+.group-card .button {
+  justify-self: start;
+}
+
+.group-progress {
+  overflow: hidden;
+  height: 10px;
+  border-radius: 8px;
+  background: #e7e0d3;
+}
+
+.group-progress span {
+  display: block;
+  height: 100%;
+  border-radius: 8px;
+  background: var(--green);
+}
+
 .module-card {
   display: grid;
   gap: 12px;
@@ -481,6 +520,120 @@ button.ghost {
   cursor: pointer;
 }
 
+.checkpoint-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.checkpoint-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.checkpoint-head h2,
+.checkpoint-head p {
+  margin: 0;
+}
+
+.checkpoint-status {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.checkpoint-status.complete {
+  border-color: #accfbd;
+  background: var(--green-2);
+  color: var(--green);
+}
+
+.score-strip {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--blue-2);
+  color: var(--blue);
+}
+
+.score-strip strong {
+  font-size: 1.35rem;
+}
+
+.checkpoint-form {
+  display: grid;
+  gap: 14px;
+}
+
+.question-block {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.question-block legend {
+  padding: 0 4px;
+  font-weight: 900;
+}
+
+.question-block p {
+  margin: 0;
+}
+
+.choice-list {
+  display: grid;
+  gap: 8px;
+}
+
+.choice-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.choice-row input {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+}
+
+.answer-feedback {
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.answer-feedback.correct {
+  background: var(--green-2);
+  color: var(--green);
+}
+
+.answer-feedback.review {
+  background: var(--rust-2);
+  color: var(--rust);
+}
+
+.checkpoint-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .log-panel {
   position: sticky;
   top: 76px;
@@ -557,6 +710,7 @@ textarea {
   }
 
   .hero-grid,
+  .group-grid,
   .module-grid,
   .insight-grid,
   .lesson-header,
@@ -566,6 +720,10 @@ textarea {
 
   .lesson-main {
     gap: 14px;
+  }
+
+  .checkpoint-head {
+    display: grid;
   }
 
   .log-panel {

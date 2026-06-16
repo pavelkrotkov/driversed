@@ -4,6 +4,9 @@
   const EMBED_ORIGINS = ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"];
   const data = window.HPT_CURRICULUM || {};
   const modules = Array.isArray(data.modules) ? data.modules : [];
+  const groups = Array.isArray(data.groups) ? data.groups : [];
+  const checkpoints = Array.isArray(window.HPT_CHECKPOINTS) ? window.HPT_CHECKPOINTS : [];
+  const checkpointById = new Map(checkpoints.map((checkpoint) => [checkpoint.id, checkpoint]));
   const app = document.getElementById("app");
 
   const pageSlug = window.LESSON_SLUG || null;
@@ -29,9 +32,27 @@
     return progress[slug] || {};
   }
 
+  function checkpointStorageKey(id) {
+    return `checkpoint:${id}`;
+  }
+
+  function checkpointProgress(id) {
+    const progress = loadProgress();
+    return progress[checkpointStorageKey(id)] || {};
+  }
+
   function updateLesson(slug, patch) {
     const progress = loadProgress();
     progress[slug] = Object.assign({}, progress[slug] || {}, patch, {
+      updatedAt: new Date().toISOString()
+    });
+    saveProgress(progress);
+  }
+
+  function updateCheckpoint(id, patch) {
+    const key = checkpointStorageKey(id);
+    const progress = loadProgress();
+    progress[key] = Object.assign({}, progress[key] || {}, patch, {
       updatedAt: new Date().toISOString()
     });
     saveProgress(progress);
@@ -62,7 +83,7 @@
   }
 
   function escapeHtml(value) {
-    return String(value || "")
+    return String(value == null ? "" : value)
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
@@ -140,14 +161,68 @@
     return /^[A-Za-z0-9_-]{6,32}$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}` : "";
   }
 
+  function groupForModuleId(moduleId) {
+    return groups.find((group) => Array.isArray(group.unitIds) && group.unitIds.includes(moduleId)) || null;
+  }
+
+  function modulesForGroup(group) {
+    const ids = new Set(Array.isArray(group?.unitIds) ? group.unitIds : []);
+    return modules.filter((module) => ids.has(module.id));
+  }
+
+  function groupCompletion(group, progress = loadProgress()) {
+    const groupModules = modulesForGroup(group);
+    const complete = groupModules.filter((module) => progress[module.slug]?.complete).length;
+    return { complete, total: groupModules.length };
+  }
+
+  function checkpointIsComplete(groupId, progress = loadProgress()) {
+    return Boolean(progress[checkpointStorageKey(groupId)]?.complete);
+  }
+
+  function normalizeCheckpointAnswers(rawAnswers, checkpoint) {
+    if (!rawAnswers || typeof rawAnswers !== "object" || Array.isArray(rawAnswers) || !checkpoint) return {};
+
+    return checkpoint.questions.reduce((result, question) => {
+      const value = Number(rawAnswers[question.id]);
+      if (Number.isInteger(value) && value >= 0 && value < question.choices.length) {
+        result[question.id] = value;
+      }
+      return result;
+    }, {});
+  }
+
+  function scoreCheckpoint(checkpoint, answers) {
+    if (!checkpoint || !Array.isArray(checkpoint.questions) || checkpoint.questions.length === 0) {
+      return { answered: 0, correct: 0, total: 0, score: 0 };
+    }
+
+    const result = checkpoint.questions.reduce((summary, question) => {
+      if (Number.isInteger(answers[question.id])) {
+        summary.answered += 1;
+        if (answers[question.id] === question.answer) {
+          summary.correct += 1;
+        }
+      }
+      return summary;
+    }, { answered: 0, correct: 0 });
+
+    return {
+      answered: result.answered,
+      correct: result.correct,
+      total: checkpoint.questions.length,
+      score: Math.round((result.correct / checkpoint.questions.length) * 100)
+    };
+  }
+
   function normalizeProgress(raw) {
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
 
-    return modules.reduce((result, module) => {
+    const result = modules.reduce((memo, module) => {
       const entry = raw[module.slug];
-      if (!entry || typeof entry !== "object" || Array.isArray(entry)) return result;
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) return memo;
 
-      result[module.slug] = {
+      memo[module.slug] = {
         started: Boolean(entry.started),
         complete: Boolean(entry.complete),
         date: typeof entry.date === "string" ? entry.date : "",
@@ -155,8 +230,27 @@
         notes: typeof entry.notes === "string" ? entry.notes : "",
         updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : ""
       };
-      return result;
+      return memo;
     }, {});
+
+    groups.forEach((group) => {
+      const checkpoint = checkpointById.get(group.id);
+      const entry = raw[checkpointStorageKey(group.id)];
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) return;
+
+      result[checkpointStorageKey(group.id)] = {
+        started: Boolean(entry.started),
+        complete: Boolean(entry.complete),
+        selfDeclared: Boolean(entry.selfDeclared),
+        answers: normalizeCheckpointAnswers(entry.answers, checkpoint),
+        score: Number.isFinite(Number(entry.score)) ? clampPercent(Number(entry.score)) : null,
+        correct: Number.isFinite(Number(entry.correct)) ? Math.max(0, Number(entry.correct)) : null,
+        submittedAt: typeof entry.submittedAt === "string" ? entry.submittedAt : "",
+        updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : ""
+      };
+    });
+
+    return result;
   }
 
   if (window.HPT_EXPOSE_TESTS) {
@@ -169,6 +263,7 @@
       renderHtml: interpolate,
       safeUrl,
       safeYoutubeEmbed,
+      scoreCheckpoint,
       todayLocalDate
     };
   }
@@ -261,9 +356,44 @@
     const percent = percentComplete();
     const progressPercent = clampPercent(percent);
     const progress = loadProgress();
+    const completedGroups = groups.filter((group) => {
+      const completion = groupCompletion(group, progress);
+      return completion.total > 0 && completion.complete === completion.total;
+    }).length;
+    const completedCheckpoints = groups.filter((group) => checkpointIsComplete(group.id, progress)).length;
     const pendingModule = modules.find((module) => !progress[module.slug]?.complete);
     const fallbackModule = modules.length > 0 ? modules[modules.length - 1] : null;
     const nextModule = pendingModule || fallbackModule;
+
+    const groupCards = groups.map((group) => {
+      const groupModules = modulesForGroup(group);
+      const completion = groupCompletion(group, progress);
+      const firstModule = groupModules[0];
+      const lastModule = groupModules[groupModules.length - 1];
+      const nextGroupModule = groupModules.find((module) => !progress[module.slug]?.complete) || lastModule;
+      const checkpointDone = checkpointIsComplete(group.id, progress);
+      const checkpoint = checkpointById.get(group.id);
+      const unitRange = firstModule && lastModule ? `Modules ${String(firstModule.id).padStart(2, "0")}-${String(lastModule.id).padStart(2, "0")}` : "Modules";
+      const runtime = group.knownRuntime && group.knownRuntime !== "n/a" ? `${group.knownRuntime} video` : "Interactive";
+      const href = safeUrl((completion.complete === completion.total && !checkpointDone ? lastModule : nextGroupModule)?.file || "index.html", { allowExternal: false });
+      const status = checkpointDone ? "Checkpoint complete" : completion.complete === completion.total ? "Checkpoint ready" : `${completion.complete}/${completion.total} modules`;
+
+      return html`
+        <article class="group-card">
+          <div class="module-meta">
+            <span class="pill green">${group.id.toUpperCase()}</span>
+            <span class="pill blue">${unitRange}</span>
+            <span class="pill">${group.estimatedStudentMinutes} min</span>
+          </div>
+          <h3>${group.title}</h3>
+          <p class="muted">${runtime} - ${checkpoint ? `${checkpoint.questions.length} questions` : "Checkpoint"}</p>
+          <div class="group-progress" aria-label="${status}">
+            <span style="width:${completion.total > 0 ? clampPercent((completion.complete / completion.total) * 100) : 0}%"></span>
+          </div>
+          <a class="button ${checkpointDone ? "ghost" : "primary"}" href="${href}">${checkpointDone ? icon("check") : icon("next")} ${status}</a>
+        </article>
+      `;
+    });
 
     const cards = modules.map((module) => {
       const item = progress[module.slug] || {};
@@ -293,6 +423,8 @@
           <div class="hero-grid">
             <div class="stat"><strong>${done}/${modules.length}</strong><span>modules complete</span></div>
             <div class="stat"><strong>${progressPercent}%</strong><span>logged progress</span></div>
+            <div class="stat"><strong>${completedGroups}/${groups.length}</strong><span>groups complete</span></div>
+            <div class="stat"><strong>${completedCheckpoints}/${groups.length}</strong><span>checkpoints complete</span></div>
           </div>
         </div>
       </section>
@@ -303,6 +435,16 @@
             <div class="progress-meter" role="progressbar" aria-valuenow="${progressPercent}" aria-valuemin="0" aria-valuemax="100" aria-label="${progressPercent}% complete"><div class="progress-fill" style="width:${progressPercent}%"></div></div>
           </div>
           <a class="button primary" href="${nextModuleFile}">${icon("next")} Continue</a>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>Lesson Groups</h2>
+              <p class="muted">Balanced checkpoints for hidden-risk recognition, road scanning, simulator timing, and DVSA transfer.</p>
+            </div>
+          </div>
+          <div class="group-grid">${groupCards}</div>
         </section>
 
         <section>
@@ -319,6 +461,79 @@
     bindImportExport();
   }
 
+  function renderCheckpoint(group, checkpoint) {
+    if (!group || !checkpoint || !Array.isArray(checkpoint.questions)) return "";
+
+    const current = checkpointProgress(group.id);
+    const answers = current.answers || {};
+    const submitted = Boolean(current.submittedAt);
+    const summary = submitted ? scoreCheckpoint(checkpoint, answers) : null;
+    const passed = Boolean(current.complete);
+    const status = passed
+      ? current.selfDeclared ? "Complete by instructor review" : `Complete: ${current.score}%`
+      : submitted ? `${current.score}% - review misses` : "Not submitted";
+
+    const questions = checkpoint.questions.map((question, questionIndex) => {
+      const selected = answers[question.id];
+      const showFeedback = submitted && Number.isInteger(selected);
+      const correct = showFeedback && selected === question.answer;
+      const choices = question.choices.map((choice, choiceIndex) => {
+        const inputId = `choice-${question.id}-${choiceIndex}`;
+        return html`
+          <label class="choice-row" for="${inputId}">
+            <input
+              id="${inputId}"
+              type="radio"
+              name="checkpoint-${group.id}-${question.id}"
+              value="${choiceIndex}"
+              ${selected === choiceIndex ? raw("checked") : ""}
+            >
+            <span>${String.fromCharCode(65 + choiceIndex)}. ${choice}</span>
+          </label>
+        `;
+      });
+
+      return html`
+        <fieldset class="question-block">
+          <legend>${questionIndex + 1}. ${question.title}</legend>
+          <p>${question.prompt}</p>
+          <div class="choice-list">${choices}</div>
+          ${showFeedback ? html`
+            <div class="answer-feedback ${correct ? "correct" : "review"}">
+              <strong>${correct ? "Correct" : "Review"} - ${question.errorCategory}</strong>
+              <p>${question.explanation}</p>
+            </div>
+          ` : ""}
+        </fieldset>
+      `;
+    });
+
+    return html`
+      <section class="panel checkpoint-panel" aria-label="${group.title} checkpoint">
+        <div class="checkpoint-head">
+          <div>
+            <p class="lesson-number">${group.id.toUpperCase()} Checkpoint</p>
+            <h2>${group.title}</h2>
+            <p class="muted">Pass target: ${checkpoint.passTarget}% - ${checkpoint.questions.length} questions</p>
+          </div>
+          <span class="checkpoint-status ${passed ? "complete" : ""}">${status}</span>
+        </div>
+        ${submitted && summary ? html`
+          <div class="score-strip">
+            <strong>${summary.correct}/${summary.total}</strong>
+            <span>${summary.answered}/${summary.total} answered</span>
+          </div>
+        ` : ""}
+        <form id="checkpoint-form" class="checkpoint-form">${questions}</form>
+        <div class="checkpoint-actions">
+          <button class="primary" type="button" id="submit-checkpoint">${icon("check")} Score checkpoint</button>
+          <button type="button" id="complete-checkpoint">${icon("next")} Mark complete after review</button>
+        </div>
+        <p class="small muted" id="checkpoint-save-state">Saved locally in this browser.</p>
+      </section>
+    `;
+  }
+
   function renderLesson(slug) {
     const module = modules.find((item) => item.slug === slug);
     if (!module) {
@@ -330,6 +545,11 @@
     const currentIndex = modules.findIndex((item) => item.slug === slug);
     const prev = modules[currentIndex - 1];
     const next = modules[currentIndex + 1];
+    const group = groupForModuleId(module.id);
+    const groupModules = group ? modulesForGroup(group) : [];
+    const isGroupFinalModule = groupModules.length > 0 && groupModules[groupModules.length - 1].id === module.id;
+    const checkpoint = group ? checkpointById.get(group.id) : null;
+    const checkpointPanel = isGroupFinalModule ? renderCheckpoint(group, checkpoint) : "";
     const hasEmbeddedMedia = Boolean(module.video || module.embedUrl);
     const resourceItems = (Array.isArray(module.resources) ? module.resources : []).map(([label, url]) => html`
       <li><a href="${safeUrl(url, { allowRelative: false })}" target="_blank" rel="noreferrer"><span>${label}</span>${icon("link")}</a></li>
@@ -398,6 +618,7 @@
             <h1>${module.title}</h1>
             <p class="muted">${module.objective}</p>
             <div class="pill-row">
+              ${group ? html`<span class="pill">${group.id.toUpperCase()}: ${group.title}</span>` : ""}
               <span class="pill green">${module.phase}</span>
               <span class="pill blue">${module.cost}</span>
               <span class="pill rust">${module.time}</span>
@@ -432,6 +653,7 @@
               <ul class="lesson-list">${promptItems}</ul>
             </div>
             ${sourcePanel}
+            ${checkpointPanel}
           </div>
 
           <aside class="panel log-panel" aria-label="Progress log">
@@ -468,6 +690,9 @@
 
     bindImportExport();
     bindLessonLog(module.slug);
+    if (isGroupFinalModule && checkpoint) {
+      bindCheckpoint(group.id);
+    }
   }
 
   function bindLessonLog(slug) {
@@ -529,6 +754,78 @@
       }, STARTED_DWELL_MS);
       startedEl.addEventListener("change", () => window.clearTimeout(dwellTimer));
     }
+  }
+
+  function bindCheckpoint(groupId) {
+    const checkpoint = checkpointById.get(groupId);
+    if (!checkpoint || !Array.isArray(checkpoint.questions)) return;
+
+    const collectAnswers = () => checkpoint.questions.reduce((answers, question) => {
+      question.choices.forEach((_, choiceIndex) => {
+        const input = document.getElementById(`choice-${question.id}-${choiceIndex}`);
+        if (input?.checked) {
+          answers[question.id] = choiceIndex;
+        }
+      });
+      return answers;
+    }, {});
+
+    const saveAnswers = () => {
+      updateCheckpoint(groupId, {
+        started: true,
+        answers: collectAnswers()
+      });
+      const state = document.getElementById("checkpoint-save-state");
+      if (state) state.textContent = "Saved checkpoint answers.";
+    };
+
+    checkpoint.questions.forEach((question) => {
+      question.choices.forEach((_, choiceIndex) => {
+        document.getElementById(`choice-${question.id}-${choiceIndex}`)?.addEventListener("change", saveAnswers);
+      });
+    });
+
+    document.getElementById("submit-checkpoint")?.addEventListener("click", () => {
+      const answers = collectAnswers();
+      const summary = scoreCheckpoint(checkpoint, answers);
+      if (summary.answered < summary.total) {
+        updateCheckpoint(groupId, {
+          started: true,
+          answers,
+          complete: false,
+          selfDeclared: false
+        });
+        const state = document.getElementById("checkpoint-save-state");
+        if (state) state.textContent = `Answer all ${summary.total} questions before scoring.`;
+        return;
+      }
+
+      updateCheckpoint(groupId, {
+        started: true,
+        answers,
+        complete: summary.score >= checkpoint.passTarget,
+        selfDeclared: false,
+        score: summary.score,
+        correct: summary.correct,
+        submittedAt: new Date().toISOString()
+      });
+      renderLesson(pageSlug);
+    });
+
+    document.getElementById("complete-checkpoint")?.addEventListener("click", () => {
+      const answers = collectAnswers();
+      const summary = scoreCheckpoint(checkpoint, answers);
+      updateCheckpoint(groupId, {
+        started: true,
+        answers,
+        complete: true,
+        selfDeclared: true,
+        score: summary.score,
+        correct: summary.correct,
+        submittedAt: new Date().toISOString()
+      });
+      renderLesson(pageSlug);
+    });
   }
 
   if (pageSlug) {
