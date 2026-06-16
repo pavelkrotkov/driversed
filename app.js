@@ -181,12 +181,16 @@
   }
 
   function normalizeCheckpointAnswers(rawAnswers, checkpoint) {
-    if (!rawAnswers || typeof rawAnswers !== "object" || Array.isArray(rawAnswers) || !checkpoint) return {};
+    if (!rawAnswers || typeof rawAnswers !== "object" || Array.isArray(rawAnswers) || !checkpoint || !Array.isArray(checkpoint.questions)) return {};
 
     return checkpoint.questions.reduce((result, question) => {
-      const value = Number(rawAnswers[question.id]);
-      if (Number.isInteger(value) && value >= 0 && value < question.choices.length) {
-        result[question.id] = value;
+      const rawValue = rawAnswers[question.id];
+      const canConvert = typeof rawValue === "number" || (typeof rawValue === "string" && rawValue.trim() !== "");
+      if (canConvert) {
+        const value = Number(rawValue);
+        if (Number.isInteger(value) && value >= 0 && value < question.choices.length) {
+          result[question.id] = value;
+        }
       }
       return result;
     }, {});
@@ -197,10 +201,11 @@
       return { answered: 0, correct: 0, total: 0, score: 0 };
     }
 
+    const safeAnswers = answers && typeof answers === "object" && !Array.isArray(answers) ? answers : {};
     const result = checkpoint.questions.reduce((summary, question) => {
-      if (Number.isInteger(answers[question.id])) {
+      if (Number.isInteger(safeAnswers[question.id])) {
         summary.answered += 1;
-        if (answers[question.id] === question.answer) {
+        if (safeAnswers[question.id] === question.answer) {
           summary.correct += 1;
         }
       }
@@ -243,8 +248,8 @@
         complete: Boolean(entry.complete),
         selfDeclared: Boolean(entry.selfDeclared),
         answers: normalizeCheckpointAnswers(entry.answers, checkpoint),
-        score: Number.isFinite(Number(entry.score)) ? clampPercent(Number(entry.score)) : null,
-        correct: Number.isFinite(Number(entry.correct)) ? Math.max(0, Number(entry.correct)) : null,
+        score: entry.score != null && !(typeof entry.score === "string" && entry.score.trim() === "") && Number.isFinite(Number(entry.score)) ? clampPercent(Number(entry.score)) : null,
+        correct: entry.correct != null && !(typeof entry.correct === "string" && entry.correct.trim() === "") && Number.isFinite(Number(entry.correct)) ? Math.max(0, Number(entry.correct)) : null,
         submittedAt: typeof entry.submittedAt === "string" ? entry.submittedAt : "",
         updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : ""
       };
@@ -373,6 +378,7 @@
       const nextGroupModule = groupModules.find((module) => !progress[module.slug]?.complete) || lastModule;
       const checkpointDone = checkpointIsComplete(group.id, progress);
       const checkpoint = checkpointById.get(group.id);
+      const checkpointLabel = checkpoint && Array.isArray(checkpoint.questions) ? `${checkpoint.questions.length} questions` : "Checkpoint";
       const unitRange = firstModule && lastModule ? `Modules ${String(firstModule.id).padStart(2, "0")}-${String(lastModule.id).padStart(2, "0")}` : "Modules";
       const runtime = group.knownRuntime && group.knownRuntime !== "n/a" ? `${group.knownRuntime} video` : "Interactive";
       const href = safeUrl((completion.complete === completion.total && !checkpointDone ? lastModule : nextGroupModule)?.file || "index.html", { allowExternal: false });
@@ -386,7 +392,7 @@
             <span class="pill">${group.estimatedStudentMinutes} min</span>
           </div>
           <h3>${group.title}</h3>
-          <p class="muted">${runtime} - ${checkpoint ? `${checkpoint.questions.length} questions` : "Checkpoint"}</p>
+          <p class="muted">${runtime} - ${checkpointLabel}</p>
           <div class="group-progress" aria-label="${status}">
             <span style="width:${completion.total > 0 ? clampPercent((completion.complete / completion.total) * 100) : 0}%"></span>
           </div>

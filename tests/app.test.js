@@ -285,6 +285,54 @@ test("normalizeProgress keeps checkpoint entries separate from lessons", () => {
   });
 });
 
+test("normalizeProgress rejects invalid falsy checkpoint answers and null scores", () => {
+  const { normalizeProgress } = loadApp({
+    groups: [{ id: "g01", unitIds: [1] }],
+    checkpoints: [
+      {
+        id: "g01",
+        questions: [
+          { id: "g01-q01", choices: ["A", "B"], answer: 1 },
+          { id: "g01-q02", choices: ["A", "B"], answer: 0 }
+        ]
+      }
+    ]
+  });
+
+  const normalized = normalizeProgress({
+    "checkpoint:g01": {
+      answers: {
+        "g01-q01": "",
+        "g01-q02": false
+      },
+      complete: false,
+      correct: null,
+      score: null
+    }
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(normalized["checkpoint:g01"].answers)), {});
+  assert.equal(normalized["checkpoint:g01"].score, null);
+  assert.equal(normalized["checkpoint:g01"].correct, null);
+});
+
+test("normalizeProgress ignores checkpoint answers when question data is malformed", () => {
+  const { normalizeProgress } = loadApp({
+    groups: [{ id: "g01", unitIds: [1] }],
+    checkpoints: [{ id: "g01" }]
+  });
+
+  const normalized = normalizeProgress({
+    "checkpoint:g01": {
+      answers: {
+        "g01-q01": 0
+      }
+    }
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(normalized["checkpoint:g01"].answers)), {});
+});
+
 test("scoreCheckpoint counts answered and correct questions", () => {
   const { scoreCheckpoint } = loadApp();
   const checkpoint = {
@@ -299,6 +347,23 @@ test("scoreCheckpoint counts answered and correct questions", () => {
     correct: 1,
     total: 2,
     score: 50
+  });
+});
+
+test("scoreCheckpoint treats missing answers as unanswered", () => {
+  const { scoreCheckpoint } = loadApp();
+  const checkpoint = {
+    questions: [
+      { id: "q1", choices: ["A", "B"], answer: 1 },
+      { id: "q2", choices: ["A", "B"], answer: 0 }
+    ]
+  };
+
+  assert.deepEqual(JSON.parse(JSON.stringify(scoreCheckpoint(checkpoint, null))), {
+    answered: 0,
+    correct: 0,
+    total: 2,
+    score: 0
   });
 });
 
