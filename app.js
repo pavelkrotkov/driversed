@@ -777,12 +777,28 @@
     }, {});
 
     const saveAnswers = () => {
-      updateCheckpoint(groupId, {
+      const current = checkpointProgress(groupId);
+      const patch = {
         started: true,
         answers: collectAnswers()
-      });
-      const state = document.getElementById("checkpoint-save-state");
-      if (state) state.textContent = "Saved checkpoint answers.";
+      };
+      if (current.submittedAt) {
+        Object.assign(patch, {
+          complete: false,
+          selfDeclared: false,
+          score: null,
+          correct: null,
+          submittedAt: ""
+        });
+      }
+
+      updateCheckpoint(groupId, patch);
+      if (current.submittedAt) {
+        renderLesson(pageSlug);
+      } else {
+        const state = document.getElementById("checkpoint-save-state");
+        if (state) state.textContent = "Saved checkpoint answers.";
+      }
     };
 
     checkpoint.questions.forEach((question) => {

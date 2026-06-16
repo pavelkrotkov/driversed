@@ -512,6 +512,72 @@ test("renderLesson scores the final module checkpoint", () => {
   assert.deepEqual(saved["checkpoint:g01"].answers, { "g01-q01": 1 });
 });
 
+test("changing checkpoint answers after submission clears stale score state", () => {
+  const checkpoint = {
+    id: "g01",
+    passTarget: 80,
+    questions: [
+      {
+        id: "g01-q01",
+        title: "Hidden space",
+        prompt: "What should you predict?",
+        choices: ["Ignore it", "Hidden actor"],
+        answer: 1,
+        explanation: "Look for the hidden space.",
+        errorCategory: "Hidden-space recognition"
+      }
+    ]
+  };
+  const { elements, storage } = loadApp({
+    pageSlug: "lesson-one",
+    groups: [
+      {
+        id: "g01",
+        title: "Hidden-Risk Baseline",
+        unitIds: [1],
+        estimatedStudentMinutes: 75,
+        knownRuntime: "n/a"
+      }
+    ],
+    checkpoints: [checkpoint],
+    modules: [
+      {
+        id: 1,
+        slug: "lesson-one",
+        file: "lesson-one.html",
+        title: "Lesson One",
+        phase: "Phase",
+        cost: "Free",
+        time: "10 min",
+        objective: "Observe safely.",
+        do: ["Watch."],
+        drill: ["Scan."],
+        pass: "Explain it.",
+        logPrompts: ["What changed?"],
+        resources: []
+      }
+    ]
+  });
+
+  elements.get("choice-g01-q01-1").checked = true;
+  elements.get("submit-checkpoint").dispatch("click");
+
+  let saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].complete, true);
+  assert.equal(saved["checkpoint:g01"].score, 100);
+
+  elements.get("choice-g01-q01-1").checked = false;
+  elements.get("choice-g01-q01-0").checked = true;
+  elements.get("choice-g01-q01-0").dispatch("change");
+
+  saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].complete, false);
+  assert.equal(saved["checkpoint:g01"].score, null);
+  assert.equal(saved["checkpoint:g01"].correct, null);
+  assert.equal(saved["checkpoint:g01"].submittedAt, "");
+  assert.deepEqual(saved["checkpoint:g01"].answers, { "g01-q01": 0 });
+});
+
 test("renderLesson auto-marks the lesson as started once the dwell timer fires", () => {
   const timers = [];
   const { elements, storage } = loadApp({
