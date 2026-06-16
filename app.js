@@ -188,7 +188,7 @@
       const canConvert = typeof rawValue === "number" || (typeof rawValue === "string" && rawValue.trim() !== "");
       if (canConvert) {
         const value = Number(rawValue);
-        if (Number.isInteger(value) && value >= 0 && value < question.choices.length) {
+        if (Number.isInteger(value) && value >= 0 && Array.isArray(question.choices) && value < question.choices.length) {
           result[question.id] = value;
         }
       }

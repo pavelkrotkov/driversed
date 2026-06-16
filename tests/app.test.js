@@ -319,7 +319,14 @@ test("normalizeProgress rejects invalid falsy checkpoint answers and null scores
 test("normalizeProgress ignores checkpoint answers when question data is malformed", () => {
   const { normalizeProgress } = loadApp({
     groups: [{ id: "g01", unitIds: [1] }],
-    checkpoints: [{ id: "g01" }]
+    checkpoints: [
+      {
+        id: "g01",
+        questions: [
+          { id: "g01-q01", answer: 0 }
+        ]
+      }
+    ]
   });
 
   const normalized = normalizeProgress({
