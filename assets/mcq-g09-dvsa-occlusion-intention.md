@@ -10,11 +10,11 @@ Pass target: 80% or better. Review every miss by error category.
 You are driving along a street with parked cars on both sides. A pedestrian is visible on the sidewalk, walking toward a gap between two parked vehicles near a crosswalk. What is the best hazard-perception response?
 
 A. Wait until the pedestrian steps into the road before reacting
-B. Treat the gap as a blocked sightline and prepare for the pedestrian to emerge
-C. Focus only on the vehicle ahead because pedestrians are still on the sidewalk
+B. Focus only on the vehicle ahead because pedestrians are still on the sidewalk
+C. Treat the gap as a blocked sightline and prepare for the pedestrian to emerge
 D. Move closer to the parked cars so you can see into the gap sooner
 
-**Answer:** B
+**Answer:** C
 **Explanation:** Parked vehicles can hide a pedestrian until they are close to the lane. The gap and crosswalk make the pedestrian's possible path relevant before they step out.
 **Error category:** Pedestrian occlusion
 
@@ -36,11 +36,11 @@ D. You should move left quickly to pass before traffic builds up
 You are approaching a bend on a narrow road. The road disappears behind hedges, and you cannot see whether there is a stopped vehicle, cyclist, or pedestrian beyond the curve. What should you do?
 
 A. Keep speed steady because no hazard is visible yet
-B. Position and slow so you can stop within the distance you can see
-C. Move toward the center of the road to see farther around the bend
+B. Move toward the center of the road to see farther around the bend
+C. Position and slow so you can stop within the distance you can see
 D. Wait for another driver to come through first, then follow their path
 
-**Answer:** B
+**Answer:** C
 **Explanation:** A bend limits the visible stopping distance. Hidden hazards beyond the curve matter even before anything appears.
 **Error category:** Bend occlusion
 
@@ -62,11 +62,11 @@ D. Move right to improve your view over the hill
 A car ahead is near the centerline at a side road. Its left wheels are angled slightly toward the side road, but the turn signal is off. What is the best prediction?
 
 A. It will definitely continue straight because there is no signal
-B. It may turn left despite no signal, so prepare for slowing or stopping
-C. It is safe to overtake because the driver did not signal
-D. The wheel angle does not matter unless the brake lights are on
+B. It is safe to overtake because the driver did not signal
+C. The wheel angle does not matter unless the brake lights are on
+D. It may turn left despite no signal, so prepare for slowing or stopping
 
-**Answer:** B
+**Answer:** D
 **Explanation:** Wheel angle and lane position can reveal intention before or without a signal. Do not rely only on indicators.
 **Error category:** Wheel-angle intention cue
 
@@ -87,12 +87,12 @@ D. The vehicle cannot turn unless it first signals for several seconds
 
 You are following a car on a busy street. It signals right, slows, then the signal cancels. A moment later, the vehicle begins moving toward the curb again near a side road. What should you do?
 
-A. Assume the cancelled signal means the driver will continue straight
-B. Watch for a second signal or turn movement and leave space
+A. Watch for a second signal or turn movement and leave space
+B. Assume the cancelled signal means the driver will continue straight
 C. Close the gap because the driver has made a decision
 D. Move left immediately without checking mirrors
 
-**Answer:** B
+**Answer:** A
 **Explanation:** A cancelled signal does not always mean the intention is gone. Drivers may hesitate, miss a turn, or signal again near the next opening.
 **Error category:** Second-signal anticipation
 
@@ -100,22 +100,21 @@ D. Move left immediately without checking mirrors
 
 You are approaching a side road partly hidden by parked vans. A cyclist is visible ahead, riding near the curb. The cyclist checks over their shoulder and shifts slightly left. What is the most likely risk?
 
-A. The cyclist may be preparing to avoid a hidden obstruction or turn across your path
-B. The cyclist is making room for you to pass immediately
-C. The parked vans are irrelevant because the cyclist is visible
-D. The cyclist must stop before changing position
+A. The cyclist is making room for you to pass immediately
+B. The parked vans are irrelevant because the cyclist is visible
+C. The cyclist must stop before changing position
+D. The cyclist may be preparing to avoid a hidden obstruction or turn across your path
 
-**Answer:** A
+**Answer:** D
 **Explanation:** A shoulder check, lane shift, and blocked side-road area suggest possible movement or conflict. The visible cyclist and hidden space both matter.
 **Error category:** Vulnerable-road-user intention cue
 
 ## Answer Key
-
-1. B
+1. C
 2. B
-3. B
+3. C
 4. B
-5. B
+5. D
 6. A
-7. B
-8. A
+7. A
+8. D

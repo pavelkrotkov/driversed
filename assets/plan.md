@@ -53,20 +53,20 @@ This keeps long units from being buried inside already-heavy groups. In particul
 
 Use these as planning values when displaying group totals or deciding how to split sessions. They are intentionally point estimates, not promises.
 
-| Group | Known raw clip/runtime sum | Student effort |
+| Group | Video/clip runtime | Student effort |
 |---|---:|---:|
-| G1 | n/a | 75 min |
-| G2 | 32:00 | 70 min |
-| G3 | 31:50 | 55 min |
-| G4 | 33:06 | 55 min |
-| G5 | 45:06 | 55 min |
-| G6 | 47:20 | 75 min |
+| G1 | n/a (interactive) | 75 min |
+| G2 | 17:30 | 70 min |
+| G3 | 29:12 | 55 min |
+| G4 | 25:00 | 55 min |
+| G5 | 25:00 | 55 min |
+| G6 | 20:02 | 75 min |
 | G7 | 15:39 | 70 min |
-| G8 | 1:25 known | 70 min |
-| G9 | n/a | 70 min |
-| G10 | n/a | 65 min |
+| G8 | 3:00 | 70 min |
+| G9 | n/a (interactive) | 70 min |
+| G10 | n/a (interactive) | 65 min |
 
-Known raw runtime only includes available video and simulator clip lengths. Student effort includes watching, pausing, replaying, reviewing misses, and logging.
+Video/clip runtime is derived from the end-timestamps of every transcript in `assets/driversed.md`, summed per group. It includes the secondary embedded videos (the four "Smart Drive Test / Rick" clips referenced inside units 4, 5, 7, and 9), not just the primary module video. These end-timestamp sums are lower bounds, since each video runs slightly past its final caption, so treat them as floors rather than exact lengths. Two exceptions: G7 uses the advertised Driving-Tests.org simulator clip lengths recorded in `curriculum.js` (the simulators have no transcript), and G8's 3:00 is the single DVSA explainer video in unit 27 (units 26 and 28 are interactive). G1, G9, and G10 are entirely interactive (Toyota Risk-ATTEND and the paid DVSA sessions) and have no measurable clip runtime; their advertised completion times are not published, so only the student-effort estimate applies. Student effort includes watching, pausing, replaying, reviewing misses, and logging, and remains a point estimate.
 
 ## MCQ Design Rules
 

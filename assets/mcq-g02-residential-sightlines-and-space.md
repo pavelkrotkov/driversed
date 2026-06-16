@@ -10,11 +10,11 @@ Pass target: 80% or better. Review every miss by error category.
 You are driving down a residential street. A parked car is ahead on the right. Nothing is moving yet, but the car blocks your view of the sidewalk and curb area. How should you classify it right now?
 
 A. No hazard, because it is parked
-B. Potential hazard, because it could hide a person, bike, door, or driveway movement
-C. Developing hazard, because every parked car requires immediate braking
-D. Emergency hazard, because you must stop before passing it
+B. Developing hazard, because every parked car requires immediate braking
+C. Emergency hazard, because you must stop before passing it
+D. Potential hazard, because it could hide a person, bike, door, or driveway movement
 
-**Answer:** B
+**Answer:** D
 **Explanation:** A parked car that blocks sightlines is a potential hazard. It becomes developing when a concrete cue appears, such as a door opening, a person stepping out, wheels turning, or a vehicle backing out.
 **Error category:** Potential-vs-developing timing
 
@@ -23,11 +23,11 @@ D. Emergency hazard, because you must stop before passing it
 A parked car ahead has been a potential hazard. As you approach, you see the driver's door crack open into your lane. What has changed?
 
 A. It is still only potential, because the door is not fully open
-B. It is now a developing hazard, because it has started to affect your path
-C. It is no longer a hazard, because the driver has seen you
+B. It is no longer a hazard, because the driver has seen you
+C. It is now a developing hazard, because it has started to affect your path
 D. It only matters if there is oncoming traffic
 
-**Answer:** B
+**Answer:** C
 **Explanation:** A developing hazard is one that has started to change your driving plan. A door opening is the cue that turns "could happen" into "act now."
 **Error category:** Developing-hazard recognition
 
@@ -35,12 +35,12 @@ D. It only matters if there is oncoming traffic
 
 You see a ball roll from between two parked cars into the street. You do not yet see a child. What is the best first response?
 
-A. Maintain speed until a child appears
-B. Honk and keep your lane position
-C. Ease off the accelerator, cover the brake, and scan the hidden space between the cars
+A. Ease off the accelerator, cover the brake, and scan the hidden space between the cars
+B. Maintain speed until a child appears
+C. Honk and keep your lane position
 D. Move sharply left immediately
 
-**Answer:** C
+**Answer:** A
 **Explanation:** Children are unpredictable residential hazards. The ball is a clue that a hidden child may enter the road, so the response should begin before the child is visible.
 **Error category:** Hidden-actor prediction
 
@@ -48,12 +48,12 @@ D. Move sharply left immediately
 
 You are passing a row of parked cars and a driveway is partly blocked by a tall hedge. You notice the rear of a vehicle beginning to appear from the driveway. What should you do?
 
-A. Treat it as developing and prepare to slow or stop
-B. Treat it as potential until the whole vehicle is in the road
-C. Speed up to clear the driveway before the car backs out
-D. Move right to make more room for oncoming traffic
+A. Treat it as potential until the whole vehicle is in the road
+B. Speed up to clear the driveway before the car backs out
+C. Move right to make more room for oncoming traffic
+D. Treat it as developing and prepare to slow or stop
 
-**Answer:** A
+**Answer:** D
 **Explanation:** Once movement begins from a hidden driveway, the hazard is developing because it can enter your path.
 **Error category:** Driveway hazard timing
 
@@ -62,11 +62,11 @@ D. Move right to make more room for oncoming traffic
 A parked car is on the right side of a residential street. There is no lane line, but there is enough room and no oncoming traffic. What lane position best manages the risk?
 
 A. Stay close to the parked car to leave more room for imaginary oncoming traffic
-B. Move left smoothly and leave about 3 to 4 feet of side clearance
-C. Drive in the middle of the street until the road is completely clear
+B. Drive in the middle of the street until the road is completely clear
+C. Move left smoothly and leave about 3 to 4 feet of side clearance
 D. Stop behind every parked car before passing
 
-**Answer:** B
+**Answer:** C
 **Explanation:** The lane positioning lesson says to imagine the lane moving left around a parked car and to leave side clearance because a door could open at any moment.
 **Error category:** Side clearance
 
@@ -75,11 +75,11 @@ D. Stop behind every parked car before passing
 You are following another car on a residential street. The lead car passes a mailbox. You reach the mailbox one second later. What is the safest correction?
 
 A. Keep the gap because residential speeds are low
-B. Increase the gap until you have about a 3 to 4 second cushion
-C. Move closer so no one cuts in
+B. Move closer so no one cuts in
+C. Increase the gap until you have about a 3 to 4 second cushion
 D. Watch only the brake lights and ignore fixed-object timing
 
-**Answer:** B
+**Answer:** C
 **Explanation:** Fixed-object counting turns following distance into a measurable habit. In residential driving, the course target is about a 3 to 4 second cushion.
 **Error category:** Following distance
 
@@ -114,11 +114,11 @@ D. The curve matters only if the road is wet
 You are approaching a residential curve. The road looks clear up to the bend, but the view beyond it is blocked. What is the best speed plan?
 
 A. Maintain speed into the curve and brake only if something appears
-B. Check the rearview mirror, slow before the curve, then gently accelerate out as the view opens
-C. Accelerate into the curve to reduce time in the blind area
-D. Drift left to increase the turning radius
+B. Accelerate into the curve to reduce time in the blind area
+C. Drift left to increase the turning radius
+D. Check the rearview mirror, slow before the curve, then gently accelerate out as the view opens
 
-**Answer:** B
+**Answer:** D
 **Explanation:** Slow before the curve, check behind before slowing, and accelerate gently only as the view opens and the vehicle straightens.
 **Error category:** Speed before occlusion
 
@@ -136,14 +136,13 @@ D. Pass close to the cyclist but stay far from the oncoming car
 **Error category:** Space cushion and lane position
 
 ## Answer Key
-
-1. B
-2. B
-3. C
-4. A
-5. B
-6. B
+1. D
+2. C
+3. A
+4. D
+5. C
+6. C
 7. A
 8. B
-9. B
+9. D
 10. B
