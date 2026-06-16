@@ -23,11 +23,11 @@ D. Honk immediately and maintain speed
 You approach an intersection on a major road. An opposing vehicle is waiting to turn left across your path. The driver appears to be looking past you, not at you.
 
 A. Assume the driver sees you because you are on the major road
-B. Speed up to clear the intersection first
-C. Reduce risk by checking mirrors, easing off the accelerator, and preparing to brake
+B. Reduce risk by checking mirrors, easing off the accelerator, and preparing to brake
+C. Speed up to clear the intersection first
 D. Move toward the centerline to make yourself more visible
 
-**Answer:** C
+**Answer:** B
 **Explanation:** Right-of-way is not enough when another driver's attention or intent is uncertain.
 **Error category:** Legal priority vs practical safety
 
@@ -35,12 +35,12 @@ D. Move toward the centerline to make yourself more visible
 
 You stop at a red light and plan to turn right. The crosswalk to your right looks clear, but pedestrians are approaching from behind your right shoulder.
 
-A. Turn as soon as the vehicle lane is clear
-B. Check left for traffic only, then turn
-C. Check the crosswalk, right-side blind area, and bike lane before moving
+A. Check the crosswalk, right-side blind area, and bike lane before moving
+B. Turn as soon as the vehicle lane is clear
+C. Check left for traffic only, then turn
 D. Stop only if someone is already inside the crosswalk
 
-**Answer:** C
+**Answer:** A
 **Explanation:** Right turn on red creates traps for pedestrians approaching from the side or behind.
 **Error category:** Pedestrian trap
 
@@ -49,11 +49,11 @@ D. Stop only if someone is already inside the crosswalk
 You are stopped at a red light with your right signal on. A cyclist is coming up in the bike lane on your right.
 
 A. Turn before the cyclist reaches you
-B. Wait and let the cyclist pass before turning
-C. Turn wide into the next lane
+B. Turn wide into the next lane
+C. Wait and let the cyclist pass before turning
 D. Edge into the bike lane to block the cyclist
 
-**Answer:** B
+**Answer:** C
 **Explanation:** A cyclist on the right can be hidden or easy to miss during right turns. Yield before turning.
 **Error category:** Cyclist conflict
 
@@ -74,12 +74,12 @@ D. Move halfway into the bike lane without checking
 
 You see traffic slowing ahead. Before braking firmly, what should you do if time allows?
 
-A. Check the rearview mirror for following distance
-B. Check only the speedometer
-C. Look at the right mirror only
-D. Brake first, then check behind you
+A. Check only the speedometer
+B. Look at the right mirror only
+C. Brake first, then check behind you
+D. Check the rearview mirror for following distance
 
-**Answer:** A
+**Answer:** D
 **Explanation:** A rearview check helps you judge whether a tailgater changes how gradually you should slow.
 **Error category:** Rear risk awareness
 
@@ -100,12 +100,12 @@ D. Ignore the vehicle behind because it is their responsibility
 
 You want to move right into the next lane. Your side mirror appears clear.
 
-A. Move over because mirrors show the full lane
-B. Signal and move gradually without another check
-C. Check the mirror, signal, then perform a shoulder check before moving
+A. Check the mirror, signal, then perform a shoulder check before moving
+B. Move over because mirrors show the full lane
+C. Signal and move gradually without another check
 D. Turn your head only and ignore the mirror
 
-**Answer:** C
+**Answer:** A
 **Explanation:** Mirrors help, but they do not eliminate blind zones. A shoulder check confirms the space beside you.
 **Error category:** Mirror overreliance
 
@@ -113,12 +113,12 @@ D. Turn your head only and ignore the mirror
 
 You are changing lanes left. A car behind you in the target lane disappears from your side mirror.
 
-A. It is probably in your blind zone, so do not move until you confirm its position
-B. It must have slowed down, so continue changing lanes
-C. It must be directly behind you, so speed up
-D. It is no longer relevant because it is not visible
+A. It must have slowed down, so continue changing lanes
+B. It must be directly behind you, so speed up
+C. It is no longer relevant because it is not visible
+D. It is probably in your blind zone, so do not move until you confirm its position
 
-**Answer:** A
+**Answer:** D
 **Explanation:** A vehicle that disappears from the mirror may be beside you in the blind spot.
 **Error category:** Blind-zone tracking
 
@@ -126,24 +126,23 @@ D. It is no longer relevant because it is not visible
 
 You are preparing to turn right from a busy street. There is a crosswalk, a bike lane, and a vehicle close behind you.
 
-A. Check only the traffic coming from the left
-B. Check rearview mirror, right mirror, right shoulder, bike lane, and crosswalk before turning
+A. Check rearview mirror, right mirror, right shoulder, bike lane, and crosswalk before turning
+B. Check only the traffic coming from the left
 C. Focus only on the signal light
 D. Turn slowly and let others react
 
-**Answer:** B
+**Answer:** A
 **Explanation:** Right turns require checking rear risk, side blind zones, bike-lane traffic, and pedestrians.
 **Error category:** Incomplete conflict scan
 
 ## Answer Key
-
 1. B
-2. C
-3. C
-4. B
+2. B
+3. A
+4. C
 5. B
-6. A
+6. D
 7. C
-8. C
-9. A
-10. B
+8. A
+9. D
+10. A

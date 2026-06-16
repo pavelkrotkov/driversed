@@ -10,11 +10,11 @@ Pass target: 80% or better. Review every miss by error category.
 You stop at a residential stop sign. The cross street has no stop signs, and parked cars make it hard to see traffic coming from your left. What should you do before entering?
 
 A. Look straight ahead, then accelerate because you stopped completely
-B. Check left-right-left, inch forward until you can see past the parked cars, then check again
-C. Check your rearview mirror, then enter if no one is behind you
-D. Move quickly so cross traffic has time to react
+B. Check your rearview mirror, then enter if no one is behind you
+C. Move quickly so cross traffic has time to react
+D. Check left-right-left, inch forward until you can see past the parked cars, then check again
 
-**Answer:** B
+**Answer:** D
 **Explanation:** A full stop is not enough when sightlines are blocked. Use left-right-left, creep forward to improve the view, then rescan before entering.
 **Error category:** Blind intersection / blocked edge
 
@@ -23,11 +23,11 @@ D. Move quickly so cross traffic has time to react
 You approach an uncontrolled residential intersection where no signs or signals are posted. A car is approaching from your right at about the same time. What is the safest response?
 
 A. Continue because you are on the wider-looking street
-B. Slow, scan both directions, and be prepared to yield to the vehicle on your right
-C. Speed up to clear the intersection first
+B. Speed up to clear the intersection first
+C. Slow, scan both directions, and be prepared to yield to the vehicle on your right
 D. Stop only if the other driver honks or brakes
 
-**Answer:** B
+**Answer:** C
 **Explanation:** At an uncontrolled intersection, the driver on the left generally yields to the driver on the right, but the safety task is still to slow and scan for conflicts.
 **Error category:** Right-of-way fixation
 
@@ -35,12 +35,12 @@ D. Stop only if the other driver honks or brakes
 
 You are turning right from a residential street. A sidewalk runs along both sides, and a hedge blocks your view of the corner. What should be included in your traffic check?
 
-A. Only the lane you are entering, because pedestrians will stop
-B. Left for traffic, right for pedestrians and cyclists, then left again before moving
+A. Left for traffic, right for pedestrians and cyclists, then left again before moving
+B. Only the lane you are entering, because pedestrians will stop
 C. Rearview mirror only, because the turn is low speed
 D. The traffic signal on the nearest major street
 
-**Answer:** B
+**Answer:** A
 **Explanation:** A right turn still requires checking cross traffic and the pedestrian/cyclist zone near the corner, especially when landscaping blocks the edge.
 **Error category:** Pedestrian / cyclist zone
 
@@ -49,11 +49,11 @@ D. The traffic signal on the nearest major street
 At a two-way stop, you are stopped on the minor street and plan to go straight across a major street. Cross traffic does not have stop signs. What is the main hazard-perception task?
 
 A. Watch only the first lane of traffic nearest you
-B. Check for a gap across all lanes you must cross, including traffic from both directions
-C. Enter halfway and wait in the middle if needed
-D. Follow the car ahead as soon as it starts moving
+B. Enter halfway and wait in the middle if needed
+C. Follow the car ahead as soon as it starts moving
+D. Check for a gap across all lanes you must cross, including traffic from both directions
 
-**Answer:** B
+**Answer:** D
 **Explanation:** Crossing a major street expands the conflict area. You need a gap that covers every lane and direction you will cross, not just the nearest lane.
 **Error category:** Major-street expansion
 
@@ -61,12 +61,12 @@ D. Follow the car ahead as soon as it starts moving
 
 You reach an all-way stop after another car on your right has already stopped. A pedestrian is stepping toward the crosswalk on your left. What should you do?
 
-A. Go first because you are turning right
-B. Yield to the pedestrian and resolve vehicle order only after the crosswalk is clear
+A. Yield to the pedestrian and resolve vehicle order only after the crosswalk is clear
+B. Go first because you are turning right
 C. Wave the other car through and ignore the pedestrian until you move
 D. Enter slowly so the pedestrian knows to wait
 
-**Answer:** B
+**Answer:** A
 **Explanation:** Pedestrian conflict takes priority. Right-of-way order between vehicles does not remove the need to yield to a pedestrian entering or using the crosswalk.
 **Error category:** Pedestrian / right-of-way sequencing
 
@@ -87,12 +87,12 @@ D. Focus only on the direction you plan to turn
 
 You are crossing a major street from a side street. The nearest lane is clear, but a large SUV in the far lane blocks your view of a bike lane and sidewalk beyond it. What should you assume?
 
-A. The far edge is clear because cars are stopped
-B. The blocked area may hide a cyclist, pedestrian, or vehicle, so you need a better view before crossing
+A. The blocked area may hide a cyclist, pedestrian, or vehicle, so you need a better view before crossing
+B. The far edge is clear because cars are stopped
 C. Only cars count as cross traffic
 D. If the SUV driver waves, the crossing is safe
 
-**Answer:** B
+**Answer:** A
 **Explanation:** Blocked edges hide smaller and faster-moving hazards. A wave or a partial gap does not confirm the whole crossing path is clear.
 **Error category:** Blocked edge / vulnerable road user
 
@@ -101,11 +101,11 @@ D. If the SUV driver waves, the crossing is safe
 You stop at a four-way stop at the same time as a driver directly across from you. You plan to turn left, and the other driver appears to be going straight. What should you do?
 
 A. Turn left first because you stopped at the same time
-B. Yield to the oncoming driver going straight, while continuing to scan for pedestrians and cross traffic
-C. Focus only on the other driver and ignore the crosswalks
+B. Focus only on the other driver and ignore the crosswalks
+C. Yield to the oncoming driver going straight, while continuing to scan for pedestrians and cross traffic
 D. Enter the intersection and wait for the other driver to stop again
 
-**Answer:** B
+**Answer:** C
 **Explanation:** When arrival time is equal, the left-turning driver yields to oncoming traffic going straight. Scanning still includes crosswalks and late arrivals.
 **Error category:** All-way stop / left-turn yield
 
@@ -127,23 +127,22 @@ D. Look straight ahead and listen for engines
 You approach an intersection on a major street with a green light. A car is waiting to turn left across your path, and pedestrians are near the far crosswalk. What should your scan include?
 
 A. Only the green light, because it gives you the right-of-way
-B. Left-center-right scanning across the intersection, including the turning car, crosswalks, and road edges
-C. Only the car turning left, because pedestrians are not in your lane yet
-D. Only the vehicle behind you, because braking is the main risk
+B. Only the car turning left, because pedestrians are not in your lane yet
+C. Only the vehicle behind you, because braking is the main risk
+D. Left-center-right scanning across the intersection, including the turning car, crosswalks, and road edges
 
-**Answer:** B
+**Answer:** D
 **Explanation:** A green light does not remove conflict checks. On major streets, the scan must widen to include turning vehicles, crosswalks, and edge movement.
 **Error category:** Major-street intersection scanning
 
 ## Answer Key
-
-1. B
-2. B
-3. B
-4. B
-5. B
+1. D
+2. C
+3. A
+4. D
+5. A
 6. B
-7. B
-8. B
+7. A
+8. C
 9. B
-10. B
+10. D
