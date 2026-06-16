@@ -181,6 +181,34 @@ test("renderHome escapes module fields but keeps icon SVGs raw", () => {
   assert.match(appHtml, /<svg aria-hidden="true"/);
 });
 
+test("renderHome does not mark empty groups as checkpoint-ready", () => {
+  const { appHtml } = loadApp({
+    groups: [
+      {
+        id: "g99",
+        title: "Empty Group",
+        unitIds: [],
+        estimatedStudentMinutes: 0,
+        knownRuntime: "n/a"
+      }
+    ],
+    modules: [
+      {
+        id: 1,
+        slug: "x",
+        file: "x.html",
+        phase: "Phase",
+        cost: "Free",
+        title: "Title",
+        objective: "Objective"
+      }
+    ]
+  });
+
+  assert.match(appHtml, /0\/0 modules/);
+  assert.doesNotMatch(appHtml, /Checkpoint ready/);
+});
+
 test("URLs flow through safeUrl and are escaped once at the template boundary", () => {
   const { appHtml } = loadApp({
     modules: [

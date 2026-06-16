@@ -379,10 +379,11 @@
       const checkpointDone = checkpointIsComplete(group.id, progress);
       const checkpoint = checkpointById.get(group.id);
       const checkpointLabel = checkpoint && Array.isArray(checkpoint.questions) ? `${checkpoint.questions.length} questions` : "Checkpoint";
+      const groupComplete = completion.total > 0 && completion.complete === completion.total;
       const unitRange = firstModule && lastModule ? `Modules ${String(firstModule.id).padStart(2, "0")}-${String(lastModule.id).padStart(2, "0")}` : "Modules";
       const runtime = group.knownRuntime && group.knownRuntime !== "n/a" ? `${group.knownRuntime} video` : "Interactive";
-      const href = safeUrl((completion.complete === completion.total && !checkpointDone ? lastModule : nextGroupModule)?.file || "index.html", { allowExternal: false });
-      const status = checkpointDone ? "Checkpoint complete" : completion.complete === completion.total ? "Checkpoint ready" : `${completion.complete}/${completion.total} modules`;
+      const href = safeUrl((groupComplete && !checkpointDone ? lastModule : nextGroupModule)?.file || "index.html", { allowExternal: false });
+      const status = checkpointDone ? "Checkpoint complete" : groupComplete ? "Checkpoint ready" : `${completion.complete}/${completion.total} modules`;
 
       return html`
         <article class="group-card">
