@@ -36,10 +36,19 @@ function loadApp(options = {}) {
   }
 
   const app = element("app");
+  /** @type {Record<string, string>} */
   const storage = {};
   if (options.progress) {
     storage["hpt-progress-v1"] = JSON.stringify(options.progress);
   }
+  const localStorageMock = {
+    getItem(key) {
+      return storage[key] || null;
+    },
+    setItem(key, value) {
+      storage[key] = value;
+    },
+  };
   const context = {
     Blob,
     URL,
@@ -53,7 +62,7 @@ function loadApp(options = {}) {
         return id === "app" ? app : element(id);
       },
     },
-    localStorage: null,
+    localStorage: localStorageMock,
     setTimeout: options.setTimeout || setTimeout,
     window: {
       HPT_CURRICULUM: {
@@ -71,23 +80,18 @@ function loadApp(options = {}) {
         href: "https://example.test/index.html",
         reload() {},
       },
-      localStorage: {
-        getItem(key) {
-          return storage[key] || null;
-        },
-        setItem(key, value) {
-          storage[key] = value;
-        },
-      },
+      localStorage: localStorageMock,
       setTimeout: options.setTimeout || setTimeout,
     },
   };
-  context.localStorage = context.window.localStorage;
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context, {
     filename: "app.js",
   });
-  return Object.assign({ appHtml: app.innerHTML, elements, storage }, context.window.HPT_TESTS);
+  return Object.assign(
+    { appHtml: app.innerHTML, elements, storage },
+    /** @type {any} */ (context.window.HPT_TESTS),
+  );
 }
 
 function loadCurriculum() {
@@ -663,7 +667,11 @@ test("renderLesson auto-marks the lesson as started once the dwell timer fires",
 
   timers.forEach((fn) => fn());
 
-  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  // Read through a fresh any binding: the earlier assert.equal(..., undefined)
+  // narrows storage["hpt-progress-v1"], and the type checker can't see
+  // timers.forEach repopulate it.
+  const persisted = /** @type {Record<string, string>} */ (storage);
+  const saved = JSON.parse(persisted["hpt-progress-v1"]);
   assert.equal(saved["lesson-one"].started, true);
   assert.equal(elements.get("started").checked, true);
   // Date must reflect the learner's local calendar day, not UTC.

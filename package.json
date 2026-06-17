@@ -5,6 +5,7 @@
   "description": "A static site for practicing hazard perception.",
   "scripts": {
     "test": "node --test",
+    "typecheck": "tsc --noEmit -p jsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "format:check": "biome format .",
@@ -12,6 +13,8 @@
     "ci": "biome ci ."
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4"
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "^22.19.21",
+    "typescript": "5.7.2"
   }
 }

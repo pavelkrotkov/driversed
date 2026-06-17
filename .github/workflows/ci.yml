@@ -7,7 +7,7 @@ on:
 
 jobs:
   check:
-    name: Lint, format & test
+    name: Lint, format, types & test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,10 +18,13 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Biome (lint + format check)
         run: npm run ci
+
+      - name: Type check (tsc on JSDoc types)
+        run: npm run typecheck
 
       - name: Tests
         run: npm test

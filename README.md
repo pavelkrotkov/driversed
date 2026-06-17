@@ -14,10 +14,15 @@ The numbered lesson HTML files are tiny clean-URL stubs. Each one only sets `win
 
 ## Development
 
-The site itself needs no build step, but linting, formatting, and tests are wired up with [Biome](https://biomejs.dev/) and the Node test runner. Install dev dependencies once with `npm install`, then:
+The site itself needs no build step, but linting, formatting, type-checking, and tests are wired up with [Biome](https://biomejs.dev/), the TypeScript compiler in JSDoc/`checkJs` mode, and the Node test runner. Install dev dependencies once with `npm install`, then:
 
 - `npm run check` — lint and format-check everything (auto-fix with `npx biome check --write .`)
 - `npm run format` — apply formatting
+- `npm run typecheck` — type-check the JavaScript via `tsc --noEmit` against the JSDoc annotations and `types.d.ts`
 - `npm test` — run the Node test suite
 
-CI (`.github/workflows/ci.yml`) runs the same checks on every pull request and fails the build on any lint, formatting, or test error.
+Type-checking stays buildless: the files remain plain `.js` loaded by `<script>` tags, and `tsc` only reads the JSDoc types and the shared shapes declared in `types.d.ts` without emitting anything. Edit `types.d.ts` when the curriculum or MCQ data format changes.
+
+There are two type-check configs so each file is checked against the right globals: `jsconfig.json` covers the browser-shipped files (`app.js`, `curriculum.js`, `mcq-data.js`) with `types: []` and DOM libs only, so Node globals like `process` or `require` are correctly rejected there; `tsconfig.node.json` covers `tests/` and `scripts/` with the Node types. `npm run typecheck` runs both.
+
+CI (`.github/workflows/ci.yml`) runs the same checks on every pull request and fails the build on any lint, formatting, type, or test error.

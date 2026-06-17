@@ -3,6 +3,11 @@ const dtoBase = "https://driving-tests.org/defensive-driving-hazard-simulator-";
 const dvsaCourse =
   "https://www.safedrivingforlife.info/shop/official-dvsa-guide-hazard-perception-elearning/";
 
+/**
+ * @param {string} label
+ * @param {string} url
+ * @returns {ResourceLink}
+ */
 function source(label, url) {
   return [label, url];
 }
