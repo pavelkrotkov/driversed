@@ -6,7 +6,7 @@
     "https://www.youtube-nocookie.com",
     "https://www.youtube.com",
   ];
-  const data = window.HPT_CURRICULUM || {};
+  const data = window.HPT_CURRICULUM || /** @type {Partial<Curriculum>} */ ({});
   const modules = Array.isArray(data.modules) ? data.modules : [];
   const groups = Array.isArray(data.groups) ? data.groups : [];
   const checkpoints = Array.isArray(window.HPT_CHECKPOINTS) ? window.HPT_CHECKPOINTS : [];
@@ -17,7 +17,9 @@
 
   function loadProgress() {
     try {
-      return normalizeProgress(JSON.parse(localStorage.getItem(storageKey)) || {});
+      return normalizeProgress(
+        JSON.parse(/** @type {string} */ (localStorage.getItem(storageKey))) || {},
+      );
     } catch (error) {
       return {};
     }
@@ -413,7 +415,9 @@
   function bindImportExport() {
     const exportButton = document.getElementById("export-progress");
     const importButton = document.getElementById("import-progress");
-    const importFile = document.getElementById("import-file");
+    const importFile = /** @type {HTMLInputElement | null} */ (
+      document.getElementById("import-file")
+    );
 
     exportButton?.addEventListener("click", () => {
       const payload = {
@@ -745,14 +749,14 @@
         : "";
     const companionMedia = companionEmbed
       ? html`
-      <section class="companion-video" aria-label="${companionVideo.label || "Companion video"}">
+      <section class="companion-video" aria-label="${companionVideo?.label || "Companion video"}">
         <div class="companion-copy">
-          <h2>${companionVideo.label || "Companion Video"}</h2>
-          ${companionVideo.note ? html`<p>${companionVideo.note}</p>` : ""}
-          ${companionVideo.prompt ? html`<p><strong>Active prompt:</strong> ${companionVideo.prompt}</p>` : ""}
+          <h2>${companionVideo?.label || "Companion Video"}</h2>
+          ${companionVideo?.note ? html`<p>${companionVideo.note}</p>` : ""}
+          ${companionVideo?.prompt ? html`<p><strong>Active prompt:</strong> ${companionVideo.prompt}</p>` : ""}
         </div>
         <div class="media-box">
-          <iframe title="${companionVideo.title || companionVideo.label || "Companion video"}" src="${companionEmbed}" allowfullscreen></iframe>
+          <iframe title="${companionVideo?.title || companionVideo?.label || "Companion video"}" src="${companionEmbed}" allowfullscreen></iframe>
         </div>
       </section>
     `
@@ -866,7 +870,7 @@
 
     bindImportExport();
     bindLessonLog(module.slug);
-    if (isGroupFinalModule && checkpoint) {
+    if (isGroupFinalModule && checkpoint && group) {
       bindCheckpoint(group.id);
     }
   }
@@ -882,11 +886,13 @@
     };
 
     const save = () => {
-      const startedEl = document.getElementById("started");
-      const completeEl = document.getElementById("complete");
-      const dateEl = document.getElementById("date");
-      const ratingEl = document.getElementById("rating");
-      const notesEl = document.getElementById("notes");
+      const startedEl = /** @type {HTMLInputElement | null} */ (document.getElementById("started"));
+      const completeEl = /** @type {HTMLInputElement | null} */ (
+        document.getElementById("complete")
+      );
+      const dateEl = /** @type {HTMLInputElement | null} */ (document.getElementById("date"));
+      const ratingEl = /** @type {HTMLSelectElement | null} */ (document.getElementById("rating"));
+      const notesEl = /** @type {HTMLTextAreaElement | null} */ (document.getElementById("notes"));
 
       updateLesson(slug, {
         started: startedEl ? startedEl.checked : false,
@@ -902,7 +908,7 @@
     const debouncedSave = debounce(save, 250);
 
     fields.forEach((id) => {
-      const field = document.getElementById(id);
+      const field = /** @type {HTMLInputElement | null} */ (document.getElementById(id));
       if (!field) return;
 
       if (field.type === "checkbox" || field.tagName === "SELECT") {
@@ -916,11 +922,11 @@
     // Automatically mark the lesson as started once the learner has stayed on
     // the page past the dwell threshold. A manual toggle of the checkbox
     // cancels the timer so the auto-mark never overrides an explicit choice.
-    const startedEl = document.getElementById("started");
+    const startedEl = /** @type {HTMLInputElement | null} */ (document.getElementById("started"));
     if (startedEl && !lessonProgress(slug).started) {
       const dwellTimer = window.setTimeout(() => {
         if (startedEl.checked) return;
-        const dateEl = document.getElementById("date");
+        const dateEl = /** @type {HTMLInputElement | null} */ (document.getElementById("date"));
         if (dateEl && !dateEl.value) {
           dateEl.value = todayLocalDate();
         }
@@ -940,7 +946,9 @@
     const collectAnswers = () =>
       checkpoint.questions.reduce((answers, question) => {
         question.choices.forEach((_, choiceIndex) => {
-          const input = document.getElementById(`choice-${question.id}-${choiceIndex}`);
+          const input = /** @type {HTMLInputElement | null} */ (
+            document.getElementById(`choice-${question.id}-${choiceIndex}`)
+          );
           if (input?.checked) {
             answers[question.id] = choiceIndex;
           }

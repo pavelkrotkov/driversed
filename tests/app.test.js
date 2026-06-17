@@ -36,6 +36,7 @@ function loadApp(options = {}) {
   }
 
   const app = element("app");
+  /** @type {Record<string, string>} */
   const storage = {};
   if (options.progress) {
     storage["hpt-progress-v1"] = JSON.stringify(options.progress);
@@ -53,7 +54,7 @@ function loadApp(options = {}) {
         return id === "app" ? app : element(id);
       },
     },
-    localStorage: null,
+    localStorage: /** @type {any} */ (null),
     setTimeout: options.setTimeout || setTimeout,
     window: {
       HPT_CURRICULUM: {
@@ -87,7 +88,10 @@ function loadApp(options = {}) {
   vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context, {
     filename: "app.js",
   });
-  return Object.assign({ appHtml: app.innerHTML, elements, storage }, context.window.HPT_TESTS);
+  return Object.assign(
+    { appHtml: app.innerHTML, elements, storage },
+    /** @type {any} */ (context.window.HPT_TESTS),
+  );
 }
 
 function loadCurriculum() {
@@ -663,7 +667,11 @@ test("renderLesson auto-marks the lesson as started once the dwell timer fires",
 
   timers.forEach((fn) => fn());
 
-  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  // Re-read via a fresh cast: the earlier assert.equal(..., undefined) narrows
+  // the element access, and the type checker can't see timers.forEach repopulate it.
+  const saved = JSON.parse(
+    /** @type {string} */ (/** @type {unknown} */ (storage["hpt-progress-v1"])),
+  );
   assert.equal(saved["lesson-one"].started, true);
   assert.equal(elements.get("started").checked, true);
   // Date must reflect the learner's local calendar day, not UTC.
