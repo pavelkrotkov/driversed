@@ -23,4 +23,6 @@ The site itself needs no build step, but linting, formatting, type-checking, and
 
 Type-checking stays buildless: the files remain plain `.js` loaded by `<script>` tags, and `tsc` only reads the JSDoc types and the shared shapes declared in `types.d.ts` without emitting anything. Edit `types.d.ts` when the curriculum or MCQ data format changes.
 
+There are two type-check configs so each file is checked against the right globals: `jsconfig.json` covers the browser-shipped files (`app.js`, `curriculum.js`, `mcq-data.js`) with `types: []` and DOM libs only, so Node globals like `process` or `require` are correctly rejected there; `tsconfig.node.json` covers `tests/` and `scripts/` with the Node types. `npm run typecheck` runs both.
+
 CI (`.github/workflows/ci.yml`) runs the same checks on every pull request and fails the build on any lint, formatting, type, or test error.
