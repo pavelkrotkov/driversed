@@ -10,7 +10,7 @@ function loadApp(options = {}) {
   const elements = new Map();
   const modules = options.modules || [
     { slug: "lesson-one", file: "lesson-one.html" },
-    { slug: "lesson-two", file: "lesson-two.html" }
+    { slug: "lesson-two", file: "lesson-two.html" },
   ];
 
   function element(id) {
@@ -29,7 +29,7 @@ function loadApp(options = {}) {
         dispatch(event) {
           (this.listeners[event] || []).forEach((handler) => handler());
         },
-        click() {}
+        click() {},
       });
     }
     return elements.get(id);
@@ -51,7 +51,7 @@ function loadApp(options = {}) {
       },
       getElementById(id) {
         return id === "app" ? app : element(id);
-      }
+      },
     },
     localStorage: null,
     setTimeout: options.setTimeout || setTimeout,
@@ -60,7 +60,7 @@ function loadApp(options = {}) {
         groups: options.groups || [],
         modules,
         sources: [],
-        title: "Test Curriculum"
+        title: "Test Curriculum",
       },
       HPT_CHECKPOINTS: options.checkpoints || [],
       HPT_EXPOSE_TESTS: true,
@@ -69,7 +69,7 @@ function loadApp(options = {}) {
       clearTimeout: options.clearTimeout || clearTimeout,
       location: {
         href: "https://example.test/index.html",
-        reload() {}
+        reload() {},
       },
       localStorage: {
         getItem(key) {
@@ -77,28 +77,34 @@ function loadApp(options = {}) {
         },
         setItem(key, value) {
           storage[key] = value;
-        }
+        },
       },
-      setTimeout: options.setTimeout || setTimeout
-    }
+      setTimeout: options.setTimeout || setTimeout,
+    },
   };
   context.localStorage = context.window.localStorage;
   vm.createContext(context);
-  vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context, { filename: "app.js" });
+  vm.runInContext(fs.readFileSync(path.join(root, "app.js"), "utf8"), context, {
+    filename: "app.js",
+  });
   return Object.assign({ appHtml: app.innerHTML, elements, storage }, context.window.HPT_TESTS);
 }
 
 function loadCurriculum() {
   const context = { window: {} };
   vm.createContext(context);
-  vm.runInContext(fs.readFileSync(path.join(root, "curriculum.js"), "utf8"), context, { filename: "curriculum.js" });
+  vm.runInContext(fs.readFileSync(path.join(root, "curriculum.js"), "utf8"), context, {
+    filename: "curriculum.js",
+  });
   return context.window.HPT_CURRICULUM;
 }
 
 function loadCheckpoints() {
   const context = { window: {} };
   vm.createContext(context);
-  vm.runInContext(fs.readFileSync(path.join(root, "mcq-data.js"), "utf8"), context, { filename: "mcq-data.js" });
+  vm.runInContext(fs.readFileSync(path.join(root, "mcq-data.js"), "utf8"), context, {
+    filename: "mcq-data.js",
+  });
   return context.window.HPT_CHECKPOINTS;
 }
 
@@ -114,21 +120,33 @@ test("safeUrl rejects dangerous and non-HTTPS external URLs", () => {
 test("safeUrl preserves safe relative URLs and enforces origin allow-lists", () => {
   const { safeUrl } = loadApp();
 
-  assert.equal(safeUrl("lessons/one.html?x=1#top"), "https://example.test/lessons/one.html?x=1#top");
-  assert.equal(safeUrl("https://allowed.example/video", {
-    allowRelative: false,
-    allowedOrigins: ["https://allowed.example"]
-  }), "https://allowed.example/video");
-  assert.equal(safeUrl("https://blocked.example/video", {
-    allowRelative: false,
-    allowedOrigins: ["https://allowed.example"]
-  }), "#");
+  assert.equal(
+    safeUrl("lessons/one.html?x=1#top"),
+    "https://example.test/lessons/one.html?x=1#top",
+  );
+  assert.equal(
+    safeUrl("https://allowed.example/video", {
+      allowRelative: false,
+      allowedOrigins: ["https://allowed.example"],
+    }),
+    "https://allowed.example/video",
+  );
+  assert.equal(
+    safeUrl("https://blocked.example/video", {
+      allowRelative: false,
+      allowedOrigins: ["https://allowed.example"],
+    }),
+    "#",
+  );
 });
 
 test("safeYoutubeEmbed accepts normal IDs and rejects malformed IDs", () => {
   const { safeYoutubeEmbed } = loadApp();
 
-  assert.equal(safeYoutubeEmbed("YUTAimvbfSk"), "https://www.youtube-nocookie.com/embed/YUTAimvbfSk");
+  assert.equal(
+    safeYoutubeEmbed("YUTAimvbfSk"),
+    "https://www.youtube-nocookie.com/embed/YUTAimvbfSk",
+  );
   assert.equal(safeYoutubeEmbed("../bad"), "");
   assert.equal(safeYoutubeEmbed("x".repeat(40)), "");
 });
@@ -137,7 +155,7 @@ test("html escapes interpolated values by default", () => {
   const { html, renderHtml } = loadApp();
 
   const output = renderHtml(html`<h1>${'<img src=x onerror="alert(1)">'}</h1>`);
-  assert.equal(output, '<h1>&lt;img src=x onerror=&quot;alert(1)&quot;&gt;</h1>');
+  assert.equal(output, "<h1>&lt;img src=x onerror=&quot;alert(1)&quot;&gt;</h1>");
 });
 
 test("html preserves zero values while escaping", () => {
@@ -173,9 +191,9 @@ test("renderHome escapes module fields but keeps icon SVGs raw", () => {
         phase: "Phase",
         cost: "Free",
         title: "<script>bad()</script>",
-        objective: "Obj & more"
-      }
-    ]
+        objective: "Obj & more",
+      },
+    ],
   });
 
   assert.match(appHtml, /&lt;script&gt;bad\(\)&lt;\/script&gt;/);
@@ -192,8 +210,8 @@ test("renderHome does not mark empty groups as checkpoint-ready", () => {
         title: "Empty Group",
         unitIds: [],
         estimatedStudentMinutes: 0,
-        knownRuntime: "n/a"
-      }
+        knownRuntime: "n/a",
+      },
     ],
     modules: [
       {
@@ -203,9 +221,9 @@ test("renderHome does not mark empty groups as checkpoint-ready", () => {
         phase: "Phase",
         cost: "Free",
         title: "Title",
-        objective: "Objective"
-      }
-    ]
+        objective: "Objective",
+      },
+    ],
   });
 
   assert.match(appHtml, /0\/0 modules/);
@@ -222,9 +240,9 @@ test("URLs flow through safeUrl and are escaped once at the template boundary", 
         phase: "Phase",
         cost: "Free",
         title: "Title",
-        objective: "Objective"
-      }
-    ]
+        objective: "Objective",
+      },
+    ],
   });
 
   // safeUrl validates and returns the href; html`` escapes it exactly once,
@@ -253,11 +271,11 @@ test("normalizeProgress keeps only known module entries and expected fields", ()
       notes: "Good scan",
       rating: "Emerging",
       started: true,
-      updatedAt: "now"
+      updatedAt: "now",
     },
     unknown: {
-      started: true
-    }
+      started: true,
+    },
   });
 
   assert.deepEqual(JSON.parse(JSON.stringify(normalized)), {
@@ -267,8 +285,8 @@ test("normalizeProgress keeps only known module entries and expected fields", ()
       notes: "Good scan",
       rating: "Emerging",
       started: true,
-      updatedAt: "now"
-    }
+      updatedAt: "now",
+    },
   });
 });
 
@@ -278,32 +296,30 @@ test("normalizeProgress keeps checkpoint entries separate from lessons", () => {
     checkpoints: [
       {
         id: "g01",
-        questions: [
-          { id: "g01-q01", choices: ["A", "B"], answer: 1 }
-        ]
-      }
-    ]
+        questions: [{ id: "g01-q01", choices: ["A", "B"], answer: 1 }],
+      },
+    ],
   });
 
   const normalized = normalizeProgress({
     "checkpoint:g01": {
       answers: {
         "g01-q01": 1,
-        unknown: 0
+        unknown: 0,
       },
       complete: 1,
       score: 125,
       correct: 1,
       selfDeclared: false,
       submittedAt: "2026-06-15T00:00:00.000Z",
-      updatedAt: "now"
-    }
+      updatedAt: "now",
+    },
   });
 
   assert.deepEqual(JSON.parse(JSON.stringify(normalized)), {
     "checkpoint:g01": {
       answers: {
-        "g01-q01": 1
+        "g01-q01": 1,
       },
       complete: true,
       correct: 1,
@@ -312,8 +328,8 @@ test("normalizeProgress keeps checkpoint entries separate from lessons", () => {
       selfDeclared: false,
       started: false,
       submittedAt: "2026-06-15T00:00:00.000Z",
-      updatedAt: "now"
-    }
+      updatedAt: "now",
+    },
   });
 });
 
@@ -325,22 +341,22 @@ test("normalizeProgress rejects invalid falsy checkpoint answers and null scores
         id: "g01",
         questions: [
           { id: "g01-q01", choices: ["A", "B"], answer: 1 },
-          { id: "g01-q02", choices: ["A", "B"], answer: 0 }
-        ]
-      }
-    ]
+          { id: "g01-q02", choices: ["A", "B"], answer: 0 },
+        ],
+      },
+    ],
   });
 
   const normalized = normalizeProgress({
     "checkpoint:g01": {
       answers: {
         "g01-q01": "",
-        "g01-q02": false
+        "g01-q02": false,
       },
       complete: false,
       correct: null,
-      score: null
-    }
+      score: null,
+    },
   });
 
   assert.deepEqual(JSON.parse(JSON.stringify(normalized["checkpoint:g01"].answers)), {});
@@ -354,19 +370,17 @@ test("normalizeProgress ignores checkpoint answers when question data is malform
     checkpoints: [
       {
         id: "g01",
-        questions: [
-          { id: "g01-q01", answer: 0 }
-        ]
-      }
-    ]
+        questions: [{ id: "g01-q01", answer: 0 }],
+      },
+    ],
   });
 
   const normalized = normalizeProgress({
     "checkpoint:g01": {
       answers: {
-        "g01-q01": 0
-      }
-    }
+        "g01-q01": 0,
+      },
+    },
   });
 
   assert.deepEqual(JSON.parse(JSON.stringify(normalized["checkpoint:g01"].answers)), {});
@@ -377,15 +391,15 @@ test("scoreCheckpoint counts answered and correct questions", () => {
   const checkpoint = {
     questions: [
       { id: "q1", choices: ["A", "B"], answer: 1 },
-      { id: "q2", choices: ["A", "B"], answer: 0 }
-    ]
+      { id: "q2", choices: ["A", "B"], answer: 0 },
+    ],
   };
 
   assert.deepEqual(JSON.parse(JSON.stringify(scoreCheckpoint(checkpoint, { q1: 1 }))), {
     answered: 1,
     correct: 1,
     total: 2,
-    score: 50
+    score: 50,
   });
 });
 
@@ -394,21 +408,23 @@ test("scoreCheckpoint treats missing answers as unanswered", () => {
   const checkpoint = {
     questions: [
       { id: "q1", choices: ["A", "B"], answer: 1 },
-      { id: "q2", choices: ["A", "B"], answer: 0 }
-    ]
+      { id: "q2", choices: ["A", "B"], answer: 0 },
+    ],
   };
 
   assert.deepEqual(JSON.parse(JSON.stringify(scoreCheckpoint(checkpoint, null))), {
     answered: 0,
     correct: 0,
     total: 2,
-    score: 0
+    score: 0,
   });
 });
 
 test("Risk-ATTEND modules open externally instead of embedding Toyota app", () => {
   const curriculum = loadCurriculum();
-  const riskAttendModules = curriculum.modules.filter((module) => module.slug.includes("risk-attend"));
+  const riskAttendModules = curriculum.modules.filter((module) =>
+    module.slug.includes("risk-attend"),
+  );
 
   assert.equal(riskAttendModules.length, 2);
   for (const module of riskAttendModules) {
@@ -424,13 +440,14 @@ test("Smart Drive Test companions are only added to the four approved DED module
   const companionModules = curriculum.modules.filter((module) => module.companionVideo);
 
   assert.equal(curriculum.modules.length, 32);
-  assert.deepEqual(JSON.parse(JSON.stringify(companionModules.map((module) => module.id))), [4, 5, 7, 9]);
-  assert.deepEqual(JSON.parse(JSON.stringify(companionModules.map((module) => module.companionVideo.id))), [
-    "91fc2N1-5sw",
-    "J_UKNOGJ2tU",
-    "TrtgVbd87SY",
-    "v0Soc-kicOQ"
-  ]);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(companionModules.map((module) => module.id))),
+    [4, 5, 7, 9],
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(companionModules.map((module) => module.companionVideo.id))),
+    ["91fc2N1-5sw", "J_UKNOGJ2tU", "TrtgVbd87SY", "v0Soc-kicOQ"],
+  );
 
   for (const module of companionModules) {
     assert.match(module.companionVideo.note, /Canadian, right-side-of-road/);
@@ -458,7 +475,7 @@ test("renderLesson renders primary and companion YouTube embeds", () => {
           id: "91fc2N1-5sw",
           label: "Commentary & method (Smart Drive Test)",
           note: "Canadian, right-side-of-road context.",
-          prompt: "Predict aloud before watching."
+          prompt: "Predict aloud before watching.",
         },
         preWatch: "Before watching.",
         sourceFit: "Fits here.",
@@ -466,9 +483,9 @@ test("renderLesson renders primary and companion YouTube embeds", () => {
         drill: ["Scan."],
         pass: "Explain it.",
         logPrompts: ["What changed?"],
-        resources: []
-      }
-    ]
+        resources: [],
+      },
+    ],
   });
 
   assert.match(appHtml, /youtube-nocookie\.com\/embed\/YUTAimvbfSk/);
@@ -489,9 +506,9 @@ test("renderLesson scores the final module checkpoint", () => {
         choices: ["Ignore it", "Hidden actor"],
         answer: 1,
         explanation: "Look for the hidden space.",
-        errorCategory: "Hidden-space recognition"
-      }
-    ]
+        errorCategory: "Hidden-space recognition",
+      },
+    ],
   };
   const { appHtml, elements, storage } = loadApp({
     pageSlug: "lesson-two",
@@ -501,8 +518,8 @@ test("renderLesson scores the final module checkpoint", () => {
         title: "Hidden-Risk Baseline",
         unitIds: [1, 2],
         estimatedStudentMinutes: 75,
-        knownRuntime: "n/a"
-      }
+        knownRuntime: "n/a",
+      },
     ],
     checkpoints: [checkpoint],
     modules: [
@@ -519,7 +536,7 @@ test("renderLesson scores the final module checkpoint", () => {
         drill: ["Scan."],
         pass: "Explain it.",
         logPrompts: ["What changed?"],
-        resources: []
+        resources: [],
       },
       {
         id: 2,
@@ -534,9 +551,9 @@ test("renderLesson scores the final module checkpoint", () => {
         drill: ["Scan."],
         pass: "Explain it.",
         logPrompts: ["What changed?"],
-        resources: []
-      }
-    ]
+        resources: [],
+      },
+    ],
   });
 
   assert.match(appHtml, /G01 Checkpoint/);
@@ -563,9 +580,9 @@ test("changing checkpoint answers after submission clears stale score state", ()
         choices: ["Ignore it", "Hidden actor"],
         answer: 1,
         explanation: "Look for the hidden space.",
-        errorCategory: "Hidden-space recognition"
-      }
-    ]
+        errorCategory: "Hidden-space recognition",
+      },
+    ],
   };
   const { elements, storage } = loadApp({
     pageSlug: "lesson-one",
@@ -575,8 +592,8 @@ test("changing checkpoint answers after submission clears stale score state", ()
         title: "Hidden-Risk Baseline",
         unitIds: [1],
         estimatedStudentMinutes: 75,
-        knownRuntime: "n/a"
-      }
+        knownRuntime: "n/a",
+      },
     ],
     checkpoints: [checkpoint],
     modules: [
@@ -593,9 +610,9 @@ test("changing checkpoint answers after submission clears stale score state", ()
         drill: ["Scan."],
         pass: "Explain it.",
         logPrompts: ["What changed?"],
-        resources: []
-      }
-    ]
+        resources: [],
+      },
+    ],
   });
 
   elements.get("choice-g01-q01-1").checked = true;
@@ -637,9 +654,9 @@ test("renderLesson auto-marks the lesson as started once the dwell timer fires",
         drill: ["Scan."],
         pass: "Explain it.",
         logPrompts: ["What changed?"],
-        resources: []
-      }
-    ]
+        resources: [],
+      },
+    ],
   });
 
   assert.equal(storage["hpt-progress-v1"], undefined);
@@ -654,7 +671,7 @@ test("renderLesson auto-marks the lesson as started once the dwell timer fires",
   const expectedDate = [
     now.getFullYear(),
     String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0")
+    String(now.getDate()).padStart(2, "0"),
   ].join("-");
   assert.equal(elements.get("date").value, expectedDate);
 });
@@ -685,9 +702,9 @@ test("manually toggling Started cancels the pending auto-start timer", () => {
         drill: ["Scan."],
         pass: "Explain it.",
         logPrompts: ["What changed?"],
-        resources: []
-      }
-    ]
+        resources: [],
+      },
+    ],
   });
 
   // The learner checks Started, then changes their mind and unchecks it,
@@ -715,7 +732,10 @@ function stubSlug(name) {
 }
 
 function numberedStubs() {
-  return fs.readdirSync(root).filter((name) => /^\d.*\.html$/.test(name)).sort();
+  return fs
+    .readdirSync(root)
+    .filter((name) => /^\d.*\.html$/.test(name))
+    .sort();
 }
 
 test("every curriculum module has a matching stub whose slug matches its filename", () => {
@@ -760,7 +780,9 @@ test("renderHome links every module to an existing file and never to '#'", () =>
   const { modules } = loadCurriculum();
   const { appHtml } = loadApp({ modules });
 
-  const hrefs = [...appHtml.matchAll(/class="module-card" href="([^"]+)"/g)].map((match) => match[1]);
+  const hrefs = [...appHtml.matchAll(/class="module-card" href="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
   assert.equal(hrefs.length, modules.length, "one card per module");
   for (const href of hrefs) {
     assert.notEqual(href, "#", "module cards must resolve to a real file");
@@ -778,7 +800,11 @@ test("curriculum ids are sequential and slugs/required fields are well formed", 
 
   assert.equal(new Set(ids).size, ids.length, "ids must be unique");
   assert.equal(new Set(slugs).size, slugs.length, "slugs must be unique");
-  assert.deepEqual(ids, modules.map((_, index) => index + 1), "ids must run 1..N in order");
+  assert.deepEqual(
+    ids,
+    modules.map((_, index) => index + 1),
+    "ids must run 1..N in order",
+  );
 
   for (const module of modules) {
     for (const field of ["slug", "file", "title", "phase", "cost", "time", "objective", "pass"]) {
@@ -799,7 +825,7 @@ test("curriculum groups assign all 32 modules exactly once", () => {
   assert.equal(groups.length, 10);
   assert.deepEqual(
     JSON.parse(JSON.stringify([...assigned].sort((a, b) => a - b))),
-    JSON.parse(JSON.stringify(moduleIds))
+    JSON.parse(JSON.stringify(moduleIds)),
   );
   assert.equal(new Set(assigned).size, moduleIds.length, "module ids must not be assigned twice");
 
@@ -860,13 +886,25 @@ test("module media ids and links pass the app's URL validators", () => {
       assert.notEqual(safeYoutubeEmbed(module.video), "", `${module.slug} has an invalid video id`);
     }
     if (module.companionVideo) {
-      assert.notEqual(safeYoutubeEmbed(module.companionVideo.id), "", `${module.slug} has an invalid companion id`);
+      assert.notEqual(
+        safeYoutubeEmbed(module.companionVideo.id),
+        "",
+        `${module.slug} has an invalid companion id`,
+      );
     }
     if (module.activityUrl) {
-      assert.notEqual(safeUrl(module.activityUrl, { allowRelative: false }), "#", `${module.slug} has a rejected activityUrl`);
+      assert.notEqual(
+        safeUrl(module.activityUrl, { allowRelative: false }),
+        "#",
+        `${module.slug} has a rejected activityUrl`,
+      );
     }
     for (const [, url] of module.resources) {
-      assert.notEqual(safeUrl(url, { allowRelative: false }), "#", `${module.slug} has a rejected resource URL: ${url}`);
+      assert.notEqual(
+        safeUrl(url, { allowRelative: false }),
+        "#",
+        `${module.slug} has a rejected resource URL: ${url}`,
+      );
     }
   }
 });
@@ -884,38 +922,55 @@ test("site-construction metadata stays out of the curriculum", () => {
 const SHUFFLE_CHOICES = ["opt-zero", "opt-one", "opt-two", "opt-three"];
 
 function shuffleSetup(extra = {}) {
-  return Object.assign({
-    pageSlug: "lesson-one",
-    groups: [{ id: "g01", title: "Group One", unitIds: [1], estimatedStudentMinutes: 10, knownRuntime: "n/a" }],
-    checkpoints: [{
-      id: "g01",
-      passTarget: 80,
-      questions: [{
-        id: "g01-q01",
-        title: "Q one",
-        prompt: "Prompt one",
-        choices: SHUFFLE_CHOICES.slice(),
-        answer: 2,
-        explanation: "Two is right.",
-        errorCategory: "Cat one"
-      }]
-    }],
-    modules: [{
-      id: 1,
-      slug: "lesson-one",
-      file: "lesson-one.html",
-      title: "Lesson One",
-      phase: "Phase",
-      cost: "Free",
-      time: "10 min",
-      objective: "Observe.",
-      do: ["Watch."],
-      drill: ["Scan."],
-      pass: "Explain.",
-      logPrompts: ["What?"],
-      resources: []
-    }]
-  }, extra);
+  return Object.assign(
+    {
+      pageSlug: "lesson-one",
+      groups: [
+        {
+          id: "g01",
+          title: "Group One",
+          unitIds: [1],
+          estimatedStudentMinutes: 10,
+          knownRuntime: "n/a",
+        },
+      ],
+      checkpoints: [
+        {
+          id: "g01",
+          passTarget: 80,
+          questions: [
+            {
+              id: "g01-q01",
+              title: "Q one",
+              prompt: "Prompt one",
+              choices: SHUFFLE_CHOICES.slice(),
+              answer: 2,
+              explanation: "Two is right.",
+              errorCategory: "Cat one",
+            },
+          ],
+        },
+      ],
+      modules: [
+        {
+          id: 1,
+          slug: "lesson-one",
+          file: "lesson-one.html",
+          title: "Lesson One",
+          phase: "Phase",
+          cost: "Free",
+          time: "10 min",
+          objective: "Observe.",
+          do: ["Watch."],
+          drill: ["Scan."],
+          pass: "Explain.",
+          logPrompts: ["What?"],
+          resources: [],
+        },
+      ],
+    },
+    extra,
+  );
 }
 
 function displayedOrder(html) {
@@ -942,7 +997,9 @@ test("renderCheckpoint shuffles options, persists a seed, and keeps the order st
   const seed = JSON.parse(storage["hpt-progress-v1"])["checkpoint:g01"].seed;
   assert.ok(Number.isInteger(seed), "a seed is persisted on first render");
 
-  const expected = [...optionOrder(seed, "g01-q01", 4)].map((index) => SHUFFLE_CHOICES[index]).join(",");
+  const expected = [...optionOrder(seed, "g01-q01", 4)]
+    .map((index) => SHUFFLE_CHOICES[index])
+    .join(",");
   assert.equal(displayedOrder(appHtml).join(","), expected);
 
   // Re-rendering the same attempt (here via submit) reuses the seed, so the
@@ -960,11 +1017,17 @@ test("a correct pick scores and stores the original index even when shuffled awa
   }
   assert.ok(seed !== null, "expected a seed that moves the correct option off position A");
 
-  const { elements, storage } = loadApp(shuffleSetup({
-    progress: { "checkpoint:g01": { started: true, seed } }
-  }));
+  const { elements, storage } = loadApp(
+    shuffleSetup({
+      progress: { "checkpoint:g01": { started: true, seed } },
+    }),
+  );
 
-  assert.equal(JSON.parse(storage["hpt-progress-v1"])["checkpoint:g01"].seed, seed, "injected seed is reused");
+  assert.equal(
+    JSON.parse(storage["hpt-progress-v1"])["checkpoint:g01"].seed,
+    seed,
+    "injected seed is reused",
+  );
 
   // Pick the correct option by its ORIGINAL index, wherever it is displayed.
   elements.get("choice-g01-q01-2").checked = true;
@@ -982,9 +1045,11 @@ test("a correct pick scores and stores the original index even when shuffled awa
 });
 
 test("feedback marks a wrong pick as Review and keeps its original index", () => {
-  const { elements, storage } = loadApp(shuffleSetup({
-    progress: { "checkpoint:g01": { started: true, seed: 99 } }
-  }));
+  const { elements, storage } = loadApp(
+    shuffleSetup({
+      progress: { "checkpoint:g01": { started: true, seed: 99 } },
+    }),
+  );
 
   // Original index 0 is a distractor (answer is 2).
   elements.get("choice-g01-q01-0").checked = true;
@@ -997,9 +1062,11 @@ test("feedback marks a wrong pick as Review and keeps its original index", () =>
 });
 
 test("changing an answer after submission regenerates the shuffle seed", () => {
-  const { elements, storage } = loadApp(shuffleSetup({
-    progress: { "checkpoint:g01": { started: true, seed: 4242 } }
-  }));
+  const { elements, storage } = loadApp(
+    shuffleSetup({
+      progress: { "checkpoint:g01": { started: true, seed: 4242 } },
+    }),
+  );
 
   elements.get("choice-g01-q01-2").checked = true;
   elements.get("submit-checkpoint").dispatch("click");
@@ -1038,6 +1105,9 @@ test("seeded shuffle spreads the correct option roughly evenly across positions"
 
   for (const count of counts) {
     const fraction = count / total;
-    assert.ok(fraction > 0.2 && fraction < 0.3, `correct-position fraction ${fraction} should be ~0.25`);
+    assert.ok(
+      fraction > 0.2 && fraction < 0.3,
+      `correct-position fraction ${fraction} should be ~0.25`,
+    );
   }
 });

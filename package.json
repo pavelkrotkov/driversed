@@ -1,0 +1,17 @@
+{
+  "name": "teen-hazard-perception-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A static site for practicing hazard perception.",
+  "scripts": {
+    "test": "node --test",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "biome check .",
+    "ci": "biome ci ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
+  }
+}
