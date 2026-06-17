@@ -196,6 +196,63 @@
     }, {});
   }
 
+  // Deterministic 32-bit string hash (FNV-1a). Used to mix a question id into
+  // the per-attempt seed so questions in the same attempt don't all permute
+  // their options identically.
+  function hashString(value) {
+    let hash = 2166136261 >>> 0;
+    const text = String(value);
+    for (let i = 0; i < text.length; i += 1) {
+      hash ^= text.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  // Tiny seeded PRNG. Same seed -> same stream, which is what keeps a checkpoint
+  // attempt's option order stable across re-renders and reloads.
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Seeded Fisher-Yates over [0, length). Returns original indices in the order
+  // they should be displayed.
+  function optionOrder(seed, questionId, length) {
+    const order = Array.from({ length }, (_, index) => index);
+    const rng = mulberry32(hashString(`${seed}:${questionId}`));
+    for (let i = order.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(rng() * (i + 1));
+      const swap = order[i];
+      order[i] = order[j];
+      order[j] = swap;
+    }
+    return order;
+  }
+
+  function generateSeed() {
+    const cryptoObj = (typeof window !== "undefined" && window.crypto) || (typeof globalThis !== "undefined" && globalThis.crypto) || null;
+    if (cryptoObj && typeof cryptoObj.getRandomValues === "function") {
+      return cryptoObj.getRandomValues(new Uint32Array(1))[0];
+    }
+    return (Date.now() ^ Math.floor(Math.random() * 0x100000000)) >>> 0;
+  }
+
+  // Reuse the attempt's persisted seed so the option order is stable, or mint
+  // and persist one the first time the checkpoint is rendered/started.
+  function ensureCheckpointSeed(groupId) {
+    const current = checkpointProgress(groupId);
+    if (Number.isInteger(current.seed)) return current.seed;
+    const seed = generateSeed();
+    updateCheckpoint(groupId, { seed });
+    return seed;
+  }
+
   function scoreCheckpoint(checkpoint, answers) {
     if (!checkpoint || !Array.isArray(checkpoint.questions) || checkpoint.questions.length === 0) {
       return { answered: 0, correct: 0, total: 0, score: 0 };
@@ -247,6 +304,7 @@
         started: Boolean(entry.started),
         complete: Boolean(entry.complete),
         selfDeclared: Boolean(entry.selfDeclared),
+        seed: Number.isInteger(entry.seed) ? entry.seed : null,
         answers: normalizeCheckpointAnswers(entry.answers, checkpoint),
         score: entry.score != null && !(typeof entry.score === "string" && entry.score.trim() === "") && Number.isFinite(Number(entry.score)) ? clampPercent(Number(entry.score)) : null,
         correct: entry.correct != null && !(typeof entry.correct === "string" && entry.correct.trim() === "") && Number.isFinite(Number(entry.correct)) ? Math.max(0, Number(entry.correct)) : null,
@@ -263,7 +321,9 @@
       clampPercent,
       escapeHtml,
       html,
+      mulberry32,
       normalizeProgress,
+      optionOrder,
       raw,
       renderHtml: interpolate,
       safeUrl,
@@ -471,6 +531,7 @@
   function renderCheckpoint(group, checkpoint) {
     if (!group || !checkpoint || !Array.isArray(checkpoint.questions)) return "";
 
+    const seed = ensureCheckpointSeed(group.id);
     const current = checkpointProgress(group.id);
     const answers = current.answers || {};
     const submitted = Boolean(current.submittedAt);
@@ -484,18 +545,23 @@
       const selected = answers[question.id];
       const showFeedback = submitted && Number.isInteger(selected);
       const correct = showFeedback && selected === question.answer;
-      const choices = question.choices.map((choice, choiceIndex) => {
-        const inputId = `choice-${question.id}-${choiceIndex}`;
+      // Shuffle only the display order; the radio value and stored answer stay
+      // the original index so scoreCheckpoint and feedback work unchanged. The
+      // A-D letter follows display position, the id/value stay keyed by the
+      // original index so collectAnswers needs no change.
+      const order = optionOrder(seed, question.id, question.choices.length);
+      const choices = order.map((originalIndex, displayPosition) => {
+        const inputId = `choice-${question.id}-${originalIndex}`;
         return html`
           <label class="choice-row" for="${inputId}">
             <input
               id="${inputId}"
               type="radio"
               name="checkpoint-${group.id}-${question.id}"
-              value="${choiceIndex}"
-              ${selected === choiceIndex ? raw("checked") : ""}
+              value="${originalIndex}"
+              ${selected === originalIndex ? raw("checked") : ""}
             >
-            <span>${String.fromCharCode(65 + choiceIndex)}. ${choice}</span>
+            <span>${String.fromCharCode(65 + displayPosition)}. ${question.choices[originalIndex]}</span>
           </label>
         `;
       });
@@ -789,7 +855,9 @@
           selfDeclared: false,
           score: null,
           correct: null,
-          submittedAt: ""
+          submittedAt: "",
+          // A fresh attempt gets a fresh option order.
+          seed: generateSeed()
         });
       }
 

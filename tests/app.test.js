@@ -37,6 +37,9 @@ function loadApp(options = {}) {
 
   const app = element("app");
   const storage = {};
+  if (options.progress) {
+    storage["hpt-progress-v1"] = JSON.stringify(options.progress);
+  }
   const context = {
     Blob,
     URL,
@@ -305,6 +308,7 @@ test("normalizeProgress keeps checkpoint entries separate from lessons", () => {
       complete: true,
       correct: 1,
       score: 100,
+      seed: null,
       selfDeclared: false,
       started: false,
       submittedAt: "2026-06-15T00:00:00.000Z",
@@ -874,5 +878,166 @@ test("site-construction metadata stays out of the curriculum", () => {
   assert.equal("sources" in curriculum, false, "sources should be removed");
   for (const module of curriculum.modules) {
     assert.equal("sourceFit" in module, false, `${module.slug} should not carry sourceFit`);
+  }
+});
+
+const SHUFFLE_CHOICES = ["opt-zero", "opt-one", "opt-two", "opt-three"];
+
+function shuffleSetup(extra = {}) {
+  return Object.assign({
+    pageSlug: "lesson-one",
+    groups: [{ id: "g01", title: "Group One", unitIds: [1], estimatedStudentMinutes: 10, knownRuntime: "n/a" }],
+    checkpoints: [{
+      id: "g01",
+      passTarget: 80,
+      questions: [{
+        id: "g01-q01",
+        title: "Q one",
+        prompt: "Prompt one",
+        choices: SHUFFLE_CHOICES.slice(),
+        answer: 2,
+        explanation: "Two is right.",
+        errorCategory: "Cat one"
+      }]
+    }],
+    modules: [{
+      id: 1,
+      slug: "lesson-one",
+      file: "lesson-one.html",
+      title: "Lesson One",
+      phase: "Phase",
+      cost: "Free",
+      time: "10 min",
+      objective: "Observe.",
+      do: ["Watch."],
+      drill: ["Scan."],
+      pass: "Explain.",
+      logPrompts: ["What?"],
+      resources: []
+    }]
+  }, extra);
+}
+
+function displayedOrder(html) {
+  return [...html.matchAll(/<span>[A-D]\. (opt-[a-z]+)<\/span>/g)].map((match) => match[1]);
+}
+
+test("optionOrder is deterministic and a valid permutation", () => {
+  const { optionOrder } = loadApp();
+
+  assert.deepEqual(optionOrder(12345, "g01-q01", 4), optionOrder(12345, "g01-q01", 4));
+  assert.deepEqual([...optionOrder(12345, "g01-q01", 4)].sort(), [0, 1, 2, 3]);
+
+  // Some seed must produce a non-identity order, or shuffling does nothing.
+  let differs = false;
+  for (let s = 1; s <= 50 && !differs; s += 1) {
+    if (optionOrder(s, "g01-q01", 4).join("") !== "0123") differs = true;
+  }
+  assert.ok(differs, "expected at least one seed to reorder the options");
+});
+
+test("renderCheckpoint shuffles options, persists a seed, and keeps the order stable", () => {
+  const { appHtml, elements, storage, optionOrder } = loadApp(shuffleSetup());
+
+  const seed = JSON.parse(storage["hpt-progress-v1"])["checkpoint:g01"].seed;
+  assert.ok(Number.isInteger(seed), "a seed is persisted on first render");
+
+  const expected = [...optionOrder(seed, "g01-q01", 4)].map((index) => SHUFFLE_CHOICES[index]).join(",");
+  assert.equal(displayedOrder(appHtml).join(","), expected);
+
+  // Re-rendering the same attempt (here via submit) reuses the seed, so the
+  // displayed order is identical -- the same property that makes a reload stable.
+  elements.get("choice-g01-q01-2").checked = true;
+  elements.get("submit-checkpoint").dispatch("click");
+  assert.equal(displayedOrder(elements.get("app").innerHTML).join(","), expected);
+});
+
+test("a correct pick scores and stores the original index even when shuffled away from first", () => {
+  const { optionOrder } = loadApp();
+  let seed = null;
+  for (let s = 1; s <= 1000 && seed === null; s += 1) {
+    if (optionOrder(s, "g01-q01", 4).indexOf(2) > 0) seed = s;
+  }
+  assert.ok(seed !== null, "expected a seed that moves the correct option off position A");
+
+  const { elements, storage } = loadApp(shuffleSetup({
+    progress: { "checkpoint:g01": { started: true, seed } }
+  }));
+
+  assert.equal(JSON.parse(storage["hpt-progress-v1"])["checkpoint:g01"].seed, seed, "injected seed is reused");
+
+  // Pick the correct option by its ORIGINAL index, wherever it is displayed.
+  elements.get("choice-g01-q01-2").checked = true;
+  elements.get("submit-checkpoint").dispatch("click");
+
+  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].correct, 1);
+  assert.equal(saved["checkpoint:g01"].score, 100);
+  // Stored as the original index 2, never the display position.
+  assert.deepEqual(saved["checkpoint:g01"].answers, { "g01-q01": 2 });
+
+  const html = elements.get("app").innerHTML;
+  assert.match(html, /Correct - Cat one/);
+  assert.match(html, /Two is right\./);
+});
+
+test("feedback marks a wrong pick as Review and keeps its original index", () => {
+  const { elements, storage } = loadApp(shuffleSetup({
+    progress: { "checkpoint:g01": { started: true, seed: 99 } }
+  }));
+
+  // Original index 0 is a distractor (answer is 2).
+  elements.get("choice-g01-q01-0").checked = true;
+  elements.get("submit-checkpoint").dispatch("click");
+
+  const saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].correct, 0);
+  assert.deepEqual(saved["checkpoint:g01"].answers, { "g01-q01": 0 });
+  assert.match(elements.get("app").innerHTML, /Review - Cat one/);
+});
+
+test("changing an answer after submission regenerates the shuffle seed", () => {
+  const { elements, storage } = loadApp(shuffleSetup({
+    progress: { "checkpoint:g01": { started: true, seed: 4242 } }
+  }));
+
+  elements.get("choice-g01-q01-2").checked = true;
+  elements.get("submit-checkpoint").dispatch("click");
+
+  let saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].seed, 4242, "submitting keeps the attempt seed");
+  assert.equal(saved["checkpoint:g01"].complete, true);
+
+  // The existing reset path (answer changed after submit) starts a fresh attempt.
+  elements.get("choice-g01-q01-2").checked = false;
+  elements.get("choice-g01-q01-0").checked = true;
+  elements.get("choice-g01-q01-0").dispatch("change");
+
+  saved = JSON.parse(storage["hpt-progress-v1"]);
+  assert.equal(saved["checkpoint:g01"].submittedAt, "");
+  assert.equal(saved["checkpoint:g01"].complete, false);
+  assert.ok(Number.isInteger(saved["checkpoint:g01"].seed));
+  assert.notEqual(saved["checkpoint:g01"].seed, 4242, "a new attempt gets a fresh seed");
+});
+
+test("seeded shuffle spreads the correct option roughly evenly across positions", () => {
+  const { optionOrder } = loadApp();
+  const checkpoints = loadCheckpoints();
+  const counts = [0, 0, 0, 0];
+  let total = 0;
+
+  for (const checkpoint of checkpoints) {
+    for (const question of checkpoint.questions) {
+      for (let s = 1; s <= 200; s += 1) {
+        const order = optionOrder(s, question.id, question.choices.length);
+        counts[order.indexOf(question.answer)] += 1;
+        total += 1;
+      }
+    }
+  }
+
+  for (const count of counts) {
+    const fraction = count / total;
+    assert.ok(fraction > 0.2 && fraction < 0.3, `correct-position fraction ${fraction} should be ~0.25`);
   }
 });
