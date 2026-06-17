@@ -17,9 +17,8 @@
 
   function loadProgress() {
     try {
-      return normalizeProgress(
-        JSON.parse(/** @type {string} */ (localStorage.getItem(storageKey))) || {},
-      );
+      const stored = localStorage.getItem(storageKey);
+      return normalizeProgress(stored ? JSON.parse(stored) : {});
     } catch (error) {
       return {};
     }
