@@ -1,7 +1,11 @@
-(function () {
+(() => {
   const storageKey = "hpt-progress-v1";
   const STARTED_DWELL_MS = 8000;
-  const EMBED_ORIGINS = ["https://amrd.toyota.com", "https://www.youtube-nocookie.com", "https://www.youtube.com"];
+  const EMBED_ORIGINS = [
+    "https://amrd.toyota.com",
+    "https://www.youtube-nocookie.com",
+    "https://www.youtube.com",
+  ];
   const data = window.HPT_CURRICULUM || {};
   const modules = Array.isArray(data.modules) ? data.modules : [];
   const groups = Array.isArray(data.groups) ? data.groups : [];
@@ -44,7 +48,7 @@
   function updateLesson(slug, patch) {
     const progress = loadProgress();
     progress[slug] = Object.assign({}, progress[slug] || {}, patch, {
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
     saveProgress(progress);
   }
@@ -53,7 +57,7 @@
     const key = checkpointStorageKey(id);
     const progress = loadProgress();
     progress[key] = Object.assign({}, progress[key] || {}, patch, {
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
     saveProgress(progress);
   }
@@ -78,7 +82,7 @@
     return [
       now.getFullYear(),
       String(now.getMonth() + 1).padStart(2, "0"),
-      String(now.getDate()).padStart(2, "0")
+      String(now.getDate()).padStart(2, "0"),
     ].join("-");
   }
 
@@ -162,7 +166,10 @@
   }
 
   function groupForModuleId(moduleId) {
-    return groups.find((group) => Array.isArray(group.unitIds) && group.unitIds.includes(moduleId)) || null;
+    return (
+      groups.find((group) => Array.isArray(group.unitIds) && group.unitIds.includes(moduleId)) ||
+      null
+    );
   }
 
   function modulesForGroup(group) {
@@ -181,14 +188,27 @@
   }
 
   function normalizeCheckpointAnswers(rawAnswers, checkpoint) {
-    if (!rawAnswers || typeof rawAnswers !== "object" || Array.isArray(rawAnswers) || !checkpoint || !Array.isArray(checkpoint.questions)) return {};
+    if (
+      !rawAnswers ||
+      typeof rawAnswers !== "object" ||
+      Array.isArray(rawAnswers) ||
+      !checkpoint ||
+      !Array.isArray(checkpoint.questions)
+    )
+      return {};
 
     return checkpoint.questions.reduce((result, question) => {
       const rawValue = rawAnswers[question.id];
-      const canConvert = typeof rawValue === "number" || (typeof rawValue === "string" && rawValue.trim() !== "");
+      const canConvert =
+        typeof rawValue === "number" || (typeof rawValue === "string" && rawValue.trim() !== "");
       if (canConvert) {
         const value = Number(rawValue);
-        if (Number.isInteger(value) && value >= 0 && Array.isArray(question.choices) && value < question.choices.length) {
+        if (
+          Number.isInteger(value) &&
+          value >= 0 &&
+          Array.isArray(question.choices) &&
+          value < question.choices.length
+        ) {
           result[question.id] = value;
         }
       }
@@ -213,7 +233,7 @@
   // attempt's option order stable across re-renders and reloads.
   function mulberry32(seed) {
     let a = seed >>> 0;
-    return function () {
+    return () => {
       a = (a + 0x6d2b79f5) | 0;
       let t = Math.imul(a ^ (a >>> 15), 1 | a);
       t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
@@ -236,7 +256,10 @@
   }
 
   function generateSeed() {
-    const cryptoObj = (typeof window !== "undefined" && window.crypto) || (typeof globalThis !== "undefined" && globalThis.crypto) || null;
+    const cryptoObj =
+      (typeof window !== "undefined" && window.crypto) ||
+      (typeof globalThis !== "undefined" && globalThis.crypto) ||
+      null;
     if (cryptoObj && typeof cryptoObj.getRandomValues === "function") {
       return cryptoObj.getRandomValues(new Uint32Array(1))[0];
     }
@@ -258,22 +281,26 @@
       return { answered: 0, correct: 0, total: 0, score: 0 };
     }
 
-    const safeAnswers = answers && typeof answers === "object" && !Array.isArray(answers) ? answers : {};
-    const result = checkpoint.questions.reduce((summary, question) => {
-      if (Number.isInteger(safeAnswers[question.id])) {
-        summary.answered += 1;
-        if (safeAnswers[question.id] === question.answer) {
-          summary.correct += 1;
+    const safeAnswers =
+      answers && typeof answers === "object" && !Array.isArray(answers) ? answers : {};
+    const result = checkpoint.questions.reduce(
+      (summary, question) => {
+        if (Number.isInteger(safeAnswers[question.id])) {
+          summary.answered += 1;
+          if (safeAnswers[question.id] === question.answer) {
+            summary.correct += 1;
+          }
         }
-      }
-      return summary;
-    }, { answered: 0, correct: 0 });
+        return summary;
+      },
+      { answered: 0, correct: 0 },
+    );
 
     return {
       answered: result.answered,
       correct: result.correct,
       total: checkpoint.questions.length,
-      score: Math.round((result.correct / checkpoint.questions.length) * 100)
+      score: Math.round((result.correct / checkpoint.questions.length) * 100),
     };
   }
 
@@ -290,7 +317,7 @@
         date: typeof entry.date === "string" ? entry.date : "",
         rating: typeof entry.rating === "string" ? entry.rating : "",
         notes: typeof entry.notes === "string" ? entry.notes : "",
-        updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : ""
+        updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : "",
       };
       return memo;
     }, {});
@@ -306,10 +333,20 @@
         selfDeclared: Boolean(entry.selfDeclared),
         seed: Number.isInteger(entry.seed) ? entry.seed : null,
         answers: normalizeCheckpointAnswers(entry.answers, checkpoint),
-        score: entry.score != null && !(typeof entry.score === "string" && entry.score.trim() === "") && Number.isFinite(Number(entry.score)) ? clampPercent(Number(entry.score)) : null,
-        correct: entry.correct != null && !(typeof entry.correct === "string" && entry.correct.trim() === "") && Number.isFinite(Number(entry.correct)) ? Math.max(0, Number(entry.correct)) : null,
+        score:
+          entry.score != null &&
+          !(typeof entry.score === "string" && entry.score.trim() === "") &&
+          Number.isFinite(Number(entry.score))
+            ? clampPercent(Number(entry.score))
+            : null,
+        correct:
+          entry.correct != null &&
+          !(typeof entry.correct === "string" && entry.correct.trim() === "") &&
+          Number.isFinite(Number(entry.correct))
+            ? Math.max(0, Number(entry.correct))
+            : null,
         submittedAt: typeof entry.submittedAt === "string" ? entry.submittedAt : "",
-        updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : ""
+        updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : "",
       };
     });
 
@@ -329,7 +366,7 @@
       safeUrl,
       safeYoutubeEmbed,
       scoreCheckpoint,
-      todayLocalDate
+      todayLocalDate,
     };
   }
 
@@ -341,11 +378,13 @@
       check: '<path d="m4 12 5 5L20 6"/>',
       next: '<path d="M5 12h14"/><path d="m13 5 7 7-7 7"/>',
       prev: '<path d="M19 12H5"/><path d="m11 5-7 7 7 7"/>',
-      link: '<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/>'
+      link: '<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/>',
     };
     // SVG markup is built from a fixed allow-list of names, so it is a known
     // raw fragment; returning a raw marker lets it pass through html`` intact.
-    return raw(`<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths[name] || ""}</svg>`);
+    return raw(
+      `<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths[name] || ""}</svg>`,
+    );
   }
 
   function shell(content) {
@@ -380,7 +419,7 @@
       const payload = {
         exportedAt: new Date().toISOString(),
         curriculumUpdated: data.updated,
-        progress: loadProgress()
+        progress: loadProgress(),
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -425,7 +464,9 @@
       const completion = groupCompletion(group, progress);
       return completion.total > 0 && completion.complete === completion.total;
     }).length;
-    const completedCheckpoints = groups.filter((group) => checkpointIsComplete(group.id, progress)).length;
+    const completedCheckpoints = groups.filter((group) =>
+      checkpointIsComplete(group.id, progress),
+    ).length;
     const pendingModule = modules.find((module) => !progress[module.slug]?.complete);
     const fallbackModule = modules.length > 0 ? modules[modules.length - 1] : null;
     const nextModule = pendingModule || fallbackModule;
@@ -435,15 +476,32 @@
       const completion = groupCompletion(group, progress);
       const firstModule = groupModules[0];
       const lastModule = groupModules[groupModules.length - 1];
-      const nextGroupModule = groupModules.find((module) => !progress[module.slug]?.complete) || lastModule;
+      const nextGroupModule =
+        groupModules.find((module) => !progress[module.slug]?.complete) || lastModule;
       const checkpointDone = checkpointIsComplete(group.id, progress);
       const checkpoint = checkpointById.get(group.id);
-      const checkpointLabel = checkpoint && Array.isArray(checkpoint.questions) ? `${checkpoint.questions.length} questions` : "Checkpoint";
+      const checkpointLabel =
+        checkpoint && Array.isArray(checkpoint.questions)
+          ? `${checkpoint.questions.length} questions`
+          : "Checkpoint";
       const groupComplete = completion.total > 0 && completion.complete === completion.total;
-      const unitRange = firstModule && lastModule ? `Modules ${String(firstModule.id).padStart(2, "0")}-${String(lastModule.id).padStart(2, "0")}` : "Modules";
-      const runtime = group.knownRuntime && group.knownRuntime !== "n/a" ? `${group.knownRuntime} video` : "Interactive";
-      const href = safeUrl((groupComplete && !checkpointDone ? lastModule : nextGroupModule)?.file || "index.html", { allowExternal: false });
-      const status = checkpointDone ? "Checkpoint complete" : groupComplete ? "Checkpoint ready" : `${completion.complete}/${completion.total} modules`;
+      const unitRange =
+        firstModule && lastModule
+          ? `Modules ${String(firstModule.id).padStart(2, "0")}-${String(lastModule.id).padStart(2, "0")}`
+          : "Modules";
+      const runtime =
+        group.knownRuntime && group.knownRuntime !== "n/a"
+          ? `${group.knownRuntime} video`
+          : "Interactive";
+      const href = safeUrl(
+        (groupComplete && !checkpointDone ? lastModule : nextGroupModule)?.file || "index.html",
+        { allowExternal: false },
+      );
+      const status = checkpointDone
+        ? "Checkpoint complete"
+        : groupComplete
+          ? "Checkpoint ready"
+          : `${completion.complete}/${completion.total} modules`;
 
       return html`
         <article class="group-card">
@@ -481,7 +539,9 @@
     const nextModuleTitle = nextModule ? nextModule.title : "No modules configured";
     const nextModuleFile = nextModule ? safeUrl(nextModule.file, { allowExternal: false }) : "#";
 
-    mount(app, shell(html`
+    mount(
+      app,
+      shell(html`
       <section class="hero">
         <div class="hero-inner">
           <p class="eyebrow">Hazard perception only</p>
@@ -524,7 +584,8 @@
           <div class="module-grid">${cards}</div>
         </section>
       </main>
-    `));
+    `),
+    );
     bindImportExport();
   }
 
@@ -538,8 +599,12 @@
     const summary = submitted ? scoreCheckpoint(checkpoint, answers) : null;
     const passed = Boolean(current.complete);
     const status = passed
-      ? current.selfDeclared ? "Complete by instructor review" : `Complete: ${current.score}%`
-      : submitted ? `${current.score}% - review misses` : "Not submitted";
+      ? current.selfDeclared
+        ? "Complete by instructor review"
+        : `Complete: ${current.score}%`
+      : submitted
+        ? `${current.score}% - review misses`
+        : "Not submitted";
 
     const questions = checkpoint.questions.map((question, questionIndex) => {
       const selected = answers[question.id];
@@ -571,12 +636,16 @@
           <legend>${questionIndex + 1}. ${question.title}</legend>
           <p>${question.prompt}</p>
           <div class="choice-list">${choices}</div>
-          ${showFeedback ? html`
+          ${
+            showFeedback
+              ? html`
             <div class="answer-feedback ${correct ? "correct" : "review"}">
               <strong>${correct ? "Correct" : "Review"} - ${question.errorCategory}</strong>
               <p>${question.explanation}</p>
             </div>
-          ` : ""}
+          `
+              : ""
+          }
         </fieldset>
       `;
     });
@@ -591,12 +660,16 @@
           </div>
           <span class="checkpoint-status ${passed ? "complete" : ""}">${status}</span>
         </div>
-        ${submitted && summary ? html`
+        ${
+          submitted && summary
+            ? html`
           <div class="score-strip">
             <strong>${summary.correct}/${summary.total}</strong>
             <span>${summary.answered}/${summary.total} answered</span>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
         <form id="checkpoint-form" class="checkpoint-form">${questions}</form>
         <div class="checkpoint-actions">
           <button class="primary" type="button" id="submit-checkpoint">${icon("check")} Score checkpoint</button>
@@ -620,39 +693,58 @@
     const next = modules[currentIndex + 1];
     const group = groupForModuleId(module.id);
     const groupModules = group ? modulesForGroup(group) : [];
-    const isGroupFinalModule = groupModules.length > 0 && groupModules[groupModules.length - 1].id === module.id;
+    const isGroupFinalModule =
+      groupModules.length > 0 && groupModules[groupModules.length - 1].id === module.id;
     const checkpoint = group ? checkpointById.get(group.id) : null;
     const checkpointPanel = isGroupFinalModule ? renderCheckpoint(group, checkpoint) : "";
     const hasEmbeddedMedia = Boolean(module.video || module.embedUrl);
-    const resourceItems = (Array.isArray(module.resources) ? module.resources : []).map(([label, url]) => html`
+    const resourceItems = (Array.isArray(module.resources) ? module.resources : []).map(
+      ([label, url]) => html`
       <li><a href="${safeUrl(url, { allowRelative: false })}" target="_blank" rel="noreferrer"><span>${label}</span>${icon("link")}</a></li>
-    `);
-    const doItems = (Array.isArray(module.do) ? module.do : []).map((item) => html`<li>${item}</li>`);
-    const drillItems = (Array.isArray(module.drill) ? module.drill : []).map((item) => html`<li>${item}</li>`);
-    const promptItems = (Array.isArray(module.logPrompts) ? module.logPrompts : []).map((item) => html`<li>${item}</li>`);
-    const preWatch = module.preWatch ? html`
+    `,
+    );
+    const doItems = (Array.isArray(module.do) ? module.do : []).map(
+      (item) => html`<li>${item}</li>`,
+    );
+    const drillItems = (Array.isArray(module.drill) ? module.drill : []).map(
+      (item) => html`<li>${item}</li>`,
+    );
+    const promptItems = (Array.isArray(module.logPrompts) ? module.logPrompts : []).map(
+      (item) => html`<li>${item}</li>`,
+    );
+    const preWatch = module.preWatch
+      ? html`
       <div class="panel intro-panel">
         <h2>Before You Start</h2>
         <p>${module.preWatch}</p>
       </div>
-    ` : "";
+    `
+      : "";
     const videoEmbed = safeYoutubeEmbed(module.video);
-    const companionVideo = module.companionVideo && typeof module.companionVideo === "object" ? module.companionVideo : null;
+    const companionVideo =
+      module.companionVideo && typeof module.companionVideo === "object"
+        ? module.companionVideo
+        : null;
     const companionEmbed = safeYoutubeEmbed(companionVideo?.id);
     const embedUrl = safeUrl(module.embedUrl, {
       allowRelative: false,
-      allowedOrigins: EMBED_ORIGINS
+      allowedOrigins: EMBED_ORIGINS,
     });
-    const media = videoEmbed ? html`
+    const media = videoEmbed
+      ? html`
       <div class="media-box">
         <iframe title="${module.title} video" src="${videoEmbed}" allowfullscreen></iframe>
       </div>
-    ` : embedUrl !== "#" ? html`
+    `
+      : embedUrl !== "#"
+        ? html`
       <div class="media-box media-box-tall">
         <iframe title="${module.embedTitle || module.title}" src="${embedUrl}" allowfullscreen></iframe>
       </div>
-    ` : "";
-    const companionMedia = companionEmbed ? html`
+    `
+        : "";
+    const companionMedia = companionEmbed
+      ? html`
       <section class="companion-video" aria-label="${companionVideo.label || "Companion video"}">
         <div class="companion-copy">
           <h2>${companionVideo.label || "Companion Video"}</h2>
@@ -663,27 +755,35 @@
           <iframe title="${companionVideo.title || companionVideo.label || "Companion video"}" src="${companionEmbed}" allowfullscreen></iframe>
         </div>
       </section>
-    ` : "";
-    const activity = !media && module.activityUrl ? html`
+    `
+      : "";
+    const activity =
+      !media && module.activityUrl
+        ? html`
       <div class="panel activity-panel">
         <h2>Activity</h2>
         <p>${module.activityNote || "Open the activity in a new tab, complete the assigned run, then return here to log what happened."}</p>
         <a class="button primary" href="${safeUrl(module.activityUrl, { allowRelative: false })}" target="_blank" rel="noreferrer">${icon("next")} ${module.activityLabel || "Open activity"}</a>
       </div>
-    ` : "";
-    const sourcePanel = hasEmbeddedMedia ? html`
+    `
+        : "";
+    const sourcePanel = hasEmbeddedMedia
+      ? html`
       <details class="source-details">
         <summary>Source links</summary>
         <ul class="resource-list quiet">${resourceItems}</ul>
       </details>
-    ` : html`
+    `
+      : html`
       <div class="panel">
         <h2>Resources</h2>
         <ul class="resource-list">${resourceItems}</ul>
       </div>
     `;
 
-    mount(app, shell(html`
+    mount(
+      app,
+      shell(html`
       <main class="lesson-shell">
         <section class="lesson-header">
           <div class="lesson-title">
@@ -746,9 +846,11 @@
             <div class="field">
               <label for="rating">Confidence</label>
               <select id="rating">
-                ${["", "Needs more coaching", "Emerging", "Solid with prompts", "Independent"].map((value) => html`
+                ${["", "Needs more coaching", "Emerging", "Solid with prompts", "Independent"].map(
+                  (value) => html`
                   <option value="${value}" ${current.rating === value ? raw("selected") : ""}>${value || "Select"}</option>
-                `)}
+                `,
+                )}
               </select>
             </div>
             <div class="field">
@@ -759,7 +861,8 @@
           </aside>
         </section>
       </main>
-    `));
+    `),
+    );
 
     bindImportExport();
     bindLessonLog(module.slug);
@@ -790,10 +893,11 @@
         complete: completeEl ? completeEl.checked : false,
         date: dateEl ? dateEl.value : "",
         rating: ratingEl ? ratingEl.value : "",
-        notes: notesEl ? notesEl.value : ""
+        notes: notesEl ? notesEl.value : "",
       });
       const state = document.getElementById("save-state");
-      if (state) state.textContent = "Saved " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + ".";
+      if (state)
+        state.textContent = `Saved ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}.`;
     };
     const debouncedSave = debounce(save, 250);
 
@@ -833,21 +937,22 @@
     const checkpoint = checkpointById.get(groupId);
     if (!checkpoint || !Array.isArray(checkpoint.questions)) return;
 
-    const collectAnswers = () => checkpoint.questions.reduce((answers, question) => {
-      question.choices.forEach((_, choiceIndex) => {
-        const input = document.getElementById(`choice-${question.id}-${choiceIndex}`);
-        if (input?.checked) {
-          answers[question.id] = choiceIndex;
-        }
-      });
-      return answers;
-    }, {});
+    const collectAnswers = () =>
+      checkpoint.questions.reduce((answers, question) => {
+        question.choices.forEach((_, choiceIndex) => {
+          const input = document.getElementById(`choice-${question.id}-${choiceIndex}`);
+          if (input?.checked) {
+            answers[question.id] = choiceIndex;
+          }
+        });
+        return answers;
+      }, {});
 
     const saveAnswers = () => {
       const current = checkpointProgress(groupId);
       const patch = {
         started: true,
-        answers: collectAnswers()
+        answers: collectAnswers(),
       };
       if (current.submittedAt) {
         Object.assign(patch, {
@@ -857,7 +962,7 @@
           correct: null,
           submittedAt: "",
           // A fresh attempt gets a fresh option order.
-          seed: generateSeed()
+          seed: generateSeed(),
         });
       }
 
@@ -872,7 +977,9 @@
 
     checkpoint.questions.forEach((question) => {
       question.choices.forEach((_, choiceIndex) => {
-        document.getElementById(`choice-${question.id}-${choiceIndex}`)?.addEventListener("change", saveAnswers);
+        document
+          .getElementById(`choice-${question.id}-${choiceIndex}`)
+          ?.addEventListener("change", saveAnswers);
       });
     });
 
@@ -884,7 +991,7 @@
           started: true,
           answers,
           complete: false,
-          selfDeclared: false
+          selfDeclared: false,
         });
         const state = document.getElementById("checkpoint-save-state");
         if (state) state.textContent = `Answer all ${summary.total} questions before scoring.`;
@@ -898,7 +1005,7 @@
         selfDeclared: false,
         score: summary.score,
         correct: summary.correct,
-        submittedAt: new Date().toISOString()
+        submittedAt: new Date().toISOString(),
       });
       renderLesson(pageSlug);
     });
@@ -913,7 +1020,7 @@
         selfDeclared: true,
         score: summary.score,
         correct: summary.correct,
-        submittedAt: new Date().toISOString()
+        submittedAt: new Date().toISOString(),
       });
       renderLesson(pageSlug);
     });

@@ -1,6 +1,7 @@
 const toyotaRiskAttend = "https://amrd.toyota.com/csrc/risk/";
 const dtoBase = "https://driving-tests.org/defensive-driving-hazard-simulator-";
-const dvsaCourse = "https://www.safedrivingforlife.info/shop/official-dvsa-guide-hazard-perception-elearning/";
+const dvsaCourse =
+  "https://www.safedrivingforlife.info/shop/official-dvsa-guide-hazard-perception-elearning/";
 
 function source(label, url) {
   return [label, url];
@@ -16,7 +17,7 @@ window.HPT_CURRICULUM = {
       unitIds: [1, 2],
       estimatedStudentMinutes: 75,
       knownRuntime: "n/a",
-      mcqAsset: "assets/mcq-g01-hidden-risk-baseline.md"
+      mcqAsset: "assets/mcq-g01-hidden-risk-baseline.md",
     },
     {
       id: "g02",
@@ -24,7 +25,7 @@ window.HPT_CURRICULUM = {
       unitIds: [3, 4, 5, 6],
       estimatedStudentMinutes: 70,
       knownRuntime: "17:30",
-      mcqAsset: "assets/mcq-g02-residential-sightlines-and-space.md"
+      mcqAsset: "assets/mcq-g02-residential-sightlines-and-space.md",
     },
     {
       id: "g03",
@@ -32,7 +33,7 @@ window.HPT_CURRICULUM = {
       unitIds: [7, 8, 9],
       estimatedStudentMinutes: 55,
       knownRuntime: "29:12",
-      mcqAsset: "assets/mcq-g03-intersection-scanning-ladder.md"
+      mcqAsset: "assets/mcq-g03-intersection-scanning-ladder.md",
     },
     {
       id: "g04",
@@ -40,7 +41,7 @@ window.HPT_CURRICULUM = {
       unitIds: [10, 11, 12, 13],
       estimatedStudentMinutes: 55,
       knownRuntime: "25:00",
-      mcqAsset: "assets/mcq-g04-conflict-checks-around-the-car.md"
+      mcqAsset: "assets/mcq-g04-conflict-checks-around-the-car.md",
     },
     {
       id: "g05",
@@ -48,7 +49,7 @@ window.HPT_CURRICULUM = {
       unitIds: [14],
       estimatedStudentMinutes: 55,
       knownRuntime: "25:00",
-      mcqAsset: "assets/mcq-g05-lane-change-deep-dive.md"
+      mcqAsset: "assets/mcq-g05-lane-change-deep-dive.md",
     },
     {
       id: "g06",
@@ -56,7 +57,7 @@ window.HPT_CURRICULUM = {
       unitIds: [15, 16, 17, 18],
       estimatedStudentMinutes: 75,
       knownRuntime: "20:02",
-      mcqAsset: "assets/mcq-g06-high-speed-large-vehicle-low-visibility.md"
+      mcqAsset: "assets/mcq-g06-high-speed-large-vehicle-low-visibility.md",
     },
     {
       id: "g07",
@@ -64,7 +65,7 @@ window.HPT_CURRICULUM = {
       unitIds: [19, 20, 21, 22, 23, 24, 25],
       estimatedStudentMinutes: 70,
       knownRuntime: "15:39",
-      mcqAsset: "assets/mcq-g07-us-simulator-set.md"
+      mcqAsset: "assets/mcq-g07-us-simulator-set.md",
     },
     {
       id: "g08",
@@ -72,7 +73,7 @@ window.HPT_CURRICULUM = {
       unitIds: [26, 27, 28],
       estimatedStudentMinutes: 70,
       knownRuntime: "3:00",
-      mcqAsset: "assets/mcq-g08-dvsa-format-transfer-first-paid-calibration.md"
+      mcqAsset: "assets/mcq-g08-dvsa-format-transfer-first-paid-calibration.md",
     },
     {
       id: "g09",
@@ -80,7 +81,7 @@ window.HPT_CURRICULUM = {
       unitIds: [29, 30],
       estimatedStudentMinutes: 70,
       knownRuntime: "n/a",
-      mcqAsset: "assets/mcq-g09-dvsa-occlusion-intention.md"
+      mcqAsset: "assets/mcq-g09-dvsa-occlusion-intention.md",
     },
     {
       id: "g10",
@@ -88,8 +89,8 @@ window.HPT_CURRICULUM = {
       unitIds: [31, 32],
       estimatedStudentMinutes: 65,
       knownRuntime: "n/a",
-      mcqAsset: "assets/mcq-g10-dvsa-conditions-mock-checkpoint.md"
-    }
+      mcqAsset: "assets/mcq-g10-dvsa-conditions-mock-checkpoint.md",
+    },
   ],
   modules: [
     {
@@ -103,14 +104,25 @@ window.HPT_CURRICULUM = {
       time: "30-45 min",
       activityUrl: toyotaRiskAttend,
       activityLabel: "Open Risk-ATTEND",
-      activityNote: "Open Risk-ATTEND in a new tab, complete the interactive module in Toyota's app, then return here to log what you noticed.",
-      preWatch: "Start with the central habit for the whole course: do not wait for trouble to be visible. As you work through Risk-ATTEND, keep asking what the visible scene is hiding: behind a parked vehicle, beyond a hedge, inside a driveway, around a curve, or past a large vehicle.",
+      activityNote:
+        "Open Risk-ATTEND in a new tab, complete the interactive module in Toyota's app, then return here to log what you noticed.",
+      preWatch:
+        "Start with the central habit for the whole course: do not wait for trouble to be visible. As you work through Risk-ATTEND, keep asking what the visible scene is hiding: behind a parked vehicle, beyond a hedge, inside a driveway, around a curve, or past a large vehicle.",
       objective: "Learn that the danger is often the space behind or beside the visible object.",
-      do: ["Complete the self-paced module once.", "Do not coach every answer. Let the module establish the baseline.", "Afterward, name the hidden-risk categories that appeared."],
-      drill: ["Look for pedestrian hidden by vehicle, driveway vehicle, child hidden by parked cars, cyclist hidden by road geometry, hazard beyond a curve or hill, obscured intersection, and stopped vehicle hiding crosswalk activity."],
+      do: [
+        "Complete the self-paced module once.",
+        "Do not coach every answer. Let the module establish the baseline.",
+        "Afterward, name the hidden-risk categories that appeared.",
+      ],
+      drill: [
+        "Look for pedestrian hidden by vehicle, driveway vehicle, child hidden by parked cars, cyclist hidden by road geometry, hazard beyond a curve or hill, obscured intersection, and stopped vehicle hiding crosswalk activity.",
+      ],
       pass: "You can explain that the danger is often not the visible object but the space it blocks.",
-      logPrompts: ["Which hidden spaces did you notice without prompting?", "Which category was weakest: pedestrian, vehicle, cyclist, or road geometry?"],
-      resources: [source("Open Risk-ATTEND", toyotaRiskAttend)]
+      logPrompts: [
+        "Which hidden spaces did you notice without prompting?",
+        "Which category was weakest: pedestrian, vehicle, cyclist, or road geometry?",
+      ],
+      resources: [source("Open Risk-ATTEND", toyotaRiskAttend)],
     },
     {
       id: 2,
@@ -123,14 +135,26 @@ window.HPT_CURRICULUM = {
       time: "25-35 min",
       activityUrl: toyotaRiskAttend,
       activityLabel: "Open Risk-ATTEND",
-      activityNote: "Open Risk-ATTEND in a new tab, use Toyota's interactive scenarios for the replay, then return here to log your best prediction.",
-      preWatch: "Now repeat the same kind of scene, but make it active. Before answering, pause and say the hidden actor, the search zone, the clue, and the first gentle action you would take. This turns 'be careful' into a usable driving prediction.",
+      activityNote:
+        "Open Risk-ATTEND in a new tab, use Toyota's interactive scenarios for the replay, then return here to log your best prediction.",
+      preWatch:
+        "Now repeat the same kind of scene, but make it active. Before answering, pause and say the hidden actor, the search zone, the clue, and the first gentle action you would take. This turns 'be careful' into a usable driving prediction.",
       objective: "Convert visual scenes into a prediction checklist.",
-      do: ["Repeat selected scenarios.", "Pause before answering.", "Require a concrete prediction before any click or selection."],
-      drill: ["What is visible?", "What is hidden?", "Who could enter my path?", "What clue tells me to look there?", "What would I do now: maintain, ease off, cover brake, brake, or change lane position?"],
+      do: [
+        "Repeat selected scenarios.",
+        "Pause before answering.",
+        "Require a concrete prediction before any click or selection.",
+      ],
+      drill: [
+        "What is visible?",
+        "What is hidden?",
+        "Who could enter my path?",
+        "What clue tells me to look there?",
+        "What would I do now: maintain, ease off, cover brake, brake, or change lane position?",
+      ],
       pass: "You name a specific hidden actor and a specific search zone, not just 'be careful.'",
       logPrompts: ["Best specific prediction today.", "One vague answer to replace next time."],
-      resources: [source("Open Risk-ATTEND", toyotaRiskAttend)]
+      resources: [source("Open Risk-ATTEND", toyotaRiskAttend)],
     },
     {
       id: 3,
@@ -143,13 +167,30 @@ window.HPT_CURRICULUM = {
       time: "15-20 min",
       activityUrl: "https://www.gov.uk/theory-test/hazard-perception-test",
       activityLabel: "Open GOV.UK explanation",
-      preWatch: "Lock in the timing language the rest of this course depends on. A potential hazard is something that could matter. A developing hazard has started to change your plan. The point is not to react to everything; it is to notice the moment a possible risk becomes an act-now risk. Carry this distinction into every clip and simulator that follows.",
+      preWatch:
+        "Lock in the timing language the rest of this course depends on. A potential hazard is something that could matter. A developing hazard has started to change your plan. The point is not to react to everything; it is to notice the moment a possible risk becomes an act-now risk. Carry this distinction into every clip and simulator that follows.",
       objective: "Know when a risk changes from possible to act-now.",
-      do: ["Read the short explanation.", "Drill potential versus developing examples.", "Carry the distinction into the video lessons and, later, the simulator sessions."],
-      drill: ["Parked car: potential. Parked car with wheel movement or signal: developing.", "Pedestrian near curb: potential. Pedestrian stepping toward road: developing.", "Cyclist steady: potential. Cyclist swerving around parked car: developing."],
+      do: [
+        "Read the short explanation.",
+        "Drill potential versus developing examples.",
+        "Carry the distinction into the video lessons and, later, the simulator sessions.",
+      ],
+      drill: [
+        "Parked car: potential. Parked car with wheel movement or signal: developing.",
+        "Pedestrian near curb: potential. Pedestrian stepping toward road: developing.",
+        "Cyclist steady: potential. Cyclist swerving around parked car: developing.",
+      ],
       pass: "You can say, 'That was only a potential hazard until X changed.'",
-      logPrompts: ["Which examples were misclassified?", "Do you wait for a concrete cue before calling it developing?"],
-      resources: [source("GOV.UK hazard perception test", "https://www.gov.uk/theory-test/hazard-perception-test")]
+      logPrompts: [
+        "Which examples were misclassified?",
+        "Do you wait for a concrete cue before calling it developing?",
+      ],
+      resources: [
+        source(
+          "GOV.UK hazard perception test",
+          "https://www.gov.uk/theory-test/hazard-perception-test",
+        ),
+      ],
     },
     {
       id: 4,
@@ -166,15 +207,37 @@ window.HPT_CURRICULUM = {
         title: "Talk to Yourself & Pass Your Driver's Test :: Running Commentary",
         label: "Commentary & method (Smart Drive Test)",
         note: "Canadian, right-side-of-road context. Use this as the course-wide commentary habit: verbalize what you see, what is hidden, and what you will do next.",
-        prompt: "Before the DED clip, predict aloud where trouble could appear; then watch the SDT clip and practice narrating hazards the way an expert thinks."
+        prompt:
+          "Before the DED clip, predict aloud where trouble could appear; then watch the SDT clip and practice narrating hazards the way an expert thinks.",
       },
-      preWatch: "DED gives the U.S. residential example; Smart Drive Test adds the running-commentary method you will use for every later clip and every supervised drive. Predict aloud where neighborhood trouble could hide before watching, then narrate the hazards as they appear: driveways, parked cars, doors, bikes, children, curves, glare, animals, debris, and blocked sightlines.",
+      preWatch:
+        "DED gives the U.S. residential example; Smart Drive Test adds the running-commentary method you will use for every later clip and every supervised drive. Predict aloud where neighborhood trouble could hide before watching, then narrate the hazards as they appear: driveways, parked cars, doors, bikes, children, curves, glare, animals, debris, and blocked sightlines.",
       objective: "Transfer hidden-risk anticipation into ordinary neighborhood streets.",
-      do: ["Watch once without pausing.", "Watch again and name each blocked sightline before the narrator explains it.", "Afterward, take a passenger-seat neighborhood ride and call only hidden-risk zones."],
-      drill: ["Parked vehicle blocks curb.", "Driveway partly hidden.", "Large vehicle blocks forward view.", "Curve hides what is around it.", "Child, bike, scooter, animal, or door could enter path."],
+      do: [
+        "Watch once without pausing.",
+        "Watch again and name each blocked sightline before the narrator explains it.",
+        "Afterward, take a passenger-seat neighborhood ride and call only hidden-risk zones.",
+      ],
+      drill: [
+        "Parked vehicle blocks curb.",
+        "Driveway partly hidden.",
+        "Large vehicle blocks forward view.",
+        "Curve hides what is around it.",
+        "Child, bike, scooter, animal, or door could enter path.",
+      ],
       pass: "You identify hidden residential zones before the car reaches them.",
-      logPrompts: ["Which residential hazards were easy?", "Which hidden zones still appeared late?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/hazards/residential/default.aspx"), source("DED YouTube video", "https://www.youtube.com/watch?v=YUTAimvbfSk"), source("SDT YouTube video", "https://www.youtube.com/watch?v=91fc2N1-5sw")]
+      logPrompts: [
+        "Which residential hazards were easy?",
+        "Which hidden zones still appeared late?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/hazards/residential/default.aspx",
+        ),
+        source("DED YouTube video", "https://www.youtube.com/watch?v=YUTAimvbfSk"),
+        source("SDT YouTube video", "https://www.youtube.com/watch?v=91fc2N1-5sw"),
+      ],
     },
     {
       id: 5,
@@ -191,15 +254,31 @@ window.HPT_CURRICULUM = {
         title: "How to Manage Space Around Your Vehicle to Pass a Road Test",
         label: "Space cushion method (Smart Drive Test)",
         note: "Canadian, right-side-of-road context. This adds the all-around space cushion and following-distance layer that the DED lane-position clip does not cover.",
-        prompt: "Before watching, predict where the car needs front, side, and rear margin; then narrate how lane position and following distance preserve escape space."
+        prompt:
+          "Before watching, predict where the car needs front, side, and rear margin; then narrate how lane position and following distance preserve escape space.",
       },
-      preWatch: "Hazard perception is not only what you see; it is where you place the car while uncertainty exists. DED shows lateral lane position around parked cars, curves, narrow streets, and hidden edges; Smart Drive Test adds the all-around space cushion and following-distance method. Predict where space can disappear before watching, then narrate how each position choice preserves margin.",
+      preWatch:
+        "Hazard perception is not only what you see; it is where you place the car while uncertainty exists. DED shows lateral lane position around parked cars, curves, narrow streets, and hidden edges; Smart Drive Test adds the all-around space cushion and following-distance method. Predict where space can disappear before watching, then narrate how each position choice preserves margin.",
       objective: "Connect perception to lane placement and clearance.",
-      do: ["Watch for how lane position changes available escape space.", "On a quiet street, discuss where the car should sit when parked vehicles or curves reduce visibility."],
-      drill: ["Leave room beside parked cars.", "Do not drift toward hidden edges.", "Use lane position to buy sightline and space."],
+      do: [
+        "Watch for how lane position changes available escape space.",
+        "On a quiet street, discuss where the car should sit when parked vehicles or curves reduce visibility.",
+      ],
+      drill: [
+        "Leave room beside parked cars.",
+        "Do not drift toward hidden edges.",
+        "Use lane position to buy sightline and space.",
+      ],
       pass: "You can explain how lane position changes escape space and sightline.",
       logPrompts: ["Where did you choose more side space?", "Where did you crowd a hidden edge?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/lane-positioning/residential/"), source("DED YouTube video", "https://www.youtube.com/watch?v=0QlcsqV0JQY"), source("SDT YouTube video", "https://www.youtube.com/watch?v=J_UKNOGJ2tU")]
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/lane-positioning/residential/",
+        ),
+        source("DED YouTube video", "https://www.youtube.com/watch?v=0QlcsqV0JQY"),
+        source("SDT YouTube video", "https://www.youtube.com/watch?v=J_UKNOGJ2tU"),
+      ],
     },
     {
       id: 6,
@@ -211,13 +290,30 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "10-15 min",
       video: "LQZiG2OXkx8",
-      preWatch: "A curve is an occlusion machine. The road may look empty, but the important part is beyond the bend. Watch for speed, lane position, and how early the driver prepares for what cannot yet be seen.",
-      objective: "Treat curves as blocked sightlines that require earlier speed and space decisions.",
-      do: ["Watch for the moment where the view ahead is incomplete.", "Practice saying what could be beyond the curve before it is visible."],
-      drill: ["Hidden pedestrian.", "Hidden vehicle.", "Parked car after curve.", "Oncoming traffic crossing center.", "Reduced escape space."],
+      preWatch:
+        "A curve is an occlusion machine. The road may look empty, but the important part is beyond the bend. Watch for speed, lane position, and how early the driver prepares for what cannot yet be seen.",
+      objective:
+        "Treat curves as blocked sightlines that require earlier speed and space decisions.",
+      do: [
+        "Watch for the moment where the view ahead is incomplete.",
+        "Practice saying what could be beyond the curve before it is visible.",
+      ],
+      drill: [
+        "Hidden pedestrian.",
+        "Hidden vehicle.",
+        "Parked car after curve.",
+        "Oncoming traffic crossing center.",
+        "Reduced escape space.",
+      ],
       pass: "You slow and scan before the curve opens, not after.",
-      logPrompts: ["Did you anticipate beyond the bend?", "Was the speed chosen for what was hidden or only for what was visible?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/curves/residential/"), source("YouTube video", "https://www.youtube.com/watch?v=LQZiG2OXkx8")]
+      logPrompts: [
+        "Did you anticipate beyond the bend?",
+        "Was the speed chosen for what was hidden or only for what was visible?",
+      ],
+      resources: [
+        source("DED source page", "https://www.driverseddirect.com/videos/curves/residential/"),
+        source("YouTube video", "https://www.youtube.com/watch?v=LQZiG2OXkx8"),
+      ],
     },
     {
       id: 7,
@@ -234,15 +330,36 @@ window.HPT_CURRICULUM = {
         title: "The Observation Technique That Guarantees You Pass First Time",
         label: "Scanning method (Smart Drive Test)",
         note: "Canadian, right-side-of-road context. Watch for the repeatable head-and-eye scan procedure, not just the specific road scene.",
-        prompt: "Before each DED traffic check, say left, center, right, mirror, and hidden edge aloud; then compare your pattern with the SDT method."
+        prompt:
+          "Before each DED traffic check, say left, center, right, mirror, and hidden edge aloud; then compare your pattern with the SDT method.",
       },
-      preWatch: "After the open-road fundamentals, add a scan pattern for intersections. DED demonstrates residential traffic checks in context; Smart Drive Test supplies the systematic observation routine. Before watching, predict which zones the driver must clear, then narrate the scan instead of staring straight ahead.",
+      preWatch:
+        "After the open-road fundamentals, add a scan pattern for intersections. DED demonstrates residential traffic checks in context; Smart Drive Test supplies the systematic observation routine. Before watching, predict which zones the driver must clear, then narrate the scan instead of staring straight ahead.",
       objective: "Build a repeatable low-speed traffic-check routine.",
-      do: ["Watch for where the driver looks before entering conflict zones.", "Practice the same scan as a passenger on a short residential route."],
-      drill: ["Left edge.", "Right edge.", "Far ahead.", "Side street or driveway.", "Hidden spaces before moving into them."],
+      do: [
+        "Watch for where the driver looks before entering conflict zones.",
+        "Practice the same scan as a passenger on a short residential route.",
+      ],
+      drill: [
+        "Left edge.",
+        "Right edge.",
+        "Far ahead.",
+        "Side street or driveway.",
+        "Hidden spaces before moving into them.",
+      ],
       pass: "You perform traffic checks before entering residential conflict points.",
-      logPrompts: ["Was the scan early or last-second?", "Did you check both vehicle and pedestrian zones?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/traffic-checks-residential/"), source("DED YouTube video", "https://www.youtube.com/watch?v=SbOWPZAbpvw"), source("SDT YouTube video", "https://www.youtube.com/watch?v=TrtgVbd87SY")]
+      logPrompts: [
+        "Was the scan early or last-second?",
+        "Did you check both vehicle and pedestrian zones?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/traffic-checks-residential/",
+        ),
+        source("DED YouTube video", "https://www.youtube.com/watch?v=SbOWPZAbpvw"),
+        source("SDT YouTube video", "https://www.youtube.com/watch?v=TrtgVbd87SY"),
+      ],
     },
     {
       id: 8,
@@ -254,13 +371,31 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "xgXkH4l4eQA",
-      preWatch: "Right-of-way is not just a rule question. It is a prediction question: who might enter the same space, who may misunderstand, and where should you leave room if the other person makes a poor choice?",
+      preWatch:
+        "Right-of-way is not just a rule question. It is a prediction question: who might enter the same space, who may misunderstand, and where should you leave room if the other person makes a poor choice?",
       objective: "Identify likely conflict points at residential intersections.",
-      do: ["Watch for which vehicle or pedestrian could claim the same space.", "Pause at examples and ask what mistake another road user might make."],
-      drill: ["Four-way stop uncertainty.", "Unprotected turn conflict.", "Pedestrian crossing conflict.", "Driver who rolls or hesitates."],
+      do: [
+        "Watch for which vehicle or pedestrian could claim the same space.",
+        "Pause at examples and ask what mistake another road user might make.",
+      ],
+      drill: [
+        "Four-way stop uncertainty.",
+        "Unprotected turn conflict.",
+        "Pedestrian crossing conflict.",
+        "Driver who rolls or hesitates.",
+      ],
       pass: "You identify the conflict point before deciding who should go.",
-      logPrompts: ["Which conflict point was clearest?", "Where did rule-thinking crowd out hazard-thinking?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/Right-of-Way/Residential/"), source("YouTube video", "https://www.youtube.com/watch?v=xgXkH4l4eQA")]
+      logPrompts: [
+        "Which conflict point was clearest?",
+        "Where did rule-thinking crowd out hazard-thinking?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/Right-of-Way/Residential/",
+        ),
+        source("YouTube video", "https://www.youtube.com/watch?v=xgXkH4l4eQA"),
+      ],
     },
     {
       id: 9,
@@ -277,15 +412,37 @@ window.HPT_CURRICULUM = {
         title: "Scanning And Moving Through Intersections Safely",
         label: "MIT intersection method (Smart Drive Test)",
         note: "Canadian, right-side-of-road context. Use this for the named intersection-scanning method, then apply it back to the DED major-street example.",
-        prompt: "Before the DED clip, call the cross traffic, pedestrian zones, turners, and blocked edges; then use the SDT method to narrate the intersection before entering."
+        prompt:
+          "Before the DED clip, call the cross traffic, pedestrian zones, turners, and blocked edges; then use the SDT method to narrate the intersection before entering.",
       },
-      preWatch: "Now move from quiet streets to busier intersections. DED gives the major-street example; Smart Drive Test adds a named intersection-scanning method to apply before entering the box. Predict the cross traffic, pedestrians, turners, lane changers, late decision-makers, and blocked edges before watching, then narrate them as the clip unfolds.",
+      preWatch:
+        "Now move from quiet streets to busier intersections. DED gives the major-street example; Smart Drive Test adds a named intersection-scanning method to apply before entering the box. Predict the cross traffic, pedestrians, turners, lane changers, late decision-makers, and blocked edges before watching, then narrate them as the clip unfolds.",
       objective: "Scan wider without losing pedestrians and hidden edges.",
-      do: ["Watch for how the scan expands on major streets.", "On a passenger ride, call the three road users most likely to matter next."],
-      drill: ["Near crosswalk.", "Far crosswalk.", "Cross traffic.", "Turning path.", "Lane-changing vehicle.", "Blocked view near larger vehicle."],
+      do: [
+        "Watch for how the scan expands on major streets.",
+        "On a passenger ride, call the three road users most likely to matter next.",
+      ],
+      drill: [
+        "Near crosswalk.",
+        "Far crosswalk.",
+        "Cross traffic.",
+        "Turning path.",
+        "Lane-changing vehicle.",
+        "Blocked view near larger vehicle.",
+      ],
       pass: "You scan beyond the car directly ahead and include pedestrian zones.",
-      logPrompts: ["Which road user mattered most?", "Was anything ignored because it was not a car?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/traffic-checks-major-streets/"), source("DED YouTube video", "https://www.youtube.com/watch?v=OP-qM-ZrVPQ"), source("SDT YouTube video", "https://www.youtube.com/watch?v=v0Soc-kicOQ")]
+      logPrompts: [
+        "Which road user mattered most?",
+        "Was anything ignored because it was not a car?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/traffic-checks-major-streets/",
+        ),
+        source("DED YouTube video", "https://www.youtube.com/watch?v=OP-qM-ZrVPQ"),
+        source("SDT YouTube video", "https://www.youtube.com/watch?v=v0Soc-kicOQ"),
+      ],
     },
     {
       id: 10,
@@ -297,13 +454,31 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "2CXnQmudiD0",
-      preWatch: "Major streets add speed and impatience. Watch this as a conflict map: who has a path across yours, who may misjudge a gap, and what clue would make you wait even if the rule says you can go.",
+      preWatch:
+        "Major streets add speed and impatience. Watch this as a conflict map: who has a path across yours, who may misjudge a gap, and what clue would make you wait even if the rule says you can go.",
       objective: "Predict conflicts at major street intersections before entering them.",
-      do: ["Watch for legal right-of-way versus practical safety.", "Name the cue that would make you delay or add space."],
-      drill: ["Late left turn.", "Rolling right turn.", "Pedestrian crossing during turn.", "Driver accelerating to beat a gap."],
+      do: [
+        "Watch for legal right-of-way versus practical safety.",
+        "Name the cue that would make you delay or add space.",
+      ],
+      drill: [
+        "Late left turn.",
+        "Rolling right turn.",
+        "Pedestrian crossing during turn.",
+        "Driver accelerating to beat a gap.",
+      ],
       pass: "You treat right-of-way as permission to proceed only after checking conflict and intention.",
-      logPrompts: ["Where did a rule answer need a safety check?", "Which cue would make you wait?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/Right-of-Way/Major-Streets/"), source("YouTube video", "https://www.youtube.com/watch?v=2CXnQmudiD0")]
+      logPrompts: [
+        "Where did a rule answer need a safety check?",
+        "Which cue would make you wait?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/Right-of-Way/Major-Streets/",
+        ),
+        source("YouTube video", "https://www.youtube.com/watch?v=2CXnQmudiD0"),
+      ],
     },
     {
       id: 11,
@@ -315,13 +490,33 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "t7j8MEsS9Mc",
-      preWatch: "Right turn on red is a perfect hazard-perception trap: the driver looks left for cars and forgets the pedestrian or cyclist on the right. Watch for how the turning path, near sidewalk, far sidewalk, and crosswalk all have to stay in view.",
+      preWatch:
+        "Right turn on red is a perfect hazard-perception trap: the driver looks left for cars and forgets the pedestrian or cyclist on the right. Watch for how the turning path, near sidewalk, far sidewalk, and crosswalk all have to stay in view.",
       objective: "Keep pedestrian and cyclist scanning alive during right-turn decisions.",
-      do: ["Watch once for traffic gaps.", "Watch again only for pedestrian/cyclist conflict.", "Practice the spoken scan before any right turn on red."],
-      drill: ["Near sidewalk.", "Far sidewalk.", "Crosswalk.", "Turning path.", "Bikes or scooters approaching from the right."],
+      do: [
+        "Watch once for traffic gaps.",
+        "Watch again only for pedestrian/cyclist conflict.",
+        "Practice the spoken scan before any right turn on red.",
+      ],
+      drill: [
+        "Near sidewalk.",
+        "Far sidewalk.",
+        "Crosswalk.",
+        "Turning path.",
+        "Bikes or scooters approaching from the right.",
+      ],
       pass: "You check sidewalks and crosswalks before checking only for vehicle gaps.",
-      logPrompts: ["Did you check right-side pedestrian/cyclist space?", "Which part of the turn stole attention?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/turns/right/right-turn-on-red/"), source("YouTube video", "https://www.youtube.com/watch?v=t7j8MEsS9Mc")]
+      logPrompts: [
+        "Did you check right-side pedestrian/cyclist space?",
+        "Which part of the turn stole attention?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/turns/right/right-turn-on-red/",
+        ),
+        source("YouTube video", "https://www.youtube.com/watch?v=t7j8MEsS9Mc"),
+      ],
     },
     {
       id: 12,
@@ -333,13 +528,32 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "10-15 min",
       video: "VFRv3Je7phs",
-      preWatch: "Hazard perception is not only forward. The car behind you changes your escape options, braking margin, and lane-change choices. Watch for how mirror checks keep the whole traffic picture alive. Mirrors come first because the next two lessons, blind spots and lane changes, build directly on them.",
+      preWatch:
+        "Hazard perception is not only forward. The car behind you changes your escape options, braking margin, and lane-change choices. Watch for how mirror checks keep the whole traffic picture alive. Mirrors come first because the next two lessons, blind spots and lane changes, build directly on them.",
       objective: "Use mirrors to track threats and space behind the vehicle.",
-      do: ["Watch for when mirror information changes the driver's options.", "During a passenger ride, call whether the space behind is open, close, or unstable."],
-      drill: ["Tailgater.", "Fast-approaching vehicle.", "Open escape lane.", "Vehicle hidden beside rear quarter.", "Brake earlier when followed closely."],
+      do: [
+        "Watch for when mirror information changes the driver's options.",
+        "During a passenger ride, call whether the space behind is open, close, or unstable.",
+      ],
+      drill: [
+        "Tailgater.",
+        "Fast-approaching vehicle.",
+        "Open escape lane.",
+        "Vehicle hidden beside rear quarter.",
+        "Brake earlier when followed closely.",
+      ],
       pass: "You use mirror information to preserve space, not just to satisfy a checklist.",
-      logPrompts: ["Did you notice rear threats early?", "Did mirror information change a speed or lane choice?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/rearview-mirrors/part-2-using/"), source("YouTube video", "https://www.youtube.com/watch?v=VFRv3Je7phs")]
+      logPrompts: [
+        "Did you notice rear threats early?",
+        "Did mirror information change a speed or lane choice?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/rearview-mirrors/part-2-using/",
+        ),
+        source("YouTube video", "https://www.youtube.com/watch?v=VFRv3Je7phs"),
+      ],
     },
     {
       id: 13,
@@ -351,13 +565,28 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "10-15 min",
       video: "ZkVBf-LIGro",
-      preWatch: "Blind spots are just occlusion beside the car. You already met the shoulder-check and 360-scan routine with the Residential Traffic Checks observation method; this lesson isolates the blind zone itself and pairs with the mirror lesson before it. Watch this clip as a visibility lesson: mirrors give information, but they do not prove the space is empty.",
+      preWatch:
+        "Blind spots are just occlusion beside the car. You already met the shoulder-check and 360-scan routine with the Residential Traffic Checks observation method; this lesson isolates the blind zone itself and pairs with the mirror lesson before it. Watch this clip as a visibility lesson: mirrors give information, but they do not prove the space is empty.",
       objective: "Understand why mirror checks and shoulder checks answer different questions.",
-      do: ["Watch for what mirrors miss.", "In a parked car, compare mirror view with shoulder-check view."],
-      drill: ["Mirror says likely clear.", "Shoulder check confirms side zone.", "Large vehicles have larger hidden zones.", "Do not linger in someone else's blind spot."],
+      do: [
+        "Watch for what mirrors miss.",
+        "In a parked car, compare mirror view with shoulder-check view.",
+      ],
+      drill: [
+        "Mirror says likely clear.",
+        "Shoulder check confirms side zone.",
+        "Large vehicles have larger hidden zones.",
+        "Do not linger in someone else's blind spot.",
+      ],
       pass: "You can explain what the mirror cannot see and when a shoulder check is needed.",
-      logPrompts: ["Which blind zone surprised you?", "Did you separate mirror information from confirmation?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/blind-spots/"), source("YouTube video", "https://www.youtube.com/watch?v=ZkVBf-LIGro")]
+      logPrompts: [
+        "Which blind zone surprised you?",
+        "Did you separate mirror information from confirmation?",
+      ],
+      resources: [
+        source("DED source page", "https://www.driverseddirect.com/videos/blind-spots/"),
+        source("YouTube video", "https://www.youtube.com/watch?v=ZkVBf-LIGro"),
+      ],
     },
     {
       id: 14,
@@ -369,13 +598,26 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "6TgFxB32fnE",
-      preWatch: "A lane change is a moving conflict problem. Before moving, the driver has to know what is ahead, behind, beside, and hidden in the blind spot. Watch for sequence, timing, and whether space remains if someone else changes speed.",
+      preWatch:
+        "A lane change is a moving conflict problem. Before moving, the driver has to know what is ahead, behind, beside, and hidden in the blind spot. Watch for sequence, timing, and whether space remains if someone else changes speed.",
       objective: "Combine mirror, blind spot, speed, and gap judgement.",
       do: ["Watch for the order of checks.", "Pause and ask what could make the gap unsafe."],
-      drill: ["Front space.", "Rear closing speed.", "Side blind spot.", "Signal and second look.", "Abort option."],
+      drill: [
+        "Front space.",
+        "Rear closing speed.",
+        "Side blind spot.",
+        "Signal and second look.",
+        "Abort option.",
+      ],
       pass: "You can describe both the target gap and the escape plan if the gap changes.",
       logPrompts: ["Did you judge closing speed?", "Did you keep an abort option?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/lane-changes/left/anxiety-buster/"), source("YouTube video", "https://www.youtube.com/watch?v=6TgFxB32fnE")]
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/lane-changes/left/anxiety-buster/",
+        ),
+        source("YouTube video", "https://www.youtube.com/watch?v=6TgFxB32fnE"),
+      ],
     },
     {
       id: 15,
@@ -387,13 +629,29 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "eLWOkdwkhps",
-      preWatch: "At freeway speed, late perception becomes expensive. Watch this clip for closing speed, blind spots, space cushions, and how early the driver has to decide whether a gap is stable enough to use.",
+      preWatch:
+        "At freeway speed, late perception becomes expensive. Watch this clip for closing speed, blind spots, space cushions, and how early the driver has to decide whether a gap is stable enough to use.",
       objective: "Read high-speed gaps and preserve options before changing lanes.",
-      do: ["Watch for early mirror checks and blind-spot confirmation.", "Name the vehicles that could change the lane-change decision."],
-      drill: ["Fast vehicle from behind.", "Vehicle sitting in blind spot.", "Lead vehicle braking.", "Truck blocking forward view.", "Open space to abort."],
+      do: [
+        "Watch for early mirror checks and blind-spot confirmation.",
+        "Name the vehicles that could change the lane-change decision.",
+      ],
+      drill: [
+        "Fast vehicle from behind.",
+        "Vehicle sitting in blind spot.",
+        "Lead vehicle braking.",
+        "Truck blocking forward view.",
+        "Open space to abort.",
+      ],
       pass: "You avoid committing to a freeway lane change until the gap, blind spot, and forward space are all accounted for.",
-      logPrompts: ["Which vehicle controlled the decision?", "Was there enough time and space to abort?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/lane-changes/freeway/"), source("YouTube video", "https://www.youtube.com/watch?v=eLWOkdwkhps")]
+      logPrompts: [
+        "Which vehicle controlled the decision?",
+        "Was there enough time and space to abort?",
+      ],
+      resources: [
+        source("DED source page", "https://www.driverseddirect.com/videos/lane-changes/freeway/"),
+        source("YouTube video", "https://www.youtube.com/watch?v=eLWOkdwkhps"),
+      ],
     },
     {
       id: 16,
@@ -405,13 +663,32 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "10-15 min",
       video: "oizQKbE-OLs",
-      preWatch: "High speed and limited sightlines turn right-of-way into a timing-and-space problem. On the freeway, the merge gap is the hazard: it can close while you commit. On a canyon road, the bend is the hazard: the important part is past the curve. Watch how early the driver reads the gap, matches speed, and prepares for what the road geometry hides.",
+      preWatch:
+        "High speed and limited sightlines turn right-of-way into a timing-and-space problem. On the freeway, the merge gap is the hazard: it can close while you commit. On a canyon road, the bend is the hazard: the important part is past the curve. Watch how early the driver reads the gap, matches speed, and prepares for what the road geometry hides.",
       objective: "Read high-speed merge gaps and canyon sightlines before committing.",
-      do: ["Watch once for freeway merging and being passed.", "Watch again for the canyon rules: uphill priority on narrow roads, and pulling into a turnout when a queue forms behind a slow vehicle."],
-      drill: ["Merge gap that closes.", "Vehicle passing you.", "Blind canyon bend.", "Oncoming car on a narrow uphill/downhill.", "Slow vehicle with a queue and a turnout ahead."],
+      do: [
+        "Watch once for freeway merging and being passed.",
+        "Watch again for the canyon rules: uphill priority on narrow roads, and pulling into a turnout when a queue forms behind a slow vehicle.",
+      ],
+      drill: [
+        "Merge gap that closes.",
+        "Vehicle passing you.",
+        "Blind canyon bend.",
+        "Oncoming car on a narrow uphill/downhill.",
+        "Slow vehicle with a queue and a turnout ahead.",
+      ],
       pass: "You commit to a merge or a canyon pass only after the gap and the hidden road geometry are accounted for.",
-      logPrompts: ["Did you read the merge gap early or late?", "What did the canyon geometry hide that you planned for?"],
-      resources: [source("DED source page", "https://www.driverseddirect.com/videos/Right-of-Way/Freeways-Canyons/"), source("YouTube video", "https://www.youtube.com/watch?v=oizQKbE-OLs")]
+      logPrompts: [
+        "Did you read the merge gap early or late?",
+        "What did the canyon geometry hide that you planned for?",
+      ],
+      resources: [
+        source(
+          "DED source page",
+          "https://www.driverseddirect.com/videos/Right-of-Way/Freeways-Canyons/",
+        ),
+        source("YouTube video", "https://www.youtube.com/watch?v=oizQKbE-OLs"),
+      ],
     },
     {
       id: 17,
@@ -423,13 +700,32 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "10-15 min",
       video: "Cw32CWOVL7c",
-      preWatch: "A truck's blind spots ('No-Zones') are occlusion you create for someone else. The rule of thumb: if you cannot see the driver's face in their mirror, they cannot see you. Large vehicles also need up to two football fields to stop and swing wide on turns. Watch for where your car disappears, and how much earlier and wider you have to plan around a big vehicle.",
-      objective: "Predict and stay out of large-vehicle blind zones, and give them stopping and turning room.",
-      do: ["Watch for the four No-Zones: front, rear, and both sides.", "Use the mirror test: can you see the driver's face?", "On a passenger ride, call when the car is sitting in a truck's blind zone."],
-      drill: ["Front No-Zone when merging in.", "Rear No-Zone when following.", "Wide right turn.", "Long stopping distance.", "Spray/wind buffeting beside a trailer."],
+      preWatch:
+        "A truck's blind spots ('No-Zones') are occlusion you create for someone else. The rule of thumb: if you cannot see the driver's face in their mirror, they cannot see you. Large vehicles also need up to two football fields to stop and swing wide on turns. Watch for where your car disappears, and how much earlier and wider you have to plan around a big vehicle.",
+      objective:
+        "Predict and stay out of large-vehicle blind zones, and give them stopping and turning room.",
+      do: [
+        "Watch for the four No-Zones: front, rear, and both sides.",
+        "Use the mirror test: can you see the driver's face?",
+        "On a passenger ride, call when the car is sitting in a truck's blind zone.",
+      ],
+      drill: [
+        "Front No-Zone when merging in.",
+        "Rear No-Zone when following.",
+        "Wide right turn.",
+        "Long stopping distance.",
+        "Spray/wind buffeting beside a trailer.",
+      ],
       pass: "You can name where a truck cannot see you and leave extra stopping and turning space.",
-      logPrompts: ["Where did you linger in a blind zone?", "Did you give enough stopping/turning room?"],
-      resources: [source("FMCSA large blind spots", "https://www.fmcsa.dot.gov/ourroads/large-blind-spots"), source("FMCSA Teen Zone", "https://www.fmcsa.dot.gov/TeenZone"), source("YouTube video", "https://www.youtube.com/watch?v=Cw32CWOVL7c")]
+      logPrompts: [
+        "Where did you linger in a blind zone?",
+        "Did you give enough stopping/turning room?",
+      ],
+      resources: [
+        source("FMCSA large blind spots", "https://www.fmcsa.dot.gov/ourroads/large-blind-spots"),
+        source("FMCSA Teen Zone", "https://www.fmcsa.dot.gov/TeenZone"),
+        source("YouTube video", "https://www.youtube.com/watch?v=Cw32CWOVL7c"),
+      ],
     },
     {
       id: 18,
@@ -441,13 +737,28 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "15-20 min",
       video: "MpRHhikARbQ",
-      preWatch: "Bad light and wet roads do not add a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, or darkness should change when you slow, how much space you keep, and how hard you search. Watch for what the driver does differently.",
+      preWatch:
+        "Bad light and wet roads do not add a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, or darkness should change when you slow, how much space you keep, and how hard you search. Watch for what the driver does differently.",
       objective: "Adjust speed, space, and search when visibility and traction degrade.",
-      do: ["Watch for headlight use, speed reduction, and longer following distance.", "Name the condition-specific change for each scene."],
-      drill: ["Same pedestrian risk, less visibility, so earlier speed reduction.", "Wet road, so longer following distance and gentler braking.", "Glare or darkness hiding the road edge or a crossing.", "Outrunning your headlights at night."],
+      do: [
+        "Watch for headlight use, speed reduction, and longer following distance.",
+        "Name the condition-specific change for each scene.",
+      ],
+      drill: [
+        "Same pedestrian risk, less visibility, so earlier speed reduction.",
+        "Wet road, so longer following distance and gentler braking.",
+        "Glare or darkness hiding the road edge or a crossing.",
+        "Outrunning your headlights at night.",
+      ],
       pass: "You can say what changes because of the condition, not just 'drive carefully.'",
-      logPrompts: ["Which condition required the biggest change?", "Did you slow before or after visibility dropped?"],
-      resources: [source("SDT night driving", "https://smartdrivetest.com/new-driver/how-to-drive-at-night"), source("YouTube video", "https://www.youtube.com/watch?v=MpRHhikARbQ")]
+      logPrompts: [
+        "Which condition required the biggest change?",
+        "Did you slow before or after visibility dropped?",
+      ],
+      resources: [
+        source("SDT night driving", "https://smartdrivetest.com/new-driver/how-to-drive-at-night"),
+        source("YouTube video", "https://www.youtube.com/watch?v=MpRHhikARbQ"),
+      ],
     },
     ...[1, 2, 3, 4, 5, 6, 7].map((simNumber, index) => {
       const meta = {
@@ -457,7 +768,7 @@ window.HPT_CURRICULUM = {
         4: ["Hard", "3:04 min", "Premium"],
         5: ["Hard", "1:42 min", "Premium"],
         6: ["Hard", "3:41 min", "Premium"],
-        7: ["Easy", "0:59 min", "Premium"]
+        7: ["Easy", "0:59 min", "Premium"],
       }[simNumber];
       return {
         id: 18 + simNumber,
@@ -472,11 +783,26 @@ window.HPT_CURRICULUM = {
         activityLabel: `Open Simulator ${simNumber}`,
         preWatch: `Use Simulator ${simNumber} to practice clicking real developing hazards, then return here to log what kind of miss happened: late cue, hidden actor, intention, space, or pattern-clicking.`,
         objective: "Convert passive video recognition into timed hazard response.",
-        do: ["Open the simulator in a new tab.", "Complete one run without trying to game the clicks.", "Review mistakes, then log the dominant error type here."],
-        drill: ["Click when a hazard starts developing.", "Ignore harmless possibilities until something changes.", "Afterward, explain each miss by category rather than score alone."],
+        do: [
+          "Open the simulator in a new tab.",
+          "Complete one run without trying to game the clicks.",
+          "Review mistakes, then log the dominant error type here.",
+        ],
+        drill: [
+          "Click when a hazard starts developing.",
+          "Ignore harmless possibilities until something changes.",
+          "Afterward, explain each miss by category rather than score alone.",
+        ],
         pass: "You can explain at least one simulator miss using a concrete category: occlusion, intention, timing, over-focus, or space.",
-        logPrompts: ["Score or result.", "Top miss category.", "One clip to repeat or one on-road habit to practice."],
-        resources: [source(`Simulator ${simNumber}`, `${dtoBase}${simNumber}/`), source("Driving-Tests.org simulator hub", "https://driving-tests.org/driving-simulator/")]
+        logPrompts: [
+          "Score or result.",
+          "Top miss category.",
+          "One clip to repeat or one on-road habit to practice.",
+        ],
+        resources: [
+          source(`Simulator ${simNumber}`, `${dtoBase}${simNumber}/`),
+          source("Driving-Tests.org simulator hub", "https://driving-tests.org/driving-simulator/"),
+        ],
       };
     }),
     {
@@ -488,15 +814,36 @@ window.HPT_CURRICULUM = {
       material: "Safe Driving for Life free hazard perception test",
       cost: "Free",
       time: "20-30 min",
-      activityUrl: "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/",
+      activityUrl:
+        "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/",
       activityLabel: "Open DVSA free clips",
-      preWatch: "Now move into the official UK-style developing-hazard format. Do not treat the left-side road context as the lesson. The lesson is timing: when does a possible hazard become something a driver must act on?",
-      objective: "Practice DVSA-style timed recognition while keeping the focus on real-road meaning.",
-      do: ["Complete the free clips.", "Review each clip immediately after the set.", "Do not chase a perfect score yet."],
-      drill: ["What was the first clue?", "When did it become developing?", "What would the driver need to do?", "What was hidden or unstable?"],
+      preWatch:
+        "Now move into the official UK-style developing-hazard format. Do not treat the left-side road context as the lesson. The lesson is timing: when does a possible hazard become something a driver must act on?",
+      objective:
+        "Practice DVSA-style timed recognition while keeping the focus on real-road meaning.",
+      do: [
+        "Complete the free clips.",
+        "Review each clip immediately after the set.",
+        "Do not chase a perfect score yet.",
+      ],
+      drill: [
+        "What was the first clue?",
+        "When did it become developing?",
+        "What would the driver need to do?",
+        "What was hidden or unstable?",
+      ],
       pass: "You can explain why an early click is good only when the hazard has started developing.",
-      logPrompts: ["Clip score and total score.", "One too-early click, one too-late click, or one missed clue."],
-      resources: [source("Free hazard perception test", "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/"), source("GOV.UK practice test page", "https://www.gov.uk/take-practice-theory-test")]
+      logPrompts: [
+        "Clip score and total score.",
+        "One too-early click, one too-late click, or one missed clue.",
+      ],
+      resources: [
+        source(
+          "Free hazard perception test",
+          "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/",
+        ),
+        source("GOV.UK practice test page", "https://www.gov.uk/take-practice-theory-test"),
+      ],
     },
     {
       id: 27,
@@ -508,13 +855,31 @@ window.HPT_CURRICULUM = {
       cost: "Free",
       time: "10-15 min",
       video: "SdQRkmdhwJs",
-      preWatch: "Before spending money on the paid bank, watch the official DVSA explainer to see exactly how the scored test presents a developing hazard and when to click. The point is to learn the format, not to memorize these clips.",
+      preWatch:
+        "Before spending money on the paid bank, watch the official DVSA explainer to see exactly how the scored test presents a developing hazard and when to click. The point is to learn the format, not to memorize these clips.",
       objective: "Understand the scored DVSA format and click timing before paying.",
-      do: ["Watch the official explainer.", "Note what counts as a developing hazard and the scoring window.", "Then return to the free clips before buying the bank."],
-      drill: ["What makes a hazard 'developing' in the test?", "When does an early click score zero?", "How is the 5-to-0 score window structured?"],
+      do: [
+        "Watch the official explainer.",
+        "Note what counts as a developing hazard and the scoring window.",
+        "Then return to the free clips before buying the bank.",
+      ],
+      drill: [
+        "What makes a hazard 'developing' in the test?",
+        "When does an early click score zero?",
+        "How is the 5-to-0 score window structured?",
+      ],
       pass: "You can explain how the scored test defines and times a developing hazard.",
-      logPrompts: ["What surprised you about the scoring?", "Are you clicking on developing hazards, not potential ones?"],
-      resources: [source("DVSA explainer video", "https://www.youtube.com/watch?v=SdQRkmdhwJs"), source("DVSA free practice clips", "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/")]
+      logPrompts: [
+        "What surprised you about the scoring?",
+        "Are you clicking on developing hazards, not potential ones?",
+      ],
+      resources: [
+        source("DVSA explainer video", "https://www.youtube.com/watch?v=SdQRkmdhwJs"),
+        source(
+          "DVSA free practice clips",
+          "https://www.safedrivingforlife.info/free-practice-tests/hazard-perception-test/",
+        ),
+      ],
     },
     {
       id: 28,
@@ -527,13 +892,24 @@ window.HPT_CURRICULUM = {
       time: "25-35 min",
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
-      preWatch: "Only buy the paid DVSA bank after the earlier layers are familiar. Treat this first scored session as calibration, not judgment: are misses caused by timing, occlusion, over-focusing on cars, missed intention, or weak space planning?",
+      preWatch:
+        "Only buy the paid DVSA bank after the earlier layers are familiar. Treat this first scored session as calibration, not judgment: are misses caused by timing, occlusion, over-focusing on cars, missed intention, or weak space planning?",
       objective: "Start paid timed practice without turning it into test gaming.",
-      do: ["Do only 5-6 clips in the first session.", "Review each miss using the course categories.", "Stop before fatigue turns into random clicking."],
-      drill: ["What was the potential hazard?", "When did it become developing?", "Did you click too early, too late, or correctly?", "What clue did you miss?", "What action would a real driver take?"],
+      do: [
+        "Do only 5-6 clips in the first session.",
+        "Review each miss using the course categories.",
+        "Stop before fatigue turns into random clicking.",
+      ],
+      drill: [
+        "What was the potential hazard?",
+        "When did it become developing?",
+        "Did you click too early, too late, or correctly?",
+        "What clue did you miss?",
+        "What action would a real driver take?",
+      ],
       pass: "You explain misses using categories, not vibes.",
       logPrompts: ["Session score or readiness indicator.", "Top error category."],
-      resources: [source("Official DVSA e-learning", dvsaCourse)]
+      resources: [source("Official DVSA e-learning", dvsaCourse)],
     },
     {
       id: 29,
@@ -546,13 +922,24 @@ window.HPT_CURRICULUM = {
       time: "25-40 min",
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
-      preWatch: "Use the paid bank for focused reps. In this session, hunt for hidden actors and blocked sightlines. Try to name where the hazard will come from before it appears on screen.",
+      preWatch:
+        "Use the paid bank for focused reps. In this session, hunt for hidden actors and blocked sightlines. Try to name where the hazard will come from before it appears on screen.",
       objective: "Predict hidden actors before they appear.",
-      do: ["Select clips involving hidden pedestrians, parked vehicles, crosswalks, large vehicles, bends, crests, side roads, or blocked sightlines.", "After each clip, write the hidden space and cue."],
-      drill: ["Where is the blocked edge?", "Who could come out of it?", "What would I do before seeing them?"],
+      do: [
+        "Select clips involving hidden pedestrians, parked vehicles, crosswalks, large vehicles, bends, crests, side roads, or blocked sightlines.",
+        "After each clip, write the hidden space and cue.",
+      ],
+      drill: [
+        "Where is the blocked edge?",
+        "Who could come out of it?",
+        "What would I do before seeing them?",
+      ],
       pass: "You can say where the hazard will come from before it appears.",
-      logPrompts: ["Best hidden-space prediction.", "Any occlusion missed because attention stayed on the visible car?"],
-      resources: [source("Official DVSA e-learning", dvsaCourse)]
+      logPrompts: [
+        "Best hidden-space prediction.",
+        "Any occlusion missed because attention stayed on the visible car?",
+      ],
+      resources: [source("Official DVSA e-learning", dvsaCourse)],
     },
     {
       id: 30,
@@ -565,13 +952,21 @@ window.HPT_CURRICULUM = {
       time: "25-40 min",
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
-      preWatch: "This focused session is about visible actors whose behavior is changing. Look for wheel angle, speed change, braking, lane position, body language, and second signals before the hazard becomes obvious.",
+      preWatch:
+        "This focused session is about visible actors whose behavior is changing. Look for wheel angle, speed change, braking, lane position, body language, and second signals before the hazard becomes obvious.",
       objective: "Detect behavioral cues before the event becomes obvious.",
-      do: ["Select clips involving turning vehicles, parked cars pulling out, cyclists changing line, pedestrians stepping out, vehicles braking unexpectedly, side roads, or late decisions.", "Name the cue before naming the hazard."],
-      drill: ["What changed in motion?", "What second signal confirmed it?", "What would I do now?"],
+      do: [
+        "Select clips involving turning vehicles, parked cars pulling out, cyclists changing line, pedestrians stepping out, vehicles braking unexpectedly, side roads, or late decisions.",
+        "Name the cue before naming the hazard.",
+      ],
+      drill: [
+        "What changed in motion?",
+        "What second signal confirmed it?",
+        "What would I do now?",
+      ],
       pass: "You detect the behavioral cue before the event becomes obvious.",
       logPrompts: ["Cue detected early.", "Cue missed or over-trusted."],
-      resources: [source("Official DVSA e-learning", dvsaCourse)]
+      resources: [source("Official DVSA e-learning", dvsaCourse)],
     },
     {
       id: 31,
@@ -584,13 +979,20 @@ window.HPT_CURRICULUM = {
       time: "25-40 min",
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
-      preWatch: "Bad conditions do not create a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, darkness, or poor traction should change when you slow, how much space you keep, and how hard you search.",
+      preWatch:
+        "Bad conditions do not create a new skill; they make the same skill earlier and gentler. Lower visibility, glare, rain, darkness, or poor traction should change when you slow, how much space you keep, and how hard you search.",
       objective: "Adjust hazard expectations when visibility and traction degrade.",
-      do: ["Use clips with rain, glare, night, snow or ice if available, poor contrast, wet braking distance, or obscured pedestrians and cyclists.", "For each clip, require the condition-specific adjustment."],
-      drill: ["Same pedestrian risk, less visibility, longer stopping distance, so earlier speed reduction.", "Same car-pulling-out risk, wet road, so more distance and gentler braking."],
+      do: [
+        "Use clips with rain, glare, night, snow or ice if available, poor contrast, wet braking distance, or obscured pedestrians and cyclists.",
+        "For each clip, require the condition-specific adjustment.",
+      ],
+      drill: [
+        "Same pedestrian risk, less visibility, longer stopping distance, so earlier speed reduction.",
+        "Same car-pulling-out risk, wet road, so more distance and gentler braking.",
+      ],
       pass: "You say what changes because of the condition.",
       logPrompts: ["Condition observed.", "What speed, space, or scan change did it require?"],
-      resources: [source("Official DVSA e-learning", dvsaCourse)]
+      resources: [source("Official DVSA e-learning", dvsaCourse)],
     },
     {
       id: 32,
@@ -603,13 +1005,30 @@ window.HPT_CURRICULUM = {
       time: "Weekly",
       activityUrl: dvsaCourse,
       activityLabel: "Open DVSA e-learning",
-      preWatch: "The final step is consistency. Use mock tests sparingly and review them by error type, not by ego. A better score is nice; the real goal is a steadier habit of seeing trouble while there is still time to choose.",
+      preWatch:
+        "The final step is consistency. Use mock tests sparingly and review them by error type, not by ego. A better score is nice; the real goal is a steadier habit of seeing trouble while there is still time to choose.",
       objective: "Assess consistency without optimizing for UK test tricks.",
-      do: ["Take one mock test per week.", "Review errors immediately.", "Track trends by error type rather than only total score."],
-      drill: ["Clicked too early: saw a possible risk before it became developing.", "Clicked too late: missed the cue.", "Missed occlusion: failed to imagine hidden actor.", "Over-focused on cars: missed pedestrian or cyclist.", "Missed intention: did not read wheel angle, speed, signal, or body language.", "Poor space thinking: recognized hazard too late to preserve options.", "Pattern clicking: gaming the test instead of reading the road."],
+      do: [
+        "Take one mock test per week.",
+        "Review errors immediately.",
+        "Track trends by error type rather than only total score.",
+      ],
+      drill: [
+        "Clicked too early: saw a possible risk before it became developing.",
+        "Clicked too late: missed the cue.",
+        "Missed occlusion: failed to imagine hidden actor.",
+        "Over-focused on cars: missed pedestrian or cyclist.",
+        "Missed intention: did not read wheel angle, speed, signal, or body language.",
+        "Poor space thinking: recognized hazard too late to preserve options.",
+        "Pattern clicking: gaming the test instead of reading the road.",
+      ],
       pass: "Improving consistency. The point is road perception, not perfect UK test optimization.",
-      logPrompts: ["Mock score or readiness indicator.", "Top two error types.", "One specific next practice target."],
-      resources: [source("Official DVSA e-learning", dvsaCourse)]
-    }
-  ]
+      logPrompts: [
+        "Mock score or readiness indicator.",
+        "Top two error types.",
+        "One specific next practice target.",
+      ],
+      resources: [source("Official DVSA e-learning", dvsaCourse)],
+    },
+  ],
 };
